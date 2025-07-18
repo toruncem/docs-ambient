@@ -1,0 +1,92 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "Athelas Scribe",
+  "colors": {
+    "primary": "#fc5478",
+    "light": "#fc5478",
+    "dark": "#fc5478"
+  },
+  "favicon": "/logo/athelas_logo.svg",
+  "navigation": {
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "get_started/overview",
+              "get_started/download",
+              "get_started/login",
+              "get_started/first-scribe"
+            ]
+          },
+          {
+            "group": "The Basics",
+            "pages": [
+              "basics/navigation",
+              "basics/recording",
+              "basics/history",
+              "basics/scribe-actions",
+              "basics/visits",
+              "basics/ehr_sync"
+            ]
+          },
+          {
+            "group": "AI Studio",
+            "pages": [
+              "ai_studio/custom-formatting",
+              "ai_studio/template-library",
+              "ai_studio/dot-phrases"
+
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/preferences",
+              "advanced/ai-summaries",
+              "advanced/clinical-copilot",
+              "advanced/carry-forward",
+              "advanced/collaborator"
+          ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/common-issues"
+            ]
+          },
+          {
+            "group": "Enterprise Grade",
+            "pages": [
+              "enterprise/security",
+              "enterprise/admin-panel"
+            ]
+          },
+          {
+            "group": "Speciality Specifc",
+            "pages": [
+              "speciality/home-health",
+              "speciality/emergency",
+              "speciality/hospitalists"
+            ]
+          }
+        ]
+  },
+  "logo": {
+    "light": "/logo/athelas_full_light.svg",
+    "dark": "/logo/athelas_full_dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:scribe-support@getathelas.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Use on Web",
+      "href": "https://scribe.athelas.com/"
+    }
+  }
+}

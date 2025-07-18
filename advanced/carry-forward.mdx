@@ -1,0 +1,57 @@
+---
+title: "Carry Forward Notes"
+description: "Automatically pull forward relevant info from past visits into your new note."
+---
+
+## Carry Forward
+
+**Carry Forward** helps providers save time by using relevant information from a patient’s previous visit note to pre-fill the new note for their current visit.
+
+This feature is particularly useful for follow-ups or recurring visits, where much of the patient's history or previous assessments are still relevant.
+
+---
+
+### How It Works
+
+When you select **Carry Forward** from the AI Actions menu:
+
+- **Integrated Sites**:
+  The new note is automatically created using content from the previous visit. You’ll be taken directly to the editing screen with carried-forward data already populated.
+- **Non-Integrated Sites**:
+  Selecting **Carry Forward** opens the new recording page with the previous note loaded as context. The system uses this to generate the new note once a new recording is completed.
+
+---
+
+### What Gets Carried Forward?
+
+Each section in your note (e.g. Plan, Objective, Subjective) can behave differently depending on how the template is configured. Here's what may happen:
+
+- `REGENERATE`: Section is freshly written based on new context (no carry forward).
+- `CARRY_FORWARD_ONLY`: Section is copied exactly from the previous note (no new content).
+- `CARRY_FORWARD_AND_APPEND`: Previous content is copied and new content is added at the end.
+- `CARRY_FORWARD_AND_BLEND` (New\!): Old and new content are merged together in a cohesive way.
+
+---
+
+### Smart Logic
+
+Carry Forward uses an advanced language model (LLM) to intelligently decide what to include, how to merge past content, and when to regenerate a section completely. Behind the scenes, the system:
+
+- Uses **guideline prompts** to guide behavior section by section
+- Applies **system and user roles** in the AI call to ensure accurate, role-specific output
+- Executes logic modularly to optimize performance and ensure consistent structure
+
+---
+
+### Benefits
+
+- Saves time on repetitive documentation
+- Ensures continuity between visits
+- Reduces errors by keeping relevant context
+- Works with both manual and EMR-integrated workflows
+
+---
+
+<Info>
+   For more information on details how to this up, please contact sales or your customer support manager. 
+</Info>
