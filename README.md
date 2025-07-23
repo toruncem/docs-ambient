@@ -1,4 +1,4 @@
-# Athelas Scribe
+# Commure Ambient
 
 Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
 
@@ -7,8 +7,6 @@ Click on `Use this template` to copy the Mintlify starter kit. The starter kit c
 - Customizations
 - API Reference pages
 - Use of popular components
-
-test123
 
 ### Development
 

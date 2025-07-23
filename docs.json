@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Athelas Scribe",
+  "name": "Commure Ambient",
   "colors": {
-    "primary": "#fc5478",
-    "light": "#fc5478",
-    "dark": "#fc5478"
+    "primary": "#1132EE",
+    "light": "#1132EE",
+    "dark": "#1132EE"
   },
-  "favicon": "/logo/athelas_logo.svg",
+  "favicon": "/logo/commure_logo.jpg",
   "navigation": {
         "groups": [
           {
@@ -73,8 +73,8 @@
         ]
   },
   "logo": {
-    "light": "/logo/athelas_full_light.svg",
-    "dark": "/logo/athelas_full_dark.svg"
+    "light": "/logo/commure_logo_full_black.png",
+    "dark": "/logo/commure_logo_full_white.png"
   },
   "navbar": {
     "links": [
@@ -86,7 +86,7 @@
     "primary": {
       "type": "button",
       "label": "Use on Web",
-      "href": "https://scribe.athelas.com/"
+      "href": "https://ambient.commure.com/"
     }
   }
 }
