@@ -1,0 +1,92 @@
+---
+title: "SCIM Provisioning"
+description: We support **SCIM v2.0** (System for Cross-domain Identity Management) to allow automated user provisioning and deprovisioning from your Identity Provider (IdP). This ensures your users always have the right access without manual setup.
+---
+
+<Accordion title="Setup Process" icon="users">
+  1. **Contact Support** – We will enable SCIM for your site.
+  2. **Generate Token** – A SCIM bearer token will be generated for your site. We store only the **encrypted token** in our system. 
+  3. **Configure in IdP** – Enter the SCIM base URL and bearer token in your IdP’s SCIM configuration page.
+  4. **Assign Users/Groups** – Provisioning can be done by assigning users directly or by assigning the app to a group.
+
+</Accordion>
+
+<Accordion title="SCIM Endpoints" icon="server">
+  We implement the standard SCIM endpoints:
+
+**Users**
+```
+GET    /Users           - List users
+GET    /Users/{id}      - Retrieve user
+POST   /Users           - Create user
+PATCH  /Users/{id}      - Update user
+PUT    /Users/{id}      - Replace user
+DELETE /Users/{id}      - Deactivate user
+```
+
+**Groups**
+```
+GET    /Groups          - List groups
+GET    /Groups/{id}     - Retrieve group
+POST   /Groups          - Create group
+PATCH  /Groups/{id}     - Update group membership
+```
+</Accordion>
+
+<Accordion title="Attributes We Support" icon="database">
+  When configuring SCIM in your IdP, use the following mappings (not all are required):
+
+| SCIM Attribute Path | Required | Example Value | Notes |
+|---------------------|----------|---------------|-------|
+| `userName` | Yes | `jane.doe@domain.com` | Used as the login/username (must be unique) |
+| `name.givenName` | Yes | `Jane` | First name |
+| `name.familyName` | Yes | `Doe` | Last name |
+| `emails[type eq "work"].value` | Yes | `jane.doe@domain.com` | Primary email address |
+| `active` | Yes | `true` | Deactivation in IdP disables the user here |
+| `urn:ietf:params:scim:schemas:extension:custom:2.0:User:role` | No | `ADMIN` or `PROVIDER` | Defaults to `PROVIDER` if not provided |
+| `urn:ietf:params:scim:schemas:extension:custom:2.0:User:npi` | No | `1234567890` | Defaults to `0` if empty |
+| `urn:ietf:params:scim:schemas:extension:custom:2.0:User:facility` | No | `Main Clinic` | Facility name |
+
+</Accordion>
+
+## Supported Operations
+- **User provisioning** – Add, update, deactivate users.
+- **PATCH operations** – Supports `replace` operations on attributes.
+- **Group membership updates** – Manage group assignments through the `groups` path.
+- **Custom attributes** – Additional attributes supported:
+  - `npi`
+  - `facility`
+  - `role` (either `ADMIN` or `PROVIDER`, defaults to `PROVIDER`)
+
+> **Note:** If `npi` is passed as an empty value, it defaults to `0`.
+
+---
+## Groups Support
+- We support **group-based user assignment**.
+- We do not support dynamic group pushes.
+- Group membership updates via PATCH are supported.
+---
+
+## Security
+- All communication with SCIM endpoints must be authenticated using the SCIM bearer token.
+- Tokens are unique per site and stored only in encrypted form.
+
+---
+
+## Next Steps
+- In your IdP, configure SCIM with the **Base URL** and **Bearer Token** we provide.
+- Assign users or groups to the application to automatically provision accounts.
+- Deactivating a user in your IdP will deactivate them in our system.
+
+---
+
+## Troubleshooting
+- **Microsoft Entra ID (Azure AD):** Uses `PATCH` heavily for updates. Ensure PATCH is enabled in your configuration.
+- **Okta:** Supports both direct user assignment and group-based assignment.
+- Ensure that the required field `emails` is provided for each provisioned user and/or any optional fields you wish to configure.
+
+---
+
+<Tip>
+  If you are experiencing an issue that is not listed here, please reach out to our [support team](mailto:support@ambient.commure.com) so we can help you resolve it.
+</Tip>

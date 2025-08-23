@@ -60,7 +60,8 @@
         "group": "Enterprise Grade",
         "pages": [
           "enterprise/security",
-          "enterprise/admin-panel"
+          "enterprise/admin-panel",
+          "enterprise/scim"
         ]
       },
       {
@@ -81,7 +82,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:scribe-support@getathelas.com"
+        "href": "mailto:support@ambient.commure.com"
       }
     ],
     "primary": {
