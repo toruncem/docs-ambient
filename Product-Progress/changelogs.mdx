@@ -214,7 +214,53 @@ description: "Product Updates and Announcements"
 </Update>
 
 <Update label="August 11th, 2025">
-  Coming soon.
+  This release is all about giving you significantly **more customizability and quality** in the types of notes you create and the visits you scribe for. From easier-to-use note-level formatting, injecting your own gold standards, and configurable carry forward rules, we’re powering Ambient to be more robust across the documentation pipeline.
+
+  <AccordionGroup>
+    <Accordion title="New Added Features" icon="sparkles">
+      <AccordionGroup>
+        <Accordion title="Note Level Preferences" icon="sparkles">
+          Note Level Preferences was built from sourcing common custom formatting themes across our user-base and decoupling them into an easy-to-use bar.
+
+          The goal is to simplify the process to set basic rules allowing you to specify how detailed you’d like your notes to be or whether you prefer bulleted, numbered, or narrative form.
+        </Accordion>
+        <Accordion title=" Carry Forward Configuration Page" description="You may have seen or used our carry forward feature already!" icon="sparkles">
+          Now you can create your own user-specific rules to dictate what sections carry forward from the previous appointment for that patient and the resulting behavior. Here are example rules:
+
+          - Carry forward and **append** the **HPI** from the previous note into the **HPI** of the current note
+          - **Blend** the **A/P** of the previous note and the **HPI** of the current note.
+            - Yes, you can carry forward between different sections\!
+            - And yes, we can do intelligently “blend” content while retaining relevant dates, using past tense for previous content — only utilizing medically relevant context.
+          - Carry forward and **prepend** the **ROS** of the previous note to the **ROS** of the current note.
+        </Accordion>
+        <Accordion title="Toggle Carry Forward On/Off Per Note" description="If a particular visit will have content carry-forwarded into, we will show a toggle for you to know." icon="sparkles">
+          1. If carry forward is enabled for the upcoming appointment
+          2. A preview of the previous note with an indication which section will be carry-forwarded
+
+          We identify what visit is “eligible” to have _carry forward_ based on if we have the previous note for your patient. If you are integrated with an EMR for which we are pulling in signed notes, the “previous note” that is used in carry forward will your final, completed note — even if you didn’t use Ambient previously.
+        </Accordion>
+        <Accordion title="Learned Formatting" description="Learned Formatting now is in your hands! You can add in gold standard notes per section which our model will use to influence future notes for that template." icon="sparkles">
+          Within your note, you can also edit (as per usual) into what it _could have been_ and star it so it gets automatically added as a standard structurally for future notes in that template.
+
+          Even if you are or you’re onboarding a brand new user, you can paste in example notes to expedite the journey to your perfect note\!
+
+          This feature gives users more control over how notes are organized and presented.
+        </Accordion>
+        <Accordion title="Auto-Send (or Scheduled-Send) Note to MDS" icon="sparkles">
+          We offer the option for providers to send notes to an MDS immediately after it is generated, or schedule-send it X minutes after completion or every day at a particular time. We are bringing robust customizability to this flow for users it is beneficial for.
+        </Accordion>
+      </AccordionGroup>
+    </Accordion>
+    <Accordion title="Coming Soon" icon="hourglass-half">
+      - **Provider Re-engagement Emails** – Automatically reach out to providers to re-engage them to the app or teach them about key features.
+      - **UI Tour During Onboarding** – Guide new users through key app features with a quick, gamified walkthrough.
+      - **Passive Learning** – System suggest features to improve note quality by learning from user edits automatically.
+      - **Macros Configuration** — We support injecting macros currently in our backend processes during note generation. But we are building out the necessary infrastructure to give you the power to view, edit, and add your own\!
+      - **MDS Messaging** — Realtime messaging between providers and an MDS to discuss and edit notes.
+      - **Chunking** – Faster, smarter transcription by breaking long audio into optimized segments.
+    </Accordion>
+  </AccordionGroup>
+  These updates push Ambient forward as the best-in-class scribe that goes well beyond the note. We aim to bring **intense personalization and standard** to your notes, striving for perfection.
 </Update>
 
 <Update label="August 25th, 2025">
