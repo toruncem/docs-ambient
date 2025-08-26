@@ -75,20 +75,20 @@
       {
         "group": "Ambient Support Models",
         "pages": [
-          "ambient-support-models/ambient_support_models"
+          "ambient_support_models/ambient_support_models"
         ]
       },
       {
         "group": "Product Progress",
         "pages": [
-          "product-progress/changelogs",
-          "product-progress/roadmap"
+          "product_progress/changelogs",
+          "product_progress/roadmap"
         ]
       },
       {
         "group": "Contact",
         "pages": [
-          "contact/contact-sales-support"
+          "contact/contact_sales_support"
         ]
       }
     ]
