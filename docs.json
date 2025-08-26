@@ -1,5 +1,5 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
+  "$schema": "https://mintlify.com/schema/docs.schema.json",
   "theme": "maple",
   "name": "Commure Ambient",
   "colors": {
@@ -65,11 +65,30 @@
         ]
       },
       {
-        "group": "Speciality Specifc",
+        "group": "Specialty Specific",
         "pages": [
-          "speciality/home-health",
-          "speciality/emergency",
-          "speciality/hospitalists"
+          "specialty/home-health",
+          "specialty/emergency",
+          "specialty/hospitalists"
+        ]
+      },
+      {
+        "group": "Ambient Support Models",
+        "pages": [
+          "ambient-support-models/mds"
+        ]
+      },
+      {
+        "group": "Product Progress",
+        "pages": [
+          "product-progress/changelogs",
+          "product-progress/roadmap"
+        ]
+      },
+      {
+        "group": "Contact",
+        "pages": [
+          "contact/contact-sales-support"
         ]
       }
     ]
