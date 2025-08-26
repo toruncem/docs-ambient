@@ -75,7 +75,7 @@
       {
         "group": "Ambient Support Models",
         "pages": [
-          "ambient_support_models/ambient_support_models"
+          "ambient_support_models/ambient-support-models"
         ]
       },
       {
@@ -88,7 +88,7 @@
       {
         "group": "Contact",
         "pages": [
-          "contact/sales_and_support"
+          "contact/sales-and-support"
         ]
       }
     ]
