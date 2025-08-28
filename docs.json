@@ -75,14 +75,14 @@
       {
         "group": "Ambient Support Models",
         "pages": [
-          "ambient_support_models/ambient-support-models"
+          "mds/ambient-support-models"
         ]
       },
       {
         "group": "Product Progress",
         "pages": [
-          "product_progress/changelogs",
-          "product_progress/roadmap"
+          "product/changelogs",
+          "product/roadmap"
         ]
       },
       {
