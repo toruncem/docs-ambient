@@ -65,11 +65,11 @@
         ]
       },
       {
-        "group": "Specialty Specific",
+        "group": "Speciality Specific",
         "pages": [
-          "specialty/home-health",
-          "specialty/emergency",
-          "specialty/hospitalists"
+          "speciality/home-health",
+          "speciality/emergency",
+          "speciality/hospitalists"
         ]
       },
       {
