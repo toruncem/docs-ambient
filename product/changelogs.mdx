@@ -3,64 +3,114 @@ title: "Changelog"
 description: "Product Updates and Announcements"
 ---
 
-<Update label="June 30th, 2025">
-  We're beyond excited to share our most recent release—packed with more than a dozen powerful features designed to streamline providers' workflow, boost productivity, and supercharge collaboration. Dive in and explore what's new\!
+<Update label="September 8th, 2025">
+  
+</Update>
+
+<Update label="August 11th-25th, 2025">
+  This release is all about giving you significantly **more customizability and quality** in the types of notes you create and the visits you scribe for. From easier-to-use note-level formatting, injecting your own gold standards, and configurable carry forward rules, we’re powering Ambient to be more robust across the documentation pipeline.
 
   <AccordionGroup>
     <Accordion title="New Added Features" icon="sparkles">
       <AccordionGroup>
-        <Accordion title="AI Copilot" icon="sparkles">
-          Meet your AI sidekick—Copilot can suggest differential diagnoses, flag potential coding issues, or draft patient instructions in seconds. Think of it as your digital clinical assistant.
-        </Accordion>
-        <Accordion title="Carry Forward Note (Integrated & Unintegrated)" icon="sparkles">
-          Seamlessly bring forward critical patient details from prior encounters—whether you're working within an integrated EHR environment or handling notes offline. Save time by automatically populating history, assessment, plan, and more.
-        </Accordion>
-        <Accordion title="Dictation Mode" icon="sparkles">
-          Go hands-free with our new, always-on dictation engine. Draft entire notes by voice, with real-time formatting and smart punctuation.
-        </Accordion>
-        <Accordion title="Note Highlighting for Macro" icon="sparkles">
-          Highlights differences from Macros to visualize what's new or changed in the note.
-        </Accordion>
-        <Accordion title="SCIM Support" icon="sparkles">
-          Built for enterprise clients like Tenet, simplify user provisioning and deprovisioning with full SCIM integration. Keep your team's access secure and up-to-date without manual account management.
-        </Accordion>
-        <Accordion title="New Help Center" icon="sparkles">
-          Explore our redesigned in-app Help Center, featuring searchable FAQs, step-by-step guides, and tutorials so you can find answers faster.
-        </Accordion>
-        <Accordion title="Expected vs. Actual Note Test Framework" icon="sparkles">
-          Built for rigorous QA, our new ELO (Expected vs. Actual Note) framework automates note-quality testing and benchmarking, helping us track note quality improvements over time and against competitors.
-        </Accordion>
-        <Accordion title="Medical Deciscion Making+" icon="sparkles">
-          Generate a more complete MDM with visual flags to indicate if specific sections important to billing are missed within the ambient conversation for clinician to complete as a re-evaluation
+        <Accordion title="Note Level Preferences" icon="sparkles">
+          Note Level Preferences was built from sourcing common custom formatting themes across our user-base and decoupling them into an easy-to-use bar.
 
-          {/* https://drive.google.com/file/d/1olHJA5caWSZqGpEdfCLAAgbosdSV9G6d/view?usp=sharing */}
+          The goal is to simplify the process to set basic rules allowing you to specify how detailed you’d like your notes to be or whether you prefer bulleted, numbered, or narrative form.
         </Accordion>
-        <Accordion title="Macros" icon="sparkles">
-          Create and insert custom text snippets or sections based on the context of your audio. From standard sign-offs to repetitive content, macros automatically generate both static and dynamic content for you.
+        <Accordion title=" Carry Forward Configuration Page" description="You may have seen or used our carry forward feature already!" icon="sparkles">
+          Now you can create your own user-specific rules to dictate what sections carry forward from the previous appointment for that patient and the resulting behavior. Here are example rules:
+
+          - Carry forward and **append** the **HPI** from the previous note into the **HPI** of the current note
+          - **Blend** the **A/P** of the previous note and the **HPI** of the current note.
+            - Yes, you can carry forward between different sections\!
+            - And yes, we can do intelligently “blend” content while retaining relevant dates, using past tense for previous content — only utilizing medically relevant context.
+          - Carry forward and **prepend** the **ROS** of the previous note to the **ROS** of the current note.
         </Accordion>
-        <Accordion title="Unassigned List" icon="sparkles">
-          View a list of all patients that are not assigned to an appointment. Link them to an appointment later on.
+        <Accordion title="Toggle Carry Forward On/Off Per Note" description="If a particular visit will have content carry-forwarded into, we will show a toggle for you to know." icon="sparkles">
+          1. If carry forward is enabled for the upcoming appointment
+          2. A preview of the previous note with an indication which section will be carry-forwarded
+
+          We identify what visit is “eligible” to have _carry forward_ based on if we have the previous note for your patient. If you are integrated with an EMR for which we are pulling in signed notes, the “previous note” that is used in carry forward will your final, completed note — even if you didn’t use Ambient previously.
         </Accordion>
-        <Accordion title="CC Coding" icon="sparkles">
-          <iframe src="https://drive.google.com/file/d/1gLa9S1cJIr2Abzom2WnL3LxX1eZkkYHh/view?usp=sharing" width="100%" height="600" style={{ border:"none" }} />
+        <Accordion title="Learned Formatting" description="Learned Formatting now is in your hands! You can add in gold standard notes per section which our model will use to influence future notes for that template." icon="sparkles">
+          Within your note, you can also edit (as per usual) into what it _could have been_ and star it so it gets automatically added as a standard structurally for future notes in that template.
+
+          Even if you are or you’re onboarding a brand new user, you can paste in example notes to expedite the journey to your perfect note\!
+
+          This feature gives users more control over how notes are organized and presented.
+        </Accordion>
+        <Accordion title="Auto-Send (or Scheduled-Send) Note to MDS" icon="sparkles">
+          We offer the option for providers to send notes to an MDS immediately after it is generated, or schedule-send it X minutes after completion or every day at a particular time. We are bringing robust customizability to this flow for users it is beneficial for.
         </Accordion>
       </AccordionGroup>
     </Accordion>
     <Accordion title="Coming Soon" icon="hourglass-half">
-      - **Passive Learning** for automatically learning based on edited notes
-      - **Citation Mode** to reference context from the transcript
-      - **In-App Notifications** to alert for downtime or system issues
-      - **Revamped Onboarding Flow** for first-time users
-      - **Feature Preferences Tab** to to tailor your workspace
-      - **Note Level Preferences** to customize your note with toggles
-      - **After Visit Summaries** to securely send from provider to patient in a single click
-      - **Learned Formatting** that adapts to your style
-      - **Feature Adoption Tracking** dashboards for internal use
-      - **Note Quality Tracking** metrics and alerts for internal use
-      - **Updated Operational Process** to improve execution speed and quality across teams
+      - **Provider Re-engagement Emails** – Automatically reach out to providers to re-engage them to the app or teach them about key features.
+      - **UI Tour During Onboarding** – Guide new users through key app features with a quick, gamified walkthrough.
+      - **Passive Learning** – System suggest features to improve note quality by learning from user edits automatically.
+      - **Macros Configuration** — We support injecting macros currently in our backend processes during note generation. But we are building out the necessary infrastructure to give you the power to view, edit, and add your own\!
+      - **MDS Messaging** — Realtime messaging between providers and an MDS to discuss and edit notes.
+      - **Chunking** – Faster, smarter transcription by breaking long audio into optimized segments.
     </Accordion>
   </AccordionGroup>
-  This release represents a major leap forward—packed with powerful capabilities to make the system more intelligent and user focused. Let's keep pushing the boundaries of what Ambient can do, together\!
+  These updates push Ambient forward as the best-in-class scribe that goes well beyond the note. We aim to bring **intense personalization and standard** to your notes, striving for perfection.
+</Update>
+
+<Update label="July 28th, 2025">
+  This release is all about giving you **more control and clarity** in how you document. From personalized formatting and improved accuracy to smarter compliance tools, we're making it easier to tailor Ambient to your needs while helping you maintain high standards across every note.
+
+  <AccordionGroup>
+    <Accordion title="New Added Features" icon="sparkles">
+      <AccordionGroup>
+        <Accordion title="Commure Ambient Rebrand" icon="sparkles">
+          We've updated our look\! Ambient now sports a new and consistent style. While the design is fresh, the app you rely on remains exactly the same.
+        </Accordion>
+        <Accordion title="Personal Dictionary" description="Personal dictionary allows users to define custom word mappings to improve transcript accuracy." icon="sparkles">
+          You can specify how certain words or phrases should be recognized which is useful for handling medical terms, uncommon names, or organization-specific language.
+
+          - Map spoken terms to preferred spellings or formats
+          - Helps reduce repeated transcription errors
+          - Custom entries apply automatically during transcription
+
+          This feature ensures greater consistency and control across your transcripts.
+        </Accordion>
+        <Accordion title="Carry Forward Diff View" description="Carry Forward Diff View highlights the differences between a previous note and the content carried forward into a new one. " icon="sparkles">
+          It allows users to quickly see:
+
+          - Exactly what content was reused from the prior note
+          - What's been added, removed, or changed in the new note
+          - How the carried-forward content fits into the current context
+
+          This makes it easier to review carry forward notes with confidence, especially in ongoing care scenarios.
+        </Accordion>
+        <Accordion title="PT Chart Review" description="PT Chart Review helps ensure documentation meets compliance standards by evaluating each note against a set of specific criteria." icon="sparkles">
+          - Automatically checks for required content based on specified guidelines
+          - Assigns a compliance grade to help providers identify gaps
+
+          This feature supports more complete, audit-ready documentation and helps reinforce best practices in PT workflows.
+        </Accordion>
+        <Accordion title="Learned Format" description="Learned Format allows users to select sections from an existing note as examples of preferred formatting." icon="sparkles">
+          These selections are used to guide how future notes are structured and styled.
+
+          - Choose specific sections to serve as formatting templates
+          - Helps maintain consistency across notes
+          - Adapts to individual documentation preferences over time
+
+          This feature gives users more control over how notes are organized and presented.
+        </Accordion>
+      </AccordionGroup>
+    </Accordion>
+    <Accordion title="Coming Soon" icon="hourglass-half">
+      - **Provider Re-engagement Emails** – Automatically reach out to providers to re-engage them to the app or teach them about key features.
+      - **UI Tour During Onboarding** – Guide new users through key app features with a quick, gamified walkthrough.
+      - **Passive Learning** – System suggest features to improve note quality by learning from user edits automatically.
+      - **Chunking** – Faster, smarter transcription by breaking long audio into optimized segments.
+      - **User Configuration for Carry Forward** – Easily configure what sections should be carried forward in upcoming notes.
+      - **Note Level Preferences** – Configure your formatting preferences on a section by section basis with pre-defined rules.
+    </Accordion>
+  </AccordionGroup>
+  These updates push Ambient forward as a **more personalized, compliant, and consistent** documentation platform.
 </Update>
 
 <Update label="July 11th, 2025">
@@ -157,112 +207,62 @@ description: "Product Updates and Announcements"
   This release brings us closer to delivering a more adaptive, accurate, and user-friendly Ambient experience for all providers. Huge thanks to everyone who made it happen.
 </Update>
 
-<Update label="July 28th, 2025">
-  This release is all about giving you **more control and clarity** in how you document. From personalized formatting and improved accuracy to smarter compliance tools, we're making it easier to tailor Ambient to your needs while helping you maintain high standards across every note.
+<Update label="June 30th, 2025">
+  We're beyond excited to share our most recent release—packed with more than a dozen powerful features designed to streamline providers' workflow, boost productivity, and supercharge collaboration. Dive in and explore what's new\!
 
   <AccordionGroup>
     <Accordion title="New Added Features" icon="sparkles">
       <AccordionGroup>
-        <Accordion title="Commure Ambient Rebrand" icon="sparkles">
-          We've updated our look\! Ambient now sports a new and consistent style. While the design is fresh, the app you rely on remains exactly the same.
+        <Accordion title="AI Copilot" icon="sparkles">
+          Meet your AI sidekick—Copilot can suggest differential diagnoses, flag potential coding issues, or draft patient instructions in seconds. Think of it as your digital clinical assistant.
         </Accordion>
-        <Accordion title="Personal Dictionary" description="Personal dictionary allows users to define custom word mappings to improve transcript accuracy." icon="sparkles">
-          You can specify how certain words or phrases should be recognized which is useful for handling medical terms, uncommon names, or organization-specific language.
-
-          - Map spoken terms to preferred spellings or formats
-          - Helps reduce repeated transcription errors
-          - Custom entries apply automatically during transcription
-
-          This feature ensures greater consistency and control across your transcripts.
+        <Accordion title="Carry Forward Note (Integrated & Unintegrated)" icon="sparkles">
+          Seamlessly bring forward critical patient details from prior encounters—whether you're working within an integrated EHR environment or handling notes offline. Save time by automatically populating history, assessment, plan, and more.
         </Accordion>
-        <Accordion title="Carry Forward Diff View" description="Carry Forward Diff View highlights the differences between a previous note and the content carried forward into a new one. " icon="sparkles">
-          It allows users to quickly see:
-
-          - Exactly what content was reused from the prior note
-          - What's been added, removed, or changed in the new note
-          - How the carried-forward content fits into the current context
-
-          This makes it easier to review carry forward notes with confidence, especially in ongoing care scenarios.
+        <Accordion title="Dictation Mode" icon="sparkles">
+          Go hands-free with our new, always-on dictation engine. Draft entire notes by voice, with real-time formatting and smart punctuation.
         </Accordion>
-        <Accordion title="PT Chart Review" description="PT Chart Review helps ensure documentation meets compliance standards by evaluating each note against a set of specific criteria." icon="sparkles">
-          - Automatically checks for required content based on specified guidelines
-          - Assigns a compliance grade to help providers identify gaps
-
-          This feature supports more complete, audit-ready documentation and helps reinforce best practices in PT workflows.
+        <Accordion title="Note Highlighting for Macro" icon="sparkles">
+          Highlights differences from Macros to visualize what's new or changed in the note.
         </Accordion>
-        <Accordion title="Learned Format" description="Learned Format allows users to select sections from an existing note as examples of preferred formatting." icon="sparkles">
-          These selections are used to guide how future notes are structured and styled.
-
-          - Choose specific sections to serve as formatting templates
-          - Helps maintain consistency across notes
-          - Adapts to individual documentation preferences over time
-
-          This feature gives users more control over how notes are organized and presented.
+        <Accordion title="SCIM Support" icon="sparkles">
+          Built for enterprise clients like Tenet, simplify user provisioning and deprovisioning with full SCIM integration. Keep your team's access secure and up-to-date without manual account management.
         </Accordion>
-      </AccordionGroup>
-    </Accordion>
-    <Accordion title="Coming Soon" icon="hourglass-half">
-      - **Provider Re-engagement Emails** – Automatically reach out to providers to re-engage them to the app or teach them about key features.
-      - **UI Tour During Onboarding** – Guide new users through key app features with a quick, gamified walkthrough.
-      - **Passive Learning** – System suggest features to improve note quality by learning from user edits automatically.
-      - **Chunking** – Faster, smarter transcription by breaking long audio into optimized segments.
-      - **User Configuration for Carry Forward** – Easily configure what sections should be carried forward in upcoming notes.
-      - **Note Level Preferences** – Configure your formatting preferences on a section by section basis with pre-defined rules.
-    </Accordion>
-  </AccordionGroup>
-  These updates push Ambient forward as a **more personalized, compliant, and consistent** documentation platform.
-</Update>
-
-<Update label="August 11th, 2025">
-  This release is all about giving you significantly **more customizability and quality** in the types of notes you create and the visits you scribe for. From easier-to-use note-level formatting, injecting your own gold standards, and configurable carry forward rules, we’re powering Ambient to be more robust across the documentation pipeline.
-
-  <AccordionGroup>
-    <Accordion title="New Added Features" icon="sparkles">
-      <AccordionGroup>
-        <Accordion title="Note Level Preferences" icon="sparkles">
-          Note Level Preferences was built from sourcing common custom formatting themes across our user-base and decoupling them into an easy-to-use bar.
-
-          The goal is to simplify the process to set basic rules allowing you to specify how detailed you’d like your notes to be or whether you prefer bulleted, numbered, or narrative form.
+        <Accordion title="New Help Center" icon="sparkles">
+          Explore our redesigned in-app Help Center, featuring searchable FAQs, step-by-step guides, and tutorials so you can find answers faster.
         </Accordion>
-        <Accordion title=" Carry Forward Configuration Page" description="You may have seen or used our carry forward feature already!" icon="sparkles">
-          Now you can create your own user-specific rules to dictate what sections carry forward from the previous appointment for that patient and the resulting behavior. Here are example rules:
-
-          - Carry forward and **append** the **HPI** from the previous note into the **HPI** of the current note
-          - **Blend** the **A/P** of the previous note and the **HPI** of the current note.
-            - Yes, you can carry forward between different sections\!
-            - And yes, we can do intelligently “blend” content while retaining relevant dates, using past tense for previous content — only utilizing medically relevant context.
-          - Carry forward and **prepend** the **ROS** of the previous note to the **ROS** of the current note.
+        <Accordion title="Expected vs. Actual Note Test Framework" icon="sparkles">
+          Built for rigorous QA, our new ELO (Expected vs. Actual Note) framework automates note-quality testing and benchmarking, helping us track note quality improvements over time and against competitors.
         </Accordion>
-        <Accordion title="Toggle Carry Forward On/Off Per Note" description="If a particular visit will have content carry-forwarded into, we will show a toggle for you to know." icon="sparkles">
-          1. If carry forward is enabled for the upcoming appointment
-          2. A preview of the previous note with an indication which section will be carry-forwarded
+        <Accordion title="Medical Deciscion Making+" icon="sparkles">
+          Generate a more complete MDM with visual flags to indicate if specific sections important to billing are missed within the ambient conversation for clinician to complete as a re-evaluation
 
-          We identify what visit is “eligible” to have _carry forward_ based on if we have the previous note for your patient. If you are integrated with an EMR for which we are pulling in signed notes, the “previous note” that is used in carry forward will your final, completed note — even if you didn’t use Ambient previously.
+          {/* https://drive.google.com/file/d/1olHJA5caWSZqGpEdfCLAAgbosdSV9G6d/view?usp=sharing */}
         </Accordion>
-        <Accordion title="Learned Formatting" description="Learned Formatting now is in your hands! You can add in gold standard notes per section which our model will use to influence future notes for that template." icon="sparkles">
-          Within your note, you can also edit (as per usual) into what it _could have been_ and star it so it gets automatically added as a standard structurally for future notes in that template.
-
-          Even if you are or you’re onboarding a brand new user, you can paste in example notes to expedite the journey to your perfect note\!
-
-          This feature gives users more control over how notes are organized and presented.
+        <Accordion title="Macros" icon="sparkles">
+          Create and insert custom text snippets or sections based on the context of your audio. From standard sign-offs to repetitive content, macros automatically generate both static and dynamic content for you.
         </Accordion>
-        <Accordion title="Auto-Send (or Scheduled-Send) Note to MDS" icon="sparkles">
-          We offer the option for providers to send notes to an MDS immediately after it is generated, or schedule-send it X minutes after completion or every day at a particular time. We are bringing robust customizability to this flow for users it is beneficial for.
+        <Accordion title="Unassigned List" icon="sparkles">
+          View a list of all patients that are not assigned to an appointment. Link them to an appointment later on.
+        </Accordion>
+        <Accordion title="CC Coding" icon="sparkles">
+          <iframe src="https://drive.google.com/file/d/1gLa9S1cJIr2Abzom2WnL3LxX1eZkkYHh/view?usp=sharing" width="100%" height="600" style={{ border:"none" }} />
         </Accordion>
       </AccordionGroup>
     </Accordion>
     <Accordion title="Coming Soon" icon="hourglass-half">
-      - **Provider Re-engagement Emails** – Automatically reach out to providers to re-engage them to the app or teach them about key features.
-      - **UI Tour During Onboarding** – Guide new users through key app features with a quick, gamified walkthrough.
-      - **Passive Learning** – System suggest features to improve note quality by learning from user edits automatically.
-      - **Macros Configuration** — We support injecting macros currently in our backend processes during note generation. But we are building out the necessary infrastructure to give you the power to view, edit, and add your own\!
-      - **MDS Messaging** — Realtime messaging between providers and an MDS to discuss and edit notes.
-      - **Chunking** – Faster, smarter transcription by breaking long audio into optimized segments.
+      - **Passive Learning** for automatically learning based on edited notes
+      - **Citation Mode** to reference context from the transcript
+      - **In-App Notifications** to alert for downtime or system issues
+      - **Revamped Onboarding Flow** for first-time users
+      - **Feature Preferences Tab** to to tailor your workspace
+      - **Note Level Preferences** to customize your note with toggles
+      - **After Visit Summaries** to securely send from provider to patient in a single click
+      - **Learned Formatting** that adapts to your style
+      - **Feature Adoption Tracking** dashboards for internal use
+      - **Note Quality Tracking** metrics and alerts for internal use
+      - **Updated Operational Process** to improve execution speed and quality across teams
     </Accordion>
   </AccordionGroup>
-  These updates push Ambient forward as the best-in-class scribe that goes well beyond the note. We aim to bring **intense personalization and standard** to your notes, striving for perfection.
-</Update>
-
-<Update label="August 25th, 2025">
-  Coming soon.
+  This release represents a major leap forward—packed with powerful capabilities to make the system more intelligent and user focused. Let's keep pushing the boundaries of what Ambient can do, together\!
 </Update>
