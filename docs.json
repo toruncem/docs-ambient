@@ -65,14 +65,6 @@
         ]
       },
       {
-        "group": "Speciality Specific",
-        "pages": [
-          "speciality/home-health",
-          "speciality/emergency",
-          "speciality/hospitalists"
-        ]
-      },
-      {
         "group": "Ambient Support Models",
         "pages": [
           "mds/ambient-support-models"
