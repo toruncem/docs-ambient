@@ -5,11 +5,11 @@ description: "Product Updates and Announcements"
 
 <Update label="September 8th, 2025">
   This release brings us closer to delivering a more adaptive, accurate, and user-friendly Ambient experience for all providers. Huge thanks to everyone who made it happen.
+</Update>
 
-  ## Recently Launched
-
-  <AccordionGroup>
-    <Accordion title="Passive Learning" icon="sparkles">
+<Expandable title="09/08/2025" defaultOpen="true">
+  <Steps>
+    <Step title="Passive Learning" icon="sparkles">
       Ambient AI now learns provider documentation preferences to reduce repetitive edits. The initial rollout focuses on personal dictionary suggestions, with dot phrase suggestions coming soon.
 
       Benefits:
@@ -17,9 +17,9 @@ description: "Product Updates and Announcements"
       - Continuously adapts to provider edits to minimize manual effort
       - Maintains full user control while accelerating note creation
 
-      ![Screenshot2025 09 08at10 25 26PM Pn](/images/Screenshot2025-09-08at10.25.26PM.png)
-    </Accordion>
-    <Accordion title="Single Sign-On" icon="sparkles">
+        ![Screenshot2025 09 08at10 25 26PM Pn](/images/Screenshot2025-09-08at10.25.26PM.png)
+    </Step>
+    <Step title="Single Sign-On" icon="sparkles">
       Site admins can now configure SSO directly with their IT teams. Once a scribe site is created by Ops and the admin has an account, they can enable/disable SSO and test it safely in a sandbox environment.
 
       Benefits:
@@ -29,8 +29,8 @@ description: "Product Updates and Announcements"
       - Centralized authentication and deprovisioning via the customer’s IdP
 
       ![Screenshot2025 09 08at10 27 17PM Pn](/images/Screenshot2025-09-08at10.27.17PM.png)
-    </Accordion>
-    <Accordion title="Upload Paused Recordings" icon="sparkles">
+    </Step>
+    <Step title="Upload Paused Recordings" icon="sparkles">
       To reduce the perception “lost” scribes, providers will now be prompted to upload any paused recordings cached for more than 24 hours when they next log in.
 
       Benefits:
@@ -39,8 +39,8 @@ description: "Product Updates and Announcements"
       - Ensures valuable recordings don’t go unused
 
       ![Screenshot2025 09 08at10 28 33PM Pn](/images/Screenshot2025-09-08at10.28.33PM.png)
-    </Accordion>
-    <Accordion title="Site-level Preferences" icon="sparkles">
+    </Step>
+    <Step title="Site-level Preferences" icon="sparkles">
       Customers can now set site-level account preferences that can override or lock user preference. This feature ensures the locked user preferences are accurately surfaced. This [retool](https://commure.retool-hosted.com/apps/aedea25a-7310-11f0-98e5-97f555aa2018/LLM/Scribe%20Preferences) will be available shortly to set the site-level preferences.
 
       Benefits:
@@ -48,24 +48,24 @@ description: "Product Updates and Announcements"
       - Provides sites with control over individual provider preferences, especially useful for enterprise customers
 
       ![Screenshot2025 09 08at10 28 57PM Pn](/images/Screenshot2025-09-08at10.28.57PM.png)
-    </Accordion>
-  </AccordionGroup>
-</Update>
+    </Step>
+  </Steps>
+</Expandable>
 
 <Update label="August 25th, 2025">
   This release is all about giving you significantly **more customizability and quality** in the types of notes you create and the visits you scribe for. From easier-to-use note-level formatting, injecting your own gold standards, and configurable carry forward rules, we’re powering Ambient to be more robust across the documentation pipeline.
+</Update>
 
-  ## Recently Launched
-
-  <AccordionGroup>
-    <Accordion title="Note Level Preferences" icon="sparkles">
+<Expandable title="08/25/2025">
+  <Steps>
+    <Step title="Note Level Preferences" icon="sparkles">
       Note Level Preferences was built from sourcing common custom formatting themes across our user-base and decoupling them into an easy-to-use bar.
 
       The goal is to simplify the process to set basic rules allowing you to specify how detailed you’d like your notes to be or whether you prefer bulleted, numbered, or narrative form.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/QcwoR0hDozo?si=StYvQB2B1900GAHG &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title=" Carry Forward Configuration Page" icon="sparkles">
+    </Step>
+    <Step title=" Carry Forward Configuration Page" icon="sparkles">
       You may have seen or used our carry forward feature already\! Now you can create your own user-specific rules to dictate what sections carry forward from the previous appointment for that patient and the resulting behavior. Here are example rules:
 
       - Carry forward and **append** the **HPI** from the previous note into the **HPI** of the current note
@@ -75,8 +75,8 @@ description: "Product Updates and Announcements"
       - Carry forward and **prepend** the **ROS** of the previous note to the **ROS** of the current note.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/1rzKdt26dnc?si=PoyG8GiRovQIFfGC &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Toggle Carry Forward On/Off Per Note" icon="sparkles">
+    </Step>
+    <Step title="Toggle Carry Forward On/Off Per Note" icon="sparkles">
       If a particular visit will have content carry-forwarded into, we will show a toggle for you to know:
 
       1. If carry forward is enabled for the upcoming appointment
@@ -85,8 +85,8 @@ description: "Product Updates and Announcements"
       We identify what visit is “eligible” to have _carry forward_ based on if we have the previous note for your patient. If you are integrated with an EMR for which we are pulling in signed notes, the “previous note” that is used in carry forward will your final, completed note — even if you didn’t use Ambient previously.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/ByZYkonuZWA?si=fw1dulwqJ-SLks4J &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Learned Formatting" icon="sparkles">
+    </Step>
+    <Step title="Learned Formatting" icon="sparkles">
       Learned Format allows users to select sections from an existing note as examples of preferred formatting. These selections are used to guide how future notes are structured and styled.
 
       - Choose specific sections to serve as formatting templates
@@ -96,22 +96,22 @@ description: "Product Updates and Announcements"
       This feature gives users more control over how notes are organized and presented.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/H7BkrKUBjwg?si=B2yofUVZzR0qiQSG &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Auto-Send (or Scheduled-Send) Note to MDS" icon="sparkles">
+    </Step>
+    <Step title="Auto-Send (or Scheduled-Send) Note to MDS" icon="sparkles">
       We offer the option for providers to send notes to an MDS immediately after it is generated, or schedule-send it X minutes after completion or every day at a particular time. We are bringing robust customizability to this flow for users it is beneficial for.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/Z9zrZyUF9uI?feature=shared&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-  </AccordionGroup>
-</Update>
+    </Step>
+  </Steps>
+</Expandable>
 
 <Update label="July 28th, 2025">
   This release is all about giving you **more control and clarity** in how you document. From personalized formatting and improved accuracy to smarter compliance tools, we're making it easier to tailor Ambient to your needs while helping you maintain high standards across every note.
+</Update>
 
-  ## Recently Launched
-
-  <AccordionGroup>
-    <Accordion title="Commure Ambient Rebrand" icon="sparkles">
+<Expandable title="07/28/2025">
+  <Steps>
+    <Step title="Commure Ambient Rebrand" icon="sparkles">
       We’ve updated our look\! Ambient now sports a new and consistent style. While the design is fresh, the app you rely on remains exactly the same.
 
       <img
@@ -124,8 +124,8 @@ description: "Product Updates and Announcements"
       ![Image(10) Pn](/images/image\(10\).png)
 
       ![Image(9) Pn](/images/image\(9\).png)
-    </Accordion>
-    <Accordion title="Personal Dictionary" icon="sparkles">
+    </Step>
+    <Step title="Personal Dictionary" icon="sparkles">
       Personal dictionary allows users to define custom word mappings to improve transcript accuracy. You can specify how certain words or phrases should be recognized which is useful for handling medical terms, uncommon names, or organization-specific language.
 
       - Map spoken terms to preferred spellings or formats
@@ -135,8 +135,8 @@ description: "Product Updates and Announcements"
       This feature ensures greater consistency and control across your transcripts.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/Dz-825ZKyDs?si=AoA1C55vKKpF592u &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Carry Forward Diff View" icon="sparkles">
+    </Step>
+    <Step title="Carry Forward Diff View" icon="sparkles">
       Carry Forward Diff View highlights the differences between a previous note and the content carried forward into a new one. It allows users to quickly see:
 
       - Exactly what content was reused from the prior note
@@ -146,8 +146,8 @@ description: "Product Updates and Announcements"
       This makes it easier to review carry forward notes with confidence, especially in ongoing care scenarios.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/W7PTi-J9zjk?si=gigB0uFRAv41MWob &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="PT Chart Review" icon="sparkles">
+    </Step>
+    <Step title="PT Chart Review" icon="sparkles">
       PT Chart Review helps ensure documentation meets compliance standards by evaluating each note against a set of specific criteria.
 
       - Automatically checks for required content based on specified guidelines
@@ -156,8 +156,8 @@ description: "Product Updates and Announcements"
       This feature supports more complete, audit-ready documentation and helps reinforce best practices in PT workflows.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/0LT3K9AHD-A?si=0Si_nZRPQhIwOVax &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Learned Format" icon="sparkles">
+    </Step>
+    <Step title="Learned Format" icon="sparkles">
       Learned Format allows users to select sections from an existing note as examples of preferred formatting. These selections are used to guide how future notes are structured and styled.
 
       - Choose specific sections to serve as formatting templates
@@ -167,17 +167,17 @@ description: "Product Updates and Announcements"
       This feature gives users more control over how notes are organized and presented.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/cDGoBqsMP2c?si=Riy1TUL9R9xoGEEG &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-  </AccordionGroup>
-</Update>
+    </Step>
+  </Steps>
+</Expandable>
 
 <Update label="July 14th, 2025">
   We're back with another powerful Ambient release—this one's loaded with personalization, better workflows, and a smoother experience across the board.
+</Update>
 
-  ## Recently Launched
-
-  <AccordionGroup>
-    <Accordion title="Copilot" icon="sparkles">
+<Expandable title="07/14/2025">
+  <Steps>
+    <Step title="Copilot" icon="sparkles">
       Copilot, a feature we launched recently, has doubled down on trust and usability.
 
       - Copilot responses are now generated from only 50 trusted medical sources like FDA, CDC and NIH
@@ -185,8 +185,8 @@ description: "Product Updates and Announcements"
       - Prompt suggestions for each user are now dynamic. This means we can change suggestions for each user/specialty type to encourage higher usage
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/RR9LVcZ-RWQ?si=UU7_MP0etXiuL-_4 &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Preferences" icon="sparkles">
+    </Step>
+    <Step title="Preferences" icon="sparkles">
       Users can now fully customize how Ambient behaves with the new **Preferences** panel, accessible under **Menu → Account → Preferences** on mobile or the left nav on web.
 
       You can now:
@@ -198,8 +198,8 @@ description: "Product Updates and Announcements"
       Changes persist across sessions, with discard warnings to prevent accidental loss of settings.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/v9vhx4LTYlw?si=KqNNnEFzZA2LML3q &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="After Visit Summaries (AVS)" icon="sparkles">
+    </Step>
+    <Step title="After Visit Summaries (AVS)" icon="sparkles">
       Ambient now supports generating and sending **After Visit Summaries** directly from the app. Users can:
 
       - Manually generate an AVS tied to a specific note template
@@ -210,22 +210,22 @@ description: "Product Updates and Announcements"
       This delivers a polished, patient-friendly post-visit communication experience.
 
       ![Screenshot2025 07 03at1 51 54PM Pn](/images/Screenshot2025-07-03at1.51.54PM.png)
-    </Accordion>
-    <Accordion title="Expanse V2 Writeback – PDOC Flow" icon="sparkles">
+    </Step>
+    <Step title="Expanse V2 Writeback – PDOC Flow" icon="sparkles">
       When syncing a note back into MEDITECH Expanse, users may now encounter multiple possible PDOC targets. Instead of a generic sync error, the user will now see a **popup with all valid documents**, allowing them to select the correct one to write into. Once selected, the note syncs as usual.
 
       This eliminates ambiguity and improves reliability for Expanse writebacks.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/iPkvwfMHH5g?si=ZnvCxR7G6zshJnWe &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Regenerate Without New Context" icon="sparkles">
+    </Step>
+    <Step title="Regenerate Without New Context" icon="sparkles">
       You can now **retry note generation** without needing to update the input text. Just open **AI Actions → Smart Edit**, leave the context box empty, and click regenerate. You'll get a new version of the note based on the same conversation.
 
-      This is especially useful when the initial output needs refinement without new edits
+      This is especially useful when the initial output needs refinement without new edits.
 
       ![Image(20) Pn](/images/image\(20\).png)
-    </Accordion>
-    <Accordion title="Citations" icon="sparkles">
+    </Step>
+    <Step title="Citations" icon="sparkles">
       Ambient now supports **source citations** for every line of the generated note. When enabled, you’ll see markers next to each sentence. Clicking them reveals:
 
       - The exact part of the transcript the content was pulled from
@@ -235,8 +235,8 @@ description: "Product Updates and Announcements"
       This improves trust, audit-ability, and quick editing.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/5wJ0BrwT0kE?si=KahUIWJOf-DpVeDk &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title=" In-App Notifications for Outages" icon="sparkles">
+    </Step>
+    <Step title=" In-App Notifications for Outages" icon="sparkles">
       Ambient now delivers real-time **in-app banners** during application outages or service disruptions—eliminating the need for manual emails or follow-ups.
 
       Banners are:
@@ -248,11 +248,11 @@ description: "Product Updates and Announcements"
       Admins can manage outages directly through our internal Retool dashboard.
 
       ![Image(21) Pn](/images/image\(21\).png)
-    </Accordion>
-    <Accordion title="Revamped Onboarding Flow" icon="sparkles">
+    </Step>
+    <Step title="Revamped Onboarding Flow" icon="sparkles">
       <iframe width="560" height="315" src="https://www.youtube.com/embed/1KKR3CeEgWU?si=I6hdn-p3rWXR0aOd &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title='HCC "MEAT" Highlighting' icon="sparkles">
+    </Step>
+    <Step title='HCC "MEAT" Highlighting' icon="sparkles">
       Ambient now helps providers ensure accurate Hierarchical Condition Category (HCC) documentation by analyzing whether the note meets **MEAT (Monitor, Evaluate, Assess, Treat)** criteria for each documented HCC code.
 
       Here's how it works:
@@ -266,52 +266,52 @@ description: "Product Updates and Announcements"
       This feature is designed to support risk adjustment workflows and maximize completeness for value-based care models.
 
       ![Image(19) Pn](/images/image\(19\).png)
-    </Accordion>
-  </AccordionGroup>
-</Update>
+    </Step>
+  </Steps>
+</Expandable>
 
 <Update label="June 30th, 2025">
   We're beyond excited to share our most recent release—packed with more than a dozen powerful features designed to streamline providers' workflow, boost productivity, and supercharge collaboration. Dive in and explore what's new\!
+</Update>
 
-  ## Recently Launched
-
-  <AccordionGroup>
-    <Accordion title="AI Copilot" icon="sparkles">
+<Expandable title="06/30/2025">
+  <Steps>
+    <Step title="AI Copilot" icon="sparkles">
       Meet your AI sidekick—Copilot can suggest differential diagnoses, flag potential coding issues, or draft patient instructions in seconds. Think of it as your digital clinical assistant.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/5Yz38Dmk8Bg?si=V7KhFG2UmmmY_u01 &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="Carry Forward Note (Integrated & Unintegrated) " icon="sparkles">
+    </Step>
+    <Step title="Carry Forward Note (Integrated & Unintegrated) " icon="sparkles">
       Seamlessly bring forward critical patient details from prior encounters—whether you’re working within an integrated EHR environment or handling notes offline. Save time by automatically populating history, assessment, plan, and more.
 
       ![Image(18) Pn](/images/image\(18\).png)
-    </Accordion>
-    <Accordion title="Dictation Mode" icon="sparkles">
+    </Step>
+    <Step title="Dictation Mode" icon="sparkles">
       Go hands-free with our new, always-on dictation engine. Draft entire notes by voice, with real-time formatting and smart punctuation.
 
       ![Image(17) Pn](/images/image\(17\).png)
-    </Accordion>
-    <Accordion title="Note Highlighting for Macros" icon="sparkles">
+    </Step>
+    <Step title="Note Highlighting for Macros" icon="sparkles">
       Highlights differences from Macros to visualize what’s new or changed in the note.
 
       ![Image(16) Pn](/images/image\(16\).png)
-    </Accordion>
-    <Accordion title="SCIM Support" icon="sparkles">
+    </Step>
+    <Step title="SCIM Support" icon="Sparkles">
       Built for enterprise clients like Tenet, simplify user provisioning and deprovisioning with full SCIM integration. Keep your team’s access secure and up-to-date without manual account management.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/2ET-AMezx_0?si=4IVYVNrz94BERZUD &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="New Help Center" icon="sparkles">
+    </Step>
+    <Step title="New Help Center" icon="sparkles">
       Explore our redesigned in-app Help Center, featuring searchable FAQs, step-by-step guides, and tutorials so you can find answers faster.
 
       ![Image(15) Pn](/images/image\(15\).png)
-    </Accordion>
-    <Accordion title="ELO Test Framework" icon="sparkles">
+    </Step>
+    <Step title="ELO Test Framework" icon="sparkles">
       Built for rigorous QA, our new ELO (Expected vs. Actual Note) framework automates note-quality testing and benchmarking, helping us track note quality improvements over time and against competitors.
 
       ![Image(14) Pn](/images/image\(14\).png)
-    </Accordion>
-    <Accordion title="MDM+" icon="sparkles">
+    </Step>
+    <Step title="MDM+" icon="sparkles">
       Generate a more complete MDM with visual flags to indicate if specific sections important to billing are missed within the ambient conversation for clinician to complete as a re-evaluation.
 
       <img
@@ -320,21 +320,21 @@ description: "Product Updates and Announcements"
         title="Image(13) Pn"
         style={{ width:"100%" }}
       />
-    </Accordion>
-    <Accordion title="Macros" icon="sparkles">
+    </Step>
+    <Step title="Macros" icon="sparkles">
       Create and insert custom text snippets or sections based on the context of your audio. From standard sign-offs to repetitive content, macros automatically generate both static and dynamic content for you.
 
       ![Image(11) Pn](/images/image\(11\).png)
-    </Accordion>
-    <Accordion title="Unassigned List" icon="sparkles">
+    </Step>
+    <Step title="Unassigned List" icon="sparkles">
       View a list of all patients that are not assigned to an appointment. Link them to an appointment later on.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/KM32NFXELVY?si=5geraYQ4VHmjHO2q &mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
-    </Accordion>
-    <Accordion title="HCC Coding" icon="sparkles">
+    </Step>
+    <Step title="HCC Coding" icon="sparkles">
       ![Screenshot2025 06 30at12 24 30PM(1) Pn](/images/Screenshot2025-06-30at12.24.30PM\(1\).png)
 
       ![Screenshot2025 06 30at12 25 01PM(1) Pn](/images/Screenshot2025-06-30at12.25.01PM\(1\).png)
-    </Accordion>
-  </AccordionGroup>
-</Update>
+    </Step>
+  </Steps>
+</Expandable>
