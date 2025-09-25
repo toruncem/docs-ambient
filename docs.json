@@ -73,6 +73,7 @@
       {
         "group": "Product Progress",
         "pages": [
+          "product/blogs",
           "product/changelogs",
           "product/roadmap"
         ]
