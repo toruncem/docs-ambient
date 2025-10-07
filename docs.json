@@ -62,6 +62,7 @@
         "pages": [
           "enterprise/security",
           "enterprise/admin-panel",
+          "enterprise/sso-self-serve",
           "enterprise/scim"
         ]
       },
