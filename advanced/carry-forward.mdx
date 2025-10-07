@@ -11,23 +11,44 @@ This feature is particularly useful for follow-ups or recurring visits, where mu
 
 ---
 
-### How It Works
-
-When you select **Carry Forward** from the AI Actions menu:
-
-- **Integrated Sites**: The new note is automatically created using content from the previous visit. You’ll be taken directly to the editing screen with carried-forward data already populated.
-- **Non-Integrated Sites**: Selecting **Carry Forward** opens the new recording page with the previous note loaded as context. The system uses this to generate the new note once a new recording is completed.
-
----
-
 ### What Gets Carried Forward?
 
 Each section in your note (e.g. Plan, Objective, Subjective, etc.) can behave differently depending on how the template is configured and what selections you make. Here's what may happen and what you can choose:
 
-- **Regenerate:** Section is freshly written based on new context (no carry forward).
-- **Carry Forward Only:** Section is copied exactly from the previous note (no new content).
-- **Carry Forward and Append:** Previous content is copied and new content is added at the end.
-- **Carry Forward and Blend:** Old and new content are merged together in a cohesive way.
+- **Clone:** Ignores new input; uses only the previous note’s content.
+- **Prepend:** Previous content is copied and new content is added at the end.
+- **Append:** Places the previous note’s content after the new content.
+- **Blend:** Old and new content are merged together in a cohesive way.
+
+---
+
+### Use Carry Forward
+
+- **EHR-Integrated Sites**: Once configured, carry forward will appear for eligble notes. The new note is automatically created using content from the previous visit. You’ll be taken directly to the editing screen with carried-forward data already populated.
+- **Non-Integrated Sites**: Selecting **Carry Forward **from the**AI Actions ** menu of the patient's previous note, opens the new recording page for the current visit of that same pateint, with the previous note loaded as context. The system uses this to generate the new note once a new recording is completed.
+
+---
+
+### Set Up Carry Forward:
+
+User Defined Rules:
+
+1. Go to **AI Actions **then**Carry Forward** 
+2. Click on the **\+ Add Configuration **button.
+3. Create carry forward rule mapping between two template.
+4. By default, all rules between the templates are disabled. You need to configure the rules using the UI.
+5. Configure custom user defined rules.
+6. Now that you have setup custom user rules, navigate to the **My Scribes** page and select a note that was created using the source template (based on the rules you defined).
+7. Then, continue to steps 2-6 listed in the section below. 
+
+Template Level Rules:
+
+1. Go to an already existing Scribe with a SOAP template.
+2. Click on **AI Actions **then**Carry Forward.** 
+3. Ensure you are using the correct template for the new scribe.
+4. View the previous note.
+5. Create a scribe. Ensure you have enough details for the sections with carry forward.
+6. Once the new scribe is generated, you should see the **Compare View** button which you can toggle to view difference.
 
 <Frame>
   ![Screenshot2025 09 15at9 58 52AM Pn](/images/Screenshot2025-09-15at9.58.52AM.png)
@@ -50,13 +71,23 @@ Carry Forward uses an advanced language model (LLM) to intelligently decide what
 - Saves time on repetitive documentation
 - Ensures continuity between visits
 - Reduces errors by keeping relevant context
-- Works with both manual and EMR-integrated workflows
+- Works with both manual and EHR-integrated workflows
 
 ---
 
 <Frame>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/1kY2hDIHHuw?si=z0i-uPwseVibeckY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/1kY2hDIHHuw?si=dheIUoh6X4EqW2j9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
 </Frame>
+
+### Commure Carry Forward (integrated)
+
+<Frame>
+  ![Image(23) Pn](/image\(23\).png)
+</Frame>
+
+<Tip>
+  Users no longer need to navigate to **My Scribes → AI Actions → Carry Forward. **The previous signed note from the EHR is automatically pulled into our system, allowing the user to start a visit with carry forward already in place.
+</Tip>
 
 <Info>
   For more information on details how to this up, please contact sales or your customer support manager.
