@@ -52,6 +52,20 @@
         ]
       },
       {
+        "group": "EHR Integrations",
+        "pages": [
+          "ehr-integrations/AdvancedMD",
+          "ehr-integrations/Athena",
+          "ehr-integrations/Athena_API",
+          "ehr-integrations/NextGen",
+          "ehr-integrations/PracticeFusion",
+          "ehr-integrations/Tebra",
+          "ehr-integrations/TherapyNotes",
+          "ehr-integrations/WebPT",
+          "ehr-integrations/eCW"
+        ]
+      },
+      {
         "group": "Troubleshooting",
         "pages": [
           "troubleshooting/common-issues"
