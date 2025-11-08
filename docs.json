@@ -9,7 +9,11 @@
   },
   "favicon": "/logo/cmmr.png",
   "navigation": {
-    "groups": [
+    "tabs": [
+    {
+    "tab": "Commure Ambient",
+      "groups": [
+      
       {
         "group": "Getting Started",
         "pages": [
@@ -90,7 +94,6 @@
         "group": "Product Progress",
         "pages": [
           "product/blogs",
-          "product/changelogs",
           "product/roadmap"
         ]
       },
@@ -102,6 +105,59 @@
       }
     ]
   },
+  {
+    "tab": "API",
+    "hidden": true,
+    "groups": [
+      {
+        "group": "Guides",
+        "pages": [
+          "api/introduction",
+          "api/authentication",
+          "api/error-handling"
+        ]
+      },
+      {
+        "group": "Authentication",
+        "openapi": "openapi.json",
+        "pages": [
+          "POST /v1/ambient/api/auth/token"
+        ]
+      },
+      {
+        "group": "Transcription",
+        "openapi": "openapi.json",
+        "pages": [
+          "POST /v1/ambient/api/transcribe",
+          "GET /v1/ambient/api/transcription/{transcription_id}"
+        ]
+      },
+      {
+        "group": "Note Generation",
+        "openapi": "openapi.json",
+        "pages": [
+          "POST /v1/ambient/api/scribe",
+          "GET /v1/ambient/api/scribe/{scribe_id}",
+          "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/audio",
+          "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/text",
+          "POST /v1/ambient/api/scribe/{scribe_id}/feedback"
+        ]
+      }
+    ]
+  },
+  {
+    "tab": "Changelog",
+    "groups": [
+      {
+        "group": "Changelog",
+        "pages": [
+          "product/changelogs"
+        ]
+      }
+    ]
+  }
+  ]
+    },
   "logo": {
     "light": "/logo/commure_logo_full_black.png",
     "dark": "/logo/commure_logo_full_white.png"

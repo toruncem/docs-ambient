@@ -1,0 +1,60 @@
+---
+title: "Introduction"
+description: "Get started with the Ambient AI Scribe API"
+---
+
+## Overview
+
+The Ambient AI Scribe API enables you to integrate ambient AI documentation capabilities into your applications. With this API, you can:
+
+- **Authenticate** using OAuth2 password flow
+- **Transcribe** audio files into text
+- **Generate clinical notes** from audio or transcripts using customizable templates
+- **Manage scribe jobs** with status tracking and regeneration capabilities
+- **Submit feedback** to improve note quality
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.scribe.athelas.com
+```
+
+## API Versioning
+
+The API uses versioning in the URL path. The current version is `v1`, which is included in all endpoint paths:
+
+```
+/v1/ambient/api/{endpoint}
+```
+
+## Authentication
+
+The API uses JWT (JSON Web Token) authentication. To authenticate:
+
+1. Obtain a JWT token using the [authentication endpoint](/api-reference/authentication)
+2. Include the token in the `Authorization` header for all subsequent requests:
+
+```
+Authorization: Bearer {your_jwt_token}
+```
+
+## Request Format
+
+Most endpoints accept JSON (`application/json`) or form data (`multipart/form-data` for file uploads). Content-Type headers are required for POST requests.
+
+## Response Format
+
+All responses are returned in JSON format. Success responses include relevant data, while error responses include error details in a consistent format.
+
+## Rate Limits
+
+API rate limits may apply depending on your subscription tier. Rate limit headers are included in responses to help you manage your usage.
+
+## Next Steps
+
+- Learn how to [authenticate](/api-reference/authentication) with the API
+- Review [error handling](/api-reference/error-handling) practices
+- Explore the available endpoints for [transcription](/api-reference/transcription) and [note generation](/api-reference/note-generation)
+

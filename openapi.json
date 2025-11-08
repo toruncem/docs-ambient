@@ -1,0 +1,453 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Ambient AI Scribe API",
+      "version": "1.0.1",
+      "description": "Auth (password flow), transcription, scribe creation, status, regeneration, and feedback."
+    },
+    "servers": [{ "url": "https://api.scribe.athelas.com" }],
+    "paths": {
+      "/v1/ambient/api/auth/token": {
+        "post": {
+          "summary": "Obtain JWT (OAuth2 password flow)",
+          "description": "Authenticate a service user and receive a JWT. Send as application/x-www-form-urlencoded.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": { "type": "string", "description": "Service account username/email" },
+                    "password": { "type": "string", "format": "password" }
+                  },
+                  "required": ["username", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "JWT access token",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "access_token": { "type": "string", "description": "JWT token" },
+                      "token_type": { "type": "string", "enum": ["bearer"] },
+                      "expires_in": { "type": "integer", "description": "Seconds to expiration (default 172800)" }
+                    },
+                    "required": ["access_token", "token_type"]
+                  },
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "token_type": "bearer",
+                        "expires_in": 172800
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Password flow",
+              "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username=service-account@ambient.commure.com&password=550e8400-e29b-41d4-a716-446655440000'"
+            },
+            {
+              "lang": "JavaScript",
+              "label": "Fetch JWT",
+              "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.scribe.athelas.com/v1/ambient/api/auth/token', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: form });\nconst tok = await res.json();"
+            },
+            {
+              "lang": "Python",
+              "label": "Requests JWT",
+              "source": "import os, requests\nres = requests.post('https://api.scribe.athelas.com/v1/ambient/api/auth/token', data={\n  'username': os.environ['AMBIENT_USER'],\n  'password': os.environ['AMBIENT_PASS']\n})\nprint(res.json())"
+            }
+          ]
+        }
+      },
+  
+      "/v1/ambient/api/transcribe": {
+        "post": {
+          "summary": "Submit audio for transcription",
+          "description": "Triggers an audio-only transcription workflow.",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "audio_file": { "type": "string", "format": "binary", "description": "Audio content" },
+                    "patient_name": { "type": "string" },
+                    "additional_context": { "type": "object", "additionalProperties": true },
+                    "date_of_service": { "type": "string", "format": "date-time" }
+                  },
+                  "required": ["audio_file"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Transcription job accepted",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/TranscribeResponse" }
+                }
+              }
+            }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Multipart upload",
+              "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/transcribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_file=@/path/visit.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'date_of_service=2025-11-06T14:05:00Z'"
+            }
+          ]
+        }
+      },
+  
+      "/v1/ambient/api/scribe": {
+        "post": {
+          "summary": "Create scribe (audio or transcripts + templates)",
+          "description": "Create a scribe job using either audio OR pre-existing transcripts, plus one or more template IDs.",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "audio_file": { "type": "string", "format": "binary", "description": "Provide if not supplying transcripts" },
+                    "transcripts": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Provide if not supplying audio"
+                    },
+                    "template_ids": {
+                      "type": "array",
+                      "items": { "type": "integer" }
+                    },
+                    "patient_name": { "type": "string" },
+                    "appointment_id": { "type": "integer" },
+                    "date_of_service": { "type": "string", "format": "date-time" },
+                    "additional_context": { "type": "object", "additionalProperties": true }
+                  },
+                  "required": ["template_ids"],
+                  "anyOf": [
+                    { "required": ["audio_file"] },
+                    { "required": ["transcripts"] }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "audio_file": { "type": "string", "description": "Base64 or presigned URL not recommended; prefer multipart binary upload" },
+                    "transcripts": { "type": "array", "items": { "type": "string" } },
+                    "template_ids": { "type": "array", "items": { "type": "integer" } },
+                    "patient_name": { "type": "string" },
+                    "appointment_id": { "type": "integer" },
+                    "date_of_service": { "type": "string", "format": "date-time" },
+                    "additional_context": { "type": "object", "additionalProperties": true }
+                  },
+                  "required": ["template_ids"],
+                  "anyOf": [
+                    { "required": ["audio_file"] },
+                    { "required": ["transcripts"] }
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Scribe creation response",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/ScribeCreateResponse" }
+                }
+              }
+            }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Audio + templates (multipart)",
+              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_file=@/path/visit.mp3' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
+            },
+            {
+              "lang": "cURL",
+              "label": "Transcripts + templates (JSON)",
+              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"transcripts\":[\"Chief Complaint...\"],\"template_ids\":[1042,2056]}'"
+            }
+          ]
+        }
+      },
+  
+      "/v1/ambient/api/scribe/{scribe_id}": {
+        "get": {
+          "summary": "Get scribe status and outputs",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "name": "scribe_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+          ],
+          "responses": {
+            "200": {
+              "description": "Scribe status and details",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/ScribeDetail" }
+                }
+              }
+            }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Get scribe",
+              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe/12345 -H 'Authorization: Bearer $TOKEN'"
+            }
+          ]
+        }
+      },
+  
+      "/v1/ambient/api/transcription/{transcription_id}": {
+        "get": {
+          "summary": "Get transcription details",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "name": "transcription_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transcription detail (similar to scribe components)",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/TranscriptionDetail" }
+                }
+              }
+            }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Get transcription",
+              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/transcription/456 -H 'Authorization: Bearer $TOKEN'"
+            }
+          ]
+        }
+      },
+  
+      "/v1/ambient/api/scribe/{scribe_id}/regenerate/audio": {
+        "post": {
+          "summary": "Regenerate scribe from new audio",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "name": "scribe_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "audio_file": { "type": "string", "format": "binary" }
+                  },
+                  "required": ["audio_file"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Regeneration accepted",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/SimpleScribeStatus" }
+                }
+              }
+            }
+          }
+        }
+      },
+  
+      "/v1/ambient/api/scribe/{scribe_id}/regenerate/text": {
+        "post": {
+          "summary": "Regenerate scribe from new transcripts",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "name": "scribe_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "transcripts": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["transcripts"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Regeneration accepted",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/SimpleScribeStatus" }
+                }
+              }
+            }
+          }
+        }
+      },
+  
+      "/v1/ambient/api/scribe/{scribe_id}/feedback": {
+        "post": {
+          "summary": "Leave feedback on a scribe result",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "name": "scribe_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+                    "comment": { "type": "string" },
+                    "tags": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["rating"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": { "description": "Feedback accepted" }
+          },
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "Submit feedback",
+              "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/scribe/12345/feedback \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"rating\":5,\"comment\":\"Great note quality\",\"tags\":[\"accuracy\",\"tone\"]}' -i"
+            }
+          ]
+        }
+      }
+    },
+  
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+      },
+      "schemas": {
+        "TranscribeResponse": {
+          "type": "object",
+          "properties": {
+            "transcription_id": { "type": "integer" },
+            "submitted_at": { "type": "string", "format": "date-time" }
+          },
+          "required": ["transcription_id", "submitted_at"]
+        },
+        "ScribeCreateResponse": {
+          "type": "object",
+          "properties": {
+            "scribe_id": { "type": "integer" },
+            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
+            "submitted_at": { "type": "string", "format": "date-time" }
+          },
+          "required": ["scribe_id", "status", "submitted_at"]
+        },
+        "TranscriptionItem": {
+          "type": "object",
+          "properties": {
+            "transcription_id": { "type": "integer" },
+            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
+            "text": { "type": "string", "nullable": true }
+          },
+          "required": ["transcription_id", "status"]
+        },
+        "WorkflowTask": {
+          "type": "object",
+          "properties": {
+            "task_id": { "type": "integer" },
+            "template_id": { "type": "integer" },
+            "task_status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
+            "output_text": { "type": "string", "nullable": true },
+            "output_json": { "type": "object", "additionalProperties": true, "nullable": true }
+          },
+          "required": ["task_id", "template_id", "task_status"]
+        },
+        "ScribeDetail": {
+          "type": "object",
+          "properties": {
+            "scribe_id": { "type": "integer" },
+            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
+            "workflow_id": { "type": "integer" },
+            "audio_length_seconds": { "type": "integer", "nullable": true },
+            "patient_name": { "type": "string", "nullable": true },
+            "date_of_service": { "type": "string", "format": "date-time", "nullable": true },
+            "additional_context": { "type": "object", "additionalProperties": true, "nullable": true },
+            "transcriptions": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/TranscriptionItem" }
+            },
+            "workflow_tasks": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/WorkflowTask" }
+            },
+            "error_message": { "type": "string", "nullable": true },
+            "submitted_at": { "type": "string", "format": "date-time" },
+            "completed_at": { "type": "string", "format": "date-time", "nullable": true }
+          },
+          "required": [
+            "scribe_id",
+            "status",
+            "workflow_id",
+            "transcriptions",
+            "workflow_tasks",
+            "submitted_at"
+          ]
+        },
+        "TranscriptionDetail": {
+          "type": "object",
+          "properties": {
+            "transcription_id": { "type": "integer" },
+            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
+            "text": { "type": "string", "nullable": true },
+            "submitted_at": { "type": "string", "format": "date-time", "nullable": true },
+            "completed_at": { "type": "string", "format": "date-time", "nullable": true }
+          },
+          "required": ["transcription_id", "status"]
+        },
+        "SimpleScribeStatus": {
+          "type": "object",
+          "properties": {
+            "scribe_id": { "type": "integer" },
+            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] }
+          },
+          "required": ["scribe_id", "status"]
+        }
+      }
+    },
+    "security": [{ "bearerAuth": [] }]
+  }
+  
