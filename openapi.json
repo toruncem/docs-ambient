@@ -57,7 +57,7 @@
             {
               "lang": "cURL",
               "label": "Password flow",
-              "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username=service-account@ambient.commure.com&password=550e8400-e29b-41d4-a716-446655440000'"
+              "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username={email}&password={password}'"
             },
             {
               "lang": "JavaScript",
