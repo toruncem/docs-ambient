@@ -1,0 +1,329 @@
+---
+title: "Error Handling"
+description: "Learn how to handle errors and exceptions in the Ambient AI Scribe API"
+---
+
+## Overview
+
+The Ambient AI Scribe API uses standard HTTP status codes to indicate success or failure. All error responses include a JSON body with error details to help you understand and resolve issues.
+
+## HTTP Status Codes
+
+The API uses the following HTTP status codes:
+
+### Success Codes
+
+- `200 OK` - Request succeeded
+- `201 Created` - Resource created successfully
+- `204 No Content` - Request succeeded with no response body
+
+### Client Error Codes
+
+- `400 Bad Request` - Invalid request parameters or body
+- `401 Unauthorized` - Missing or invalid authentication token
+- `403 Forbidden` - Insufficient permissions
+- `404 Not Found` - Resource not found
+- `409 Conflict` - Resource conflict (e.g., duplicate creation)
+- `422 Unprocessable Entity` - Validation error
+- `429 Too Many Requests` - Rate limit exceeded
+
+### Server Error Codes
+
+- `500 Internal Server Error` - Unexpected server error
+- `502 Bad Gateway` - Gateway error
+- `503 Service Unavailable` - Service temporarily unavailable
+- `504 Gateway Timeout` - Request timeout
+
+## Error Response Format
+
+Error responses follow a consistent format:
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": {
+      "field": "Additional context or validation errors"
+    }
+  }
+}
+```
+
+## Common Error Scenarios
+
+### Authentication Errors
+
+<CodeGroup>
+```json 401 Unauthorized
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid or expired token",
+    "details": {
+      "reason": "Token expired"
+    }
+  }
+}
+```
+
+```json 401 Invalid Credentials
+{
+  "error": {
+    "code": "INVALID_CREDENTIALS",
+    "message": "Authentication failed",
+    "details": {
+      "reason": "Invalid username or password"
+    }
+  }
+}
+```
+</CodeGroup>
+
+### Validation Errors
+
+<CodeGroup>
+```json 400 Bad Request
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid request parameters",
+    "details": {
+      "audio_file": "File is required",
+      "template_ids": "At least one template ID is required"
+    }
+  }
+}
+```
+
+```json 422 Unprocessable Entity
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": {
+      "audio_file": "Invalid file format. Supported formats: mp3, wav, m4a",
+      "template_ids": "Template ID 9999 does not exist"
+    }
+  }
+}
+```
+</CodeGroup>
+
+### Resource Errors
+
+<CodeGroup>
+```json 404 Not Found
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Resource not found",
+    "details": {
+      "resource": "scribe",
+      "id": "12345",
+      "reason": "Scribe ID does not exist or you don't have access"
+    }
+  }
+}
+```
+
+```json 409 Conflict
+{
+  "error": {
+    "code": "CONFLICT",
+    "message": "Resource already exists",
+    "details": {
+      "resource": "scribe",
+      "reason": "A scribe with this ID already exists"
+    }
+  }
+}
+```
+</CodeGroup>
+
+### Rate Limiting
+
+```json 429 Too Many Requests
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests",
+    "details": {
+      "limit": 100,
+      "remaining": 0,
+      "reset_at": "2025-01-15T10:30:00Z"
+    }
+  }
+}
+```
+
+Response headers also include rate limit information:
+
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1736941800
+```
+
+## Error Handling Best Practices
+
+### 1. Check Status Codes
+
+Always check the HTTP status code before processing the response:
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    const response = await fetch(url, options);
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error.message);
+    }
+    
+    const data = await response.json();
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+
+    response = requests.post(url, json=data)
+    
+    if response.status_code >= 400:
+        error = response.json()
+        raise Exception(error['error']['message'])
+    
+    data = response.json()
+    ```
+  </Tab>
+</Tabs>
+
+### 2. Handle Specific Error Codes
+
+Implement specific handling for different error types:
+
+```javascript
+try {
+  const response = await fetch(url, options);
+  const data = await response.json();
+  
+  if (!response.ok) {
+    switch (response.status) {
+      case 401:
+        // Token expired, re-authenticate
+        await reauthenticate();
+        break;
+      case 429:
+        // Rate limited, wait and retry
+        await waitForRateLimit(data.error.details.reset_at);
+        break;
+      case 404:
+        // Resource not found
+        console.error('Resource not found:', data.error.details);
+        break;
+      default:
+        console.error('API error:', data.error.message);
+    }
+    throw new Error(data.error.message);
+  }
+  
+  return data;
+} catch (error) {
+  // Handle network errors or other exceptions
+  console.error('Request failed:', error);
+  throw error;
+}
+```
+
+### 3. Implement Retry Logic
+
+For transient errors (5xx status codes), implement retry logic with exponential backoff:
+
+```javascript
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url, options);
+      
+      if (response.ok) {
+        return await response.json();
+      }
+      
+      // Don't retry client errors (4xx)
+      if (response.status < 500) {
+        throw new Error(`Client error: ${response.status}`);
+      }
+      
+      // Retry server errors (5xx)
+      if (i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000; // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      
+      throw new Error(`Server error: ${response.status}`);
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+    }
+  }
+}
+```
+
+### 4. Log Errors Appropriately
+
+Log errors with sufficient context for debugging:
+
+```javascript
+function handleApiError(error, context) {
+  const logData = {
+    timestamp: new Date().toISOString(),
+    error: error.error || error.message,
+    context: context,
+    statusCode: error.statusCode
+  };
+  
+  // Log to your error tracking service
+  console.error('API Error:', JSON.stringify(logData, null, 2));
+}
+```
+
+### 5. Handle Rate Limits
+
+When receiving a 429 response, wait until the rate limit resets:
+
+```javascript
+async function handleRateLimit(error) {
+  const resetAt = new Date(error.details.reset_at);
+  const waitTime = resetAt - new Date();
+  
+  if (waitTime > 0) {
+    console.log(`Rate limited. Waiting ${waitTime}ms until reset...`);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+  }
+}
+```
+
+## Testing Error Handling
+
+Test your error handling by:
+
+1. **Invalid credentials** - Test with wrong username/password
+2. **Expired tokens** - Test with expired or invalid tokens
+3. **Invalid parameters** - Test with missing or invalid request data
+4. **Rate limiting** - Test by making rapid requests
+5. **Network errors** - Test with network interruptions
+
+## Getting Help
+
+If you encounter errors that aren't covered in this guide:
+
+1. Check the error message and details in the response
+2. Verify your request format matches the API specification
+3. Review the [authentication guide](/api-reference/authentication)
+4. Contact support with:
+   - Error code and message
+   - Request details (endpoint, parameters, headers)
+   - Response body
+   - Timestamp of the error
+

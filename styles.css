@@ -1,0 +1,14 @@
+
+
+
+
+
+.nav-tabs{
+  /* background-color: red; */
+  
+  /* background-color: red; */
+  display: flex;
+  justify-content: flex-end;
+  width: 78%; /* ensure it spans across the page */
+  /* margin-left: auto; */
+}

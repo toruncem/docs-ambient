@@ -1,0 +1,136 @@
+---
+title: "Authentication"
+description: "Learn how to authenticate with the Ambient AI Scribe API"
+---
+
+## Overview
+
+The Ambient AI Scribe API uses OAuth2 password flow for authentication. This allows service accounts to authenticate using a username and password to obtain a JWT (JSON Web Token) access token.
+
+## Obtaining a Token
+
+To authenticate, send a POST request to the `/v1/ambient/api/auth/token` endpoint with your credentials.
+
+### Request
+
+<ParamField body="username" type="string" required>
+  Service account username/email
+</ParamField>
+
+<ParamField body="password" type="string" format="password" required>
+  Service account password
+</ParamField>
+
+### Response
+
+Upon successful authentication, you'll receive a JWT token:
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "expires_in": 172800
+}
+```
+
+### Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      -d 'username=service-account@ambient.commure.com&password=your-password'
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const form = new URLSearchParams({
+      username: process.env.AMBIENT_USER,
+      password: process.env.AMBIENT_PASS
+    });
+    
+    const res = await fetch('https://api.scribe.athelas.com/v1/ambient/api/auth/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: form
+    });
+    
+    const tokenData = await res.json();
+    console.log(tokenData.access_token);
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+    import os
+
+    response = requests.post(
+        'https://api.scribe.athelas.com/v1/ambient/api/auth/token',
+        data={
+            'username': os.environ['AMBIENT_USER'],
+            'password': os.environ['AMBIENT_PASS']
+        }
+    )
+    
+    token_data = response.json()
+    access_token = token_data['access_token']
+    ```
+  </Tab>
+</Tabs>
+
+## Using the Token
+
+Once you have the access token, include it in the `Authorization` header for all authenticated API requests:
+
+```
+Authorization: Bearer {access_token}
+```
+
+### Example
+
+```bash
+curl -X GET https://api.scribe.athelas.com/v1/ambient/api/scribe/12345 \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+```
+
+## Token Expiration
+
+Tokens have a default expiration time of 172,800 seconds (48 hours). The `expires_in` field in the response indicates when the token will expire.
+
+When a token expires, you'll receive a `401 Unauthorized` response. Simply request a new token using the authentication endpoint.
+
+## Security Best Practices
+
+1. **Never commit credentials** to version control
+2. **Store credentials securely** using environment variables or secure vaults
+3. **Rotate passwords regularly** for service accounts
+4. **Use HTTPS only** - never send credentials over unencrypted connections
+5. **Implement token caching** to avoid unnecessary authentication requests
+6. **Handle token refresh** proactively before expiration
+
+## Service Accounts
+
+Service accounts are used for programmatic access to the API. Contact your administrator to:
+- Create a service account
+- Obtain credentials
+- Configure appropriate permissions and rate limits
+
+## Troubleshooting
+
+### Invalid Credentials
+
+If you receive a `401 Unauthorized` response, verify:
+- Your username and password are correct
+- Your service account is active
+- Your account has API access enabled
+
+### Token Not Working
+
+If your token is not accepted:
+- Verify the token hasn't expired
+- Check that you're including the `Bearer` prefix in the Authorization header
+- Ensure there are no extra spaces or characters in the token
+
