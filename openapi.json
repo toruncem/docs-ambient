@@ -35,8 +35,7 @@
                     "type": "object",
                     "properties": {
                       "access_token": { "type": "string", "description": "JWT token" },
-                      "token_type": { "type": "string", "enum": ["bearer"] },
-                      "expires_in": { "type": "integer", "description": "Seconds to expiration (default 172800)" }
+                      "token_type": { "type": "string", "enum": ["bearer"] }
                     },
                     "required": ["access_token", "token_type"]
                   },
@@ -44,8 +43,7 @@
                     "default": {
                       "value": {
                         "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                        "token_type": "bearer",
-                        "expires_in": 172800
+                        "token_type": "bearer"
                       }
                     }
                   }
@@ -87,7 +85,10 @@
                   "properties": {
                     "audio_file": { "type": "string", "format": "binary", "description": "Audio content" },
                     "patient_name": { "type": "string" },
-                    "additional_context": { "type": "object", "additionalProperties": true },
+                    "additional_context": {
+                      "type": "string",
+                      "description": "JSON-serialised metadata as a string"
+                    },
                     "date_of_service": { "type": "string", "format": "date-time" }
                   },
                   "required": ["audio_file"]
@@ -96,7 +97,7 @@
             }
           },
           "responses": {
-            "200": {
+            "202": {
               "description": "Transcription job accepted",
               "content": {
                 "application/json": {
@@ -127,7 +128,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "audio_file": { "type": "string", "format": "binary", "description": "Provide if not supplying transcripts" },
+                    "audio_files": {
+                      "type": "array",
+                      "items": { "type": "string", "format": "binary" },
+                      "description": "One or more audio files; repeat the form field for each file"
+                    },
                     "transcripts": {
                       "type": "array",
                       "items": { "type": "string" },
@@ -140,11 +145,14 @@
                     "patient_name": { "type": "string" },
                     "appointment_id": { "type": "integer" },
                     "date_of_service": { "type": "string", "format": "date-time" },
-                    "additional_context": { "type": "object", "additionalProperties": true }
+                    "additional_context": {
+                      "type": "string",
+                      "description": "JSON-serialised metadata as a string"
+                    }
                   },
                   "required": ["template_ids"],
                   "anyOf": [
-                    { "required": ["audio_file"] },
+                    { "required": ["audio_files"] },
                     { "required": ["transcripts"] }
                   ]
                 }
@@ -153,25 +161,23 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "audio_file": { "type": "string", "description": "Base64 or presigned URL not recommended; prefer multipart binary upload" },
                     "transcripts": { "type": "array", "items": { "type": "string" } },
                     "template_ids": { "type": "array", "items": { "type": "integer" } },
                     "patient_name": { "type": "string" },
                     "appointment_id": { "type": "integer" },
                     "date_of_service": { "type": "string", "format": "date-time" },
-                    "additional_context": { "type": "object", "additionalProperties": true }
+                    "additional_context": {
+                      "type": "string",
+                      "description": "JSON-serialised metadata as a string"
+                    }
                   },
-                  "required": ["template_ids"],
-                  "anyOf": [
-                    { "required": ["audio_file"] },
-                    { "required": ["transcripts"] }
-                  ]
+                  "required": ["template_ids", "transcripts"]
                 }
               }
             }
           },
           "responses": {
-            "200": {
+            "202": {
               "description": "Scribe creation response",
               "content": {
                 "application/json": {
@@ -184,7 +190,7 @@
             {
               "lang": "cURL",
               "label": "Audio + templates (multipart)",
-              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_file=@/path/visit.mp3' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
+              "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_files=@/path/visit.mp3' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
             },
             {
               "lang": "cURL",
@@ -222,19 +228,19 @@
         }
       },
   
-      "/v1/ambient/api/transcription/{transcription_id}": {
+      "/v1/ambient/api/transcription/{id}": {
         "get": {
           "summary": "Get transcription details",
           "security": [{ "bearerAuth": [] }],
           "parameters": [
-            { "name": "transcription_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+            { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
           ],
           "responses": {
             "200": {
-              "description": "Transcription detail (similar to scribe components)",
+              "description": "Transcription ORM record",
               "content": {
                 "application/json": {
-                  "schema": { "$ref": "#/components/schemas/TranscriptionDetail" }
+                  "schema": { "$ref": "#/components/schemas/TranscriptionRecord" }
                 }
               }
             }
@@ -263,15 +269,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "audio_file": { "type": "string", "format": "binary" }
+                    "audio_files": {
+                      "type": "array",
+                      "items": { "type": "string", "format": "binary" },
+                      "description": "One or more replacement audio files"
+                    }
                   },
-                  "required": ["audio_file"]
+                  "required": ["audio_files"]
                 }
               }
             }
           },
           "responses": {
-            "200": {
+            "202": {
               "description": "Regeneration accepted",
               "content": {
                 "application/json": {
@@ -305,7 +315,7 @@
             }
           },
           "responses": {
-            "200": {
+            "202": {
               "description": "Regeneration accepted",
               "content": {
                 "application/json": {
@@ -376,14 +386,25 @@
           },
           "required": ["scribe_id", "status", "submitted_at"]
         },
-        "TranscriptionItem": {
+        "TranscriptionStatus": {
+          "type": "string",
+          "description": "Status values emitted by the Transcription ORM model",
+          "enum": ["STT_PENDING", "STT_PROCESSING", "STT_COMPLETED", "STT_FAILED", "STT_CANCELLED"]
+        },
+        "TranscriptionRecord": {
           "type": "object",
           "properties": {
-            "transcription_id": { "type": "integer" },
-            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
-            "text": { "type": "string", "nullable": true }
+            "id": { "type": "integer" },
+            "task_status": { "$ref": "#/components/schemas/TranscriptionStatus" },
+            "raw_text": { "type": "string", "nullable": true },
+            "timestamp": { "type": "string", "format": "date-time", "nullable": true },
+            "submitted_at": { "type": "string", "format": "date-time", "nullable": true },
+            "completed_at": { "type": "string", "format": "date-time", "nullable": true },
+            "metadata": { "type": "object", "additionalProperties": true, "nullable": true },
+            "error_message": { "type": "string", "nullable": true }
           },
-          "required": ["transcription_id", "status"]
+          "required": ["id", "task_status"],
+          "additionalProperties": true
         },
         "WorkflowTask": {
           "type": "object",
@@ -408,7 +429,7 @@
             "additional_context": { "type": "object", "additionalProperties": true, "nullable": true },
             "transcriptions": {
               "type": "array",
-              "items": { "$ref": "#/components/schemas/TranscriptionItem" }
+              "items": { "$ref": "#/components/schemas/TranscriptionRecord" }
             },
             "workflow_tasks": {
               "type": "array",
@@ -426,17 +447,6 @@
             "workflow_tasks",
             "submitted_at"
           ]
-        },
-        "TranscriptionDetail": {
-          "type": "object",
-          "properties": {
-            "transcription_id": { "type": "integer" },
-            "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"] },
-            "text": { "type": "string", "nullable": true },
-            "submitted_at": { "type": "string", "format": "date-time", "nullable": true },
-            "completed_at": { "type": "string", "format": "date-time", "nullable": true }
-          },
-          "required": ["transcription_id", "status"]
         },
         "SimpleScribeStatus": {
           "type": "object",
