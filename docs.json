@@ -129,7 +129,7 @@
         "openapi": "openapi.json",
         "pages": [
           "POST /v1/ambient/api/transcribe",
-          "GET /v1/ambient/api/transcription/{transcription_id}"
+          "GET /v1/ambient/api/transcribe/{transcription_id}"
         ]
       },
       {
@@ -140,7 +140,7 @@
           "GET /v1/ambient/api/scribe/{scribe_id}",
           "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/audio",
           "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/text",
-          "POST /v1/ambient/api/scribe/{scribe_id}/feedback"
+          "POST /v1/ambient/api/feedback"
         ]
       }
     ]
