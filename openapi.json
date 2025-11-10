@@ -228,12 +228,12 @@
         }
       },
   
-      "/v1/ambient/api/transcription/{id}": {
+      "/v1/ambient/api/transcription/{transcription_id}": {
         "get": {
           "summary": "Get transcription details",
           "security": [{ "bearerAuth": [] }],
           "parameters": [
-            { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+            { "name": "transcription_id", "in": "path", "required": true, "schema": { "type": "integer" } }
           ],
           "responses": {
             "200": {
