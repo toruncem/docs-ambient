@@ -28,8 +28,7 @@ Upon successful authentication, you'll receive a JWT token:
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "bearer",
-  "expires_in": 172800
+  "token_type": "bearer"
 }
 ```
 
@@ -98,7 +97,7 @@ curl -X GET https://rcm-api.athelas.com/v1/ambient/api/scribe/12345 \
 
 ## Token Expiration
 
-Tokens have a default expiration time of 172,800 seconds (48 hours). The `expires_in` field in the response indicates when the token will expire.
+Tokens have a default expiration time of 172,800 seconds (48 hours). 
 
 When a token expires, you'll receive a `401 Unauthorized` response. Simply request a new token using the authentication endpoint.
 

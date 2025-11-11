@@ -75,7 +75,7 @@
     "/v1/ambient/api/transcribe": {
       "post": {
         "summary": "Submit audio for transcription",
-        "description": "Triggers an audio-only transcription workflow.",
+        "description": "Triggers an audio-only transcription workflow.\n\nUploading audio may take a while for larger files.",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
@@ -88,9 +88,10 @@
                   "patient_name": { "type": "string" },
                   "additional_context": {
                     "type": "string",
-                    "description": "JSON-serialised metadata as a string"
+                    "description": "JSON-serialised metadata as a string",
+                    "example": "{'age':72,'gender':'M'}"
                   },
-                  "date_of_service": { "type": "string", "format": "date-time" }
+                  "date_of_service": { "type": "string", "format": "datqe-time" }
                 },
                 "required": ["audio_file"]
               }
@@ -120,7 +121,7 @@
     "/v1/ambient/api/scribe": {
       "post": {
         "summary": "Create scribe (audio or transcripts + templates)",
-        "description": "Create a scribe job using either audio OR pre-existing transcripts, plus one or more template IDs. All requests must use multipart/form-data.",
+        "description": "Create a scribe job using either audio OR pre-existing transcripts, plus one or more template IDs. All requests must use multipart/form-data.\n\nUploading audio may take a while for larger files.",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
@@ -149,7 +150,8 @@
                   "date_of_service": { "type": "string", "format": "date-time" },
                   "additional_context": {
                     "type": "string",
-                    "description": "JSON-serialised metadata as a string"
+                    "description": "JSON-serialised metadata as a string",
+                    "example": "{'age':72,'gender':'M'}"
                   }
                 },
                 "required": ["template_ids"]
@@ -402,11 +404,10 @@
         },
         "required": ["scribe_id", "status", "submitted_at"]
       },
-      "TranscriptionStatus": {
-        "type": "string",
-        "description": "Status values for transcription tasks",
-        "enum": ["DETECTED_FILE", "STT_PROCESSING", "STT_COMPLETED", "STT_ERROR", "STT_INCOMPLETE"]
-      },
+        "TranscriptionStatus": {
+          "type": "string",
+          "description": "Status values for transcription tasks:\n- `DETECTED_FILE`: Audio file has been queued to enter the speech-to-text pipeline.\n- `STT_PROCESSING`: Speech-to-text is actively transcribing the audio.\n- `STT_COMPLETED`: Speech-to-text processing finished successfully and produced a full transcript.\n- `STT_ERROR`: Speech-to-text run failed and needs investigation or retry.\n- `STT_INCOMPLETE`: Speech-to-text run ended without producing a complete transcript (partial or truncated output)."
+        },
       "TranscriptionRecord": {
         "type": "object",
         "properties": {
