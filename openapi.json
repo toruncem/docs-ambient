@@ -404,7 +404,7 @@
       },
       "TranscriptionStatus": {
         "type": "string",
-        "description": "Status values for transcription tasks",
+        "description": "Status values for transcription tasks.\n\n- `DETECTED_FILE`: Audio file has been queued to enter the speech-to-text pipeline.\n- `STT_PROCESSING`: Speech-to-text is actively transcribing the audio.\n- `STT_COMPLETED`: Speech-to-text processing finished successfully and produced a full transcript.\n- `STT_ERROR`: Speech-to-text run failed and needs investigation or retry.\n- `STT_INCOMPLETE`: Speech-to-text run ended without producing a complete transcript (partial or truncated output).",
         "enum": ["DETECTED_FILE", "STT_PROCESSING", "STT_COMPLETED", "STT_ERROR", "STT_INCOMPLETE"]
       },
       "TranscriptionRecord": {
