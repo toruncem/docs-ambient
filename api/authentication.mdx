@@ -38,7 +38,7 @@ Upon successful authentication, you'll receive a JWT token:
 <Tabs>
   <Tab title="cURL">
     ```bash
-    curl -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \
+    curl -X POST https://rcm-api.athelas.com/v1/ambient/api/auth/token \
       -H 'Content-Type: application/x-www-form-urlencoded' \
       -d 'username=service-account@ambient.commure.com&password=your-password'
     ```
@@ -50,7 +50,7 @@ Upon successful authentication, you'll receive a JWT token:
       password: process.env.AMBIENT_PASS
     });
     
-    const res = await fetch('https://api.scribe.athelas.com/v1/ambient/api/auth/token', {
+    const res = await fetch('https://rcm-api.athelas.com/v1/ambient/api/auth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -68,7 +68,7 @@ Upon successful authentication, you'll receive a JWT token:
     import os
 
     response = requests.post(
-        'https://api.scribe.athelas.com/v1/ambient/api/auth/token',
+        'https://rcm-api.athelas.com/v1/ambient/api/auth/token',
         data={
             'username': os.environ['AMBIENT_USER'],
             'password': os.environ['AMBIENT_PASS']
@@ -92,7 +92,7 @@ Authorization: Bearer {access_token}
 ### Example
 
 ```bash
-curl -X GET https://api.scribe.athelas.com/v1/ambient/api/scribe/12345 \
+curl -X GET https://rcm-api.athelas.com/v1/ambient/api/scribe/12345 \
   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 ```
 
