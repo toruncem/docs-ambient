@@ -131,12 +131,12 @@
                   "audio_files": {
                     "type": "array",
                     "items": { "type": "string", "format": "binary" },
-                    "description": "One or more audio files; repeat the form field for each file"
+                    "description": "One or more audio files; Provide if not supplying transcripts;"
                   },
                   "transcripts": {
                     "type": "array",
                     "items": { "type": "string" },
-                    "description": "Provide if not supplying audio; repeat the form field for each transcript"
+                    "description": "One or more transcripts; Provide if not supplying audio;"
                   },
                   "template_ids": {
                     "type": "array",
@@ -326,22 +326,23 @@
                     "type": "string", 
                     "description": "Feedback text/comment" 
                   },
-                  "rating": { 
-                    "type": "number", 
-                    "format": "float", 
+                  "rating": {
+                    "type": "number",
+                    "format": "float",
                     "description": "Optional rating (float with max 1 decimal place)",
                     "nullable": true
                   },
-                  "category": { 
-                    "type": "string", 
+                  "category": {
+                    "type": "string",
                     "description": "Optional feedback category",
-                    "nullable": true
-                  },
-                  "category_list": { 
-                    "type": "array", 
-                    "items": { "type": "string" },
-                    "description": "Optional list of feedback categories",
-                    "nullable": true
+                    "nullable": true,
+                    "enum": [
+                      "Missing Key Information",
+                      "Inaccurate Information",
+                      "Transcription Issue",
+                      "Other",
+                      "No Issue"
+                    ]
                   }
                 },
                 "required": ["scribe_id", "feedback"]
@@ -371,7 +372,7 @@
           {
             "lang": "cURL",
             "label": "Submit feedback",
-            "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/feedback \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"scribe_id\":12345,\"feedback\":\"Great note quality\",\"rating\":4.5,\"category_list\":[\"accuracy\",\"tone\"]}'"
+            "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/feedback \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"scribe_id\":12345,\"feedback\":\"Great note quality\",\"rating\":4.5,\"category\":\"Transcription Issue\"}'"
           }
         ]
       }
