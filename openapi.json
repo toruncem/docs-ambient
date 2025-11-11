@@ -5,7 +5,7 @@
     "version": "1.0.1",
     "description": "Auth (password flow), transcription, scribe creation, status, regeneration, and feedback."
   },
-  "servers": [{ "url": "https://api.scribe.athelas.com" }],
+  "servers": [{ "url": "https://rcm-api.athelas.com" }],
   "paths": {
     "/v1/ambient/api/auth/token": {
       "post": {
@@ -56,17 +56,17 @@
           {
             "lang": "cURL",
             "label": "Password flow",
-            "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username={email}&password={password}'"
+            "source": "curl -sS -X POST https://rcm-api.athelas.com/v1/ambient/api/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username={email}&password={password}'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch JWT",
-            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.scribe.athelas.com/v1/ambient/api/auth/token', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: form });\nconst tok = await res.json();"
+            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://rcm-api.athelas.com/v1/ambient/api/auth/token', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: form });\nconst tok = await res.json();"
           },
           {
             "lang": "Python",
             "label": "Requests JWT",
-            "source": "import os, requests\nres = requests.post('https://api.scribe.athelas.com/v1/ambient/api/auth/token', data={\n  'username': os.environ['AMBIENT_USER'],\n  'password': os.environ['AMBIENT_PASS']\n})\nprint(res.json())"
+            "source": "import os, requests\nres = requests.post('https://rcm-api.athelas.com/v1/ambient/api/auth/token', data={\n  'username': os.environ['AMBIENT_USER'],\n  'password': os.environ['AMBIENT_PASS']\n})\nprint(res.json())"
           }
         ]
       }
@@ -111,7 +111,7 @@
           {
             "lang": "cURL",
             "label": "Multipart upload",
-            "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/transcribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_file=@/path/visit.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'date_of_service=2025-11-06T14:05:00Z'"
+            "source": "curl -sS -X POST https://rcm-api.athelas.com/v1/ambient/api/transcribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_file=@/path/visit.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'date_of_service=2025-11-06T14:05:00Z'"
           }
         ]
       }
@@ -171,12 +171,12 @@
           {
             "lang": "cURL",
             "label": "Audio + templates (multipart)",
-            "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_files=@/path/visit.mp3' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
+            "source": "curl -sS https://rcm-api.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'audio_files=@/path/visit.mp3' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
           },
           {
             "lang": "cURL",
             "label": "Transcripts + templates (multipart)",
-            "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'transcripts=Chief Complaint: Patient reports...' \\\n  -F 'transcripts=History of Present Illness...' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
+            "source": "curl -sS https://rcm-api.athelas.com/v1/ambient/api/scribe \\\n  -H 'Authorization: Bearer $TOKEN' \\\n  -F 'transcripts=Chief Complaint: Patient reports...' \\\n  -F 'transcripts=History of Present Illness...' \\\n  -F 'template_ids=1042' -F 'template_ids=2056'"
           }
         ]
       }
@@ -203,7 +203,7 @@
           {
             "lang": "cURL",
             "label": "Get scribe",
-            "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/scribe/12345 -H 'Authorization: Bearer $TOKEN'"
+            "source": "curl -sS https://rcm-api.athelas.com/v1/ambient/api/scribe/12345 -H 'Authorization: Bearer $TOKEN'"
           }
         ]
       }
@@ -230,7 +230,7 @@
           {
             "lang": "cURL",
             "label": "Get transcription",
-            "source": "curl -sS https://api.scribe.athelas.com/v1/ambient/api/transcribe/456 -H 'Authorization: Bearer $TOKEN'"
+            "source": "curl -sS https://rcm-api.athelas.com/v1/ambient/api/transcribe/456 -H 'Authorization: Bearer $TOKEN'"
           }
         ]
       }
@@ -373,7 +373,7 @@
           {
             "lang": "cURL",
             "label": "Submit feedback",
-            "source": "curl -sS -X POST https://api.scribe.athelas.com/v1/ambient/api/feedback \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"scribe_id\":12345,\"feedback\":\"Great note quality\",\"rating\":4.5,\"category\":\"Transcription Issue\"}'"
+            "source": "curl -sS -X POST https://rcm-api.athelas.com/v1/ambient/api/feedback \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"scribe_id\":12345,\"feedback\":\"Great note quality\",\"rating\":4.5,\"category\":\"Transcription Issue\"}'"
           }
         ]
       }
