@@ -131,12 +131,12 @@
                   "audio_files": {
                     "type": "array",
                     "items": { "type": "string", "format": "binary" },
-                    "description": "One or more audio files; repeat the form field for each file"
+                    "description": "One or more audio files; Provide if not supplying transcripts;"
                   },
                   "transcripts": {
                     "type": "array",
                     "items": { "type": "string" },
-                    "description": "Provide if not supplying audio; repeat the form field for each transcript"
+                    "description": "One or more transcripts; Provide if not supplying audio;"
                   },
                   "template_ids": {
                     "type": "array",
