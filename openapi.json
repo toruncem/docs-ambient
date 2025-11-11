@@ -11,6 +11,7 @@
       "post": {
         "summary": "Obtain JWT (OAuth2 password flow)",
         "description": "Authenticate a service user and receive a JWT. Send as application/x-www-form-urlencoded.",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
