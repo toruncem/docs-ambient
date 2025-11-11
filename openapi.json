@@ -438,7 +438,6 @@
           "template_id": { "type": "integer" },
           "template_name": { "type": "string", "nullable": true },
           "task_status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "FAILED"], "nullable": true },
-          "output_text": { "type": "string", "nullable": true },
           "output_json": { "type": "object", "additionalProperties": true, "nullable": true }
         },
         "required": ["template_id"]
