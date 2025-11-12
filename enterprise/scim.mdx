@@ -6,7 +6,7 @@ description: We support **SCIM v2.0** (System for Cross-domain Identity Manageme
 <Accordion title="Setup Process" icon="users">
   1. **Contact Support** – We will enable SCIM for your site.
   2. **Generate Token** – A SCIM bearer token will be generated for your site. We store only the **encrypted token** in our system. 
-  3. **Configure in IdP** – Enter the SCIM base URL and bearer token in your IdP’s SCIM configuration page.
+  3. **Configure in IdP** – Enter the SCIM base URL `https://rcm-api.athelas.com/v1/scribe/scim/v2/` and bearer token (provided by your Commure point of contact) in your IdP’s SCIM configuration page.
   4. **Assign Users/Groups** – Provisioning can be done by assigning users directly or by assigning the app to a group.
 
 </Accordion>
@@ -74,7 +74,7 @@ PATCH  /Groups/{id}     - Update group membership
 ---
 
 ## Next Steps
-- In your IdP, configure SCIM with the **Base URL** and **Bearer Token** we provide.
+- In your IdP, configure SCIM with the **Base URL**: `https://rcm-api.athelas.com/v1/scribe/scim/v2/` and **Bearer Token** we provide.
 - Assign users or groups to the application to automatically provision accounts.
 - Deactivating a user in your IdP will deactivate them in our system.
 
