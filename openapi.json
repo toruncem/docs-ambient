@@ -87,7 +87,7 @@
                   "audio_file": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Audio content. \n\nSupported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                    "description": "Audio content. \n\nSupported types: mp3, mp4, mpeg, mpga, m4a, wav, webm. Maximum file size in the web interface is 5MB. For files larger than 5MB, use the API directly via curl."
                   },
                   "patient_name": { "type": "string" },
                   "additional_context": {
@@ -139,7 +139,7 @@
                       "items": {
                         "type": "string",
                         "format": "binary",
-                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm. Maximum file size in the web interface is 5MB. For files larger than 5MB, use the API directly via curl."
                       },
                       "description": "One or more audio files; Provide if not supplying transcripts;"
                     },
@@ -264,7 +264,7 @@
                       "items": {
                         "type": "string",
                         "format": "binary",
-                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm. Maximum file size in the web interface is 5MB. For files larger than 5MB, use the API directly via curl."
                       },
                       "description": "One or more replacement audio files"
                     }
