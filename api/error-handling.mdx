@@ -40,13 +40,7 @@ Error responses follow a consistent format:
 
 ```json
 {
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable error message",
-    "details": {
-      "field": "Additional context or validation errors"
-    }
-  }
+  "detail": "Additional context or validation errors"
 }
 ```
 
@@ -57,25 +51,13 @@ Error responses follow a consistent format:
 <CodeGroup>
 ```json 401 Unauthorized
 {
-  "error": {
-    "code": "UNAUTHORIZED",
-    "message": "Invalid or expired token",
-    "details": {
-      "reason": "Token expired"
-    }
-  }
+  "detail": "Could not validate credentials"
 }
 ```
 
 ```json 401 Invalid Credentials
 {
-  "error": {
-    "code": "INVALID_CREDENTIALS",
-    "message": "Authentication failed",
-    "details": {
-      "reason": "Invalid username or password"
-    }
-  }
+  "detail": "Incorrect username or password"
 }
 ```
 </CodeGroup>
@@ -83,86 +65,32 @@ Error responses follow a consistent format:
 ### Validation Errors
 
 <CodeGroup>
-```json 400 Bad Request
+```json 403 Bad Request
 {
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid request parameters",
-    "details": {
-      "audio_file": "File is required",
-      "template_ids": "At least one template ID is required"
-    }
-  }
+  "detail": "You do not have access to these template_ids [234234]"
 }
 ```
 
 ```json 422 Unprocessable Entity
 {
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Request validation failed",
-    "details": {
-      "audio_file": "Invalid file format. Supported formats: mp3, wav, m4a",
-      "template_ids": "Template ID 9999 does not exist"
-    }
-  }
+  "details": "Invalid audio file format"
 }
 ```
 </CodeGroup>
 
-### Resource Errors
-
-<CodeGroup>
+### Not Found
 ```json 404 Not Found
 {
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Resource not found",
-    "details": {
-      "resource": "scribe",
-      "id": "12345",
-      "reason": "Scribe ID does not exist or you don't have access"
-    }
-  }
+  "detail": "Transcription not found"
 }
 ```
-
-```json 409 Conflict
-{
-  "error": {
-    "code": "CONFLICT",
-    "message": "Resource already exists",
-    "details": {
-      "resource": "scribe",
-      "reason": "A scribe with this ID already exists"
-    }
-  }
-}
-```
-</CodeGroup>
 
 ### Rate Limiting
 
 ```json 429 Too Many Requests
 {
-  "error": {
-    "code": "RATE_LIMIT_EXCEEDED",
-    "message": "Too many requests",
-    "details": {
-      "limit": 100,
-      "remaining": 0,
-      "reset_at": "2025-01-15T10:30:00Z"
-    }
-  }
+  "details": "Too many requests"
 }
-```
-
-Response headers also include rate limit information:
-
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1736941800
 ```
 
 ## Error Handling Best Practices

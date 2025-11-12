@@ -84,7 +84,11 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "audio_file": { "type": "string", "format": "binary", "description": "Audio content" },
+                  "audio_file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio content. \n\nSupported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                  },
                   "patient_name": { "type": "string" },
                   "additional_context": {
                     "type": "string",
@@ -120,7 +124,7 @@
 
     "/v1/ambient/api/scribe": {
       "post": {
-        "summary": "Create scribe (audio or transcripts + templates)",
+        "summary": "Create scribe (from audio or transcript)",
         "description": "Create a scribe job using either audio OR pre-existing transcripts, plus one or more template IDs. All requests must use multipart/form-data.\n\nUploading audio may take a while for larger files.",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
@@ -130,11 +134,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "audio_files": {
-                    "type": "array",
-                    "items": { "type": "string", "format": "binary" },
-                    "description": "One or more audio files; Provide if not supplying transcripts;"
-                  },
+                    "audio_files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                      },
+                      "description": "One or more audio files; Provide if not supplying transcripts;"
+                    },
                   "transcripts": {
                     "type": "array",
                     "items": { "type": "string" },
@@ -146,7 +154,6 @@
                     "description": "Required; repeat the form field for each template ID"
                   },
                   "patient_name": { "type": "string" },
-                  "appointment_id": { "type": "integer" },
                   "date_of_service": { "type": "string", "format": "date-time" },
                   "additional_context": {
                     "type": "string",
@@ -252,11 +259,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "audio_files": {
-                    "type": "array",
-                    "items": { "type": "string", "format": "binary" },
-                    "description": "One or more replacement audio files"
-                  }
+                    "audio_files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Supported types: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+                      },
+                      "description": "One or more replacement audio files"
+                    }
                 },
                 "required": ["audio_files"]
               }
