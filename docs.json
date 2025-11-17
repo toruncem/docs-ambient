@@ -39,7 +39,8 @@
         "pages": [
           "ai_studio/custom-formatting",
           "ai_studio/template-library",
-          "ai_studio/dot-phrases"
+          "ai_studio/dot-phrases",
+          "ai_studio/personal-dictionary"
         ]
       },
       {
