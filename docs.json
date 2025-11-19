@@ -40,18 +40,18 @@
           "ai_studio/custom-formatting",
           "ai_studio/template-library",
           "ai_studio/dot-phrases",
-          "ai_studio/personal-dictionary"
+          "ai_studio/personal-dictionary",
+          "ai_studio/preferences",
+          "ai_studio/ai-summaries",
+          "ai_studio/after-visit-summaries",
+          "ai_studio/clinical-copilot",
+          "ai_studio/carry-forward",
+          "ai_studio/macros"
         ]
       },
       {
         "group": "Advanced",
         "pages": [
-          "advanced/preferences",
-          "advanced/ai-summaries",
-          "advanced/after-visit-summaries",
-          "advanced/clinical-copilot",
-          "advanced/carry-forward",
-          "advanced/macros",
           "advanced/collaborator",
           "advanced/dictation"
         ]
