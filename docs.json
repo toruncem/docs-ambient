@@ -35,7 +35,7 @@
         ]
       },
       {
-        "group": "AI Studio",
+        "group": "Customize (formerly AI Studio)",
         "pages": [
           "ai_studio/custom-formatting",
           "ai_studio/template-library",
