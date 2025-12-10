@@ -19,12 +19,12 @@ description: Configure Single Sign-On (SSO) using SAML 2.0 to allow your users t
    Copy the SAML 2.0 endpoint URL (tenant url) from your IdP and paste it into the **SSO URL** field in the app. This needs to be the *reachable* URL that your providers get directed to.
 
 4. **Get Your Certificate**  
-   Download the X.509 certificate from your IdP and convert it to **Base64** format. Paste it into the **Certificate** field in the app.
+   Download the X.509 certificate from your IdP and convert it to **Base64** format. Paste it into the **Certificate** field in the app. Keep the newlines and formatting you get from the base64 version.
 
 5. **Check the Identifier (Entity ID)**
-   Ensure the entity id is set to `https://rcm-api.athelas.com/v1/scribe`
+   Ensure the entity id is set to `https://rcm-api.athelas.com/v1/scribe`. For majority of sites this will be correct. If your site is located outside the United States, please reach out to us to verify.
 
-5. **Test the Connection**  
+6. **Test the Connection**  
    Use the **Test with Your User Account** button to verify that your SSO configuration is correct.  
    This is a **safe test** that will not affect existing user sessions.
 
@@ -32,17 +32,17 @@ description: Configure Single Sign-On (SSO) using SAML 2.0 to allow your users t
   ![](/images/testing_sso.png)
 </Frame>
 
-6. **Save and Enable**  
+7. **Save and Enable**  
    Once testing succeeds, click **Save and Enable SSO** to activate SSO for all users on your site.
 
 ---
 
 ## Required SAML Configuration
 
-Your IdP’s **SAML Response** must include the following attributes:
+Your IdP’s **SAML Response** must include the following exact attributes names:
 
 - `NameID` → user.userprincipalname (default) 
-- `email` → user.mail (default email value)
+- `email` → user.mail (or whichever attribute your site standardizes against for a user's email)
 
 Both are required.  
 Without these attributes, SSO login will fail. Please confirm your IdP is configured to send them.
