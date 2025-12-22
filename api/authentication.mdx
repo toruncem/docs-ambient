@@ -17,7 +17,7 @@ To authenticate, send a POST request to the `/v1/ambient/api/auth/token` endpoin
   Service account username/email
 </ParamField>
 
-<ParamField body="password" type="string" format="password" required>
+<ParamField body="password" type="string" required>
   Service account password
 </ParamField>
 
@@ -65,7 +65,7 @@ Upon successful authentication, you'll receive a JWT token:
     ```python
     import requests
     import os
-
+    
     response = requests.post(
         'https://rcm-api.athelas.com/v1/ambient/api/auth/token',
         data={
@@ -97,7 +97,7 @@ curl -X GET https://rcm-api.athelas.com/v1/ambient/api/scribe/12345 \
 
 ## Token Expiration
 
-Tokens have a default expiration time of 172,800 seconds (48 hours). 
+Tokens have a default expiration time of 172,800 seconds (48 hours).
 
 When a token expires, you'll receive a `401 Unauthorized` response. Simply request a new token using the authentication endpoint.
 
@@ -113,6 +113,7 @@ When a token expires, you'll receive a `401 Unauthorized` response. Simply reque
 ## Service Accounts
 
 Service accounts are used for programmatic access to the API. Contact your administrator to:
+
 - Create a service account
 - Obtain credentials
 - Configure appropriate permissions and rate limits
@@ -122,6 +123,7 @@ Service accounts are used for programmatic access to the API. Contact your admin
 ### Invalid Credentials
 
 If you receive a `401 Unauthorized` response, verify:
+
 - Your username and password are correct
 - Your service account is active
 - Your account has API access enabled
@@ -129,7 +131,7 @@ If you receive a `401 Unauthorized` response, verify:
 ### Token Not Working
 
 If your token is not accepted:
+
 - Verify the token hasn't expired
 - Check that you're including the `Bearer` prefix in the Authorization header
 - Ensure there are no extra spaces or characters in the token
-

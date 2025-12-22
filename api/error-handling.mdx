@@ -49,36 +49,43 @@ Error responses follow a consistent format:
 ### Authentication Errors
 
 <CodeGroup>
+
 ```json 401 Unauthorized
 {
   "detail": "Could not validate credentials"
 }
 ```
 
+
 ```json 401 Invalid Credentials
 {
   "detail": "Incorrect username or password"
 }
 ```
+
 </CodeGroup>
 
 ### Validation Errors
 
 <CodeGroup>
+
 ```json 403 Bad Request
 {
   "detail": "You do not have access to these template_ids [234234]"
 }
 ```
 
+
 ```json 422 Unprocessable Entity
 {
   "details": "Invalid audio file format"
 }
 ```
+
 </CodeGroup>
 
 ### Not Found
+
 ```json 404 Not Found
 {
   "detail": "Transcription not found"
@@ -115,7 +122,7 @@ Always check the HTTP status code before processing the response:
   <Tab title="Python">
     ```python
     import requests
-
+    
     response = requests.post(url, json=data)
     
     if response.status_code >= 400:
@@ -254,4 +261,3 @@ If you encounter errors that aren't covered in this guide:
    - Request details (endpoint, parameters, headers)
    - Response body
    - Timestamp of the error
-
