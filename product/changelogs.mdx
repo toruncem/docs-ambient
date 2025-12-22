@@ -3,11 +3,59 @@ title: "Changelog"
 description: "Product Updates and Announcements"
 ---
 
+<Update label="December 22nd, 2025">
+  
+</Update>
+
+<Expandable title="12/22/2025 - New Features" defaultOpen="true">
+  <Steps>
+    <Step title="Login Email Caching" icon="sparkles">
+      To streamline the authentication process, the login screen now retains the most recently used email address.
+
+      - **Behavior:** After a successful login (SSO or standard), the email address is cached locally. Upon logout or session expiration, the field will pre-populate with the last used ID.
+      - **User Control:** Providers can clear the cached email at any time by simply tapping on the populated field.
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/B0JVhCnIVuU?si=1hdEvHpvzlau8c6d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
+    </Step>
+  </Steps>
+</Expandable>
+
+<Expandable title="12/22/2025 - Improvements" defaultOpen="true">
+  <Steps>
+    <Step title="PIN Validation Improvements" icon="sparkles">
+      We have introduced enhanced security validation for PIN creation to prevent the use of easily guessable sequences across all platforms.
+
+      - **Enhanced Logic:** The system now identifies and blocks insecure PIN patterns during the setup process.
+      - **Prohibited Patterns:** \* **Strictly Ascending:** (e.g., 1234)
+        - **Strictly Descending:** (e.g., 4321)
+        - **Repeating Digits:** (e.g., 222)
+      - **Workflow:** Following a PIN reset, users must authenticate via SSO and establish a new PIN that meets these complexity requirements to gain application access.
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/tps5XzQlXSQ?si=gZ55WCfkTmyuCkcL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
+    </Step>
+  </Steps>
+</Expandable>
+
+<Expandable title="12/22/2025 - Additional Updates" defaultOpen="true">
+  <Steps>
+    <Step title="Bug Fixes" icon="sparkles">
+      - Facility Filter (back on the Visit page)
+      - (Fixed) Repeated onboarding prompt
+    </Step>
+    <Step title="Release Versions" icon="sparkles">
+      - Web App: 6.6
+      - iOS App: 3.19.2 +2
+      - Android App: 3.19.1+716 (Pending further validation for Compassus)
+      - Chrome Extension: 2.54
+    </Step>
+  </Steps>
+</Expandable>
+
 <Update label="December 1st, 2025" description>
   These features are being released through a phased rollout.
 </Update>
 
-<Expandable title="12/1/2025 - New Features" defaultOpen="true">
+<Expandable title="12/1/2025 - New Features">
   <Steps>
     <Step title="Navigation Update" icon="sparkles">
       Re-organized AI Studio into Customize tab! Providers can now more easily navigate within Customize to change global and template level settings, guided by a tour.
@@ -35,7 +83,7 @@ description: "Product Updates and Announcements"
   </Steps>
 </Expandable>
 
-<Expandable title="12/1/2025 - Iterations" defaultOpen="true">
+<Expandable title="12/1/2025 - Iterations">
   <Steps>
     <Step title="Commure Assistant Efficiency" icon="sparkles">
       vCollection of features for Scribe Assistant to make frequent questions, recent questions more accessible, and provide followup suggestions.

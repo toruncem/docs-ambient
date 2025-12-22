@@ -94,8 +94,7 @@
       {
         "group": "Product Progress",
         "pages": [
-          "product/blogs",
-          "product/roadmap"
+          "product/blogs"
         ]
       },
       {
