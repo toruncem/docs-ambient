@@ -95,7 +95,7 @@
                     "description": "JSON-serialised metadata as a string",
                     "example": "{'age':72,'gender':'M'}"
                   },
-                  "date_of_service": { "type": "string", "format": "datqe-time" }
+                  "date_of_service": { "type": "string", "format": "date-time" }
                 },
                 "required": ["audio_file"]
               }
