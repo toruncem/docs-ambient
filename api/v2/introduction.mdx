@@ -1,0 +1,56 @@
+---
+title: "Introduction"
+description: "Get started with the Ambient AI API v2"
+---
+
+## Overview
+
+The Ambient AI API v2 enables you to integrate ambient AI documentation capabilities into your applications. With this API, you can:
+
+- **Authenticate** using OAuth2 password flow
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.staging.commure.com/ambient/scribe
+```
+
+## API Versioning
+
+The API uses versioning in the URL path. This is version `v2`, which uses the following path pattern:
+
+```
+/v1/{endpoint}
+```
+
+## Authentication
+
+The API uses JWT (JSON Web Token) authentication. To authenticate:
+
+1. Obtain a JWT token using the [authentication endpoint](/api-reference/authentication)
+2. Include the token in the `Authorization` header for all subsequent requests:
+
+```
+Authorization: Bearer {your_jwt_token}
+```
+
+## Request Format
+
+Most endpoints accept JSON (`application/json`) or form data (`multipart/form-data` for file uploads). Content-Type headers are required for POST requests.
+
+## Response Format
+
+All responses are returned in JSON format. Success responses include relevant data, while error responses include error details in a consistent format.
+
+## Rate Limits
+
+API rate limits may apply depending on your subscription tier.
+
+## Next Steps
+
+- Learn how to [authenticate](/api-reference/authentication) with the API
+- Review [error handling](/api-reference/error-handling) practices
+- Explore the available endpoints for [transcription](/api-reference/transcription) and [note generation](/api-reference/note-generation)
+
