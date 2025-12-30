@@ -146,6 +146,25 @@
     ]
   },
   {
+    "tab": "API v2",
+    "hidden": true,
+    "groups": [
+      {
+        "group": "Guides",
+        "pages": [
+          "api/v2/introduction"
+        ]
+      },
+      {
+        "group": "Authentication",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/auth/token"
+        ]
+      }
+    ]
+  },
+  {
     "tab": "Changelog",
     "groups": [
       {
