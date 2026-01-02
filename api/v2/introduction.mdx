@@ -8,6 +8,9 @@ description: "Get started with the Ambient AI API v2"
 The Ambient AI API v2 enables you to integrate ambient AI documentation capabilities into your applications. With this API, you can:
 
 - **Authenticate** using OAuth2 password flow
+- **Transcribe** audio files into text
+- **Manage templates** with JSON Schema for clinical note structures
+- **Generate clinical notes** from transcriptions using customizable templates
 
 ## Base URL
 
@@ -29,7 +32,7 @@ The API uses versioning in the URL path. This is version `v2`, which uses the fo
 
 The API uses JWT (JSON Web Token) authentication. To authenticate:
 
-1. Obtain a JWT token using the [authentication endpoint](/api-reference/authentication)
+1. Obtain a JWT token using the authentication endpoint
 2. Include the token in the `Authorization` header for all subsequent requests:
 
 ```
@@ -38,7 +41,9 @@ Authorization: Bearer {your_jwt_token}
 
 ## Request Format
 
-Most endpoints accept JSON (`application/json`) or form data (`multipart/form-data` for file uploads). Content-Type headers are required for POST requests.
+- Authentication endpoint accepts form data (`application/x-www-form-urlencoded`)
+- Transcription endpoint accepts multipart form data (`multipart/form-data` for file uploads)
+- Template endpoints accept JSON (`application/json`)
 
 ## Response Format
 
@@ -50,7 +55,7 @@ API rate limits may apply depending on your subscription tier.
 
 ## Next Steps
 
-- Learn how to [authenticate](/api-reference/authentication) with the API
-- Review [error handling](/api-reference/error-handling) practices
-- Explore the available endpoints for [transcription](/api-reference/transcription) and [note generation](/api-reference/note-generation)
+- Learn how to authenticate with the API
+- Explore transcription endpoints for audio-to-text processing
+- Create and manage templates for structured note generation
 

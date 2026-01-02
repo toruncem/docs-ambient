@@ -161,6 +161,22 @@
         "pages": [
           "POST /v1/auth/token"
         ]
+      },
+      {
+        "group": "Transcription",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/transcribe",
+          "GET /v1/transcribe/{transcription_id}"
+        ]
+      },
+      {
+        "group": "Templates",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/templates",
+          "GET /v1/templates/{template_id}"
+        ]
       }
     ]
   },
