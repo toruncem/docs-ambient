@@ -1,0 +1,1106 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ambient AI Scribe API v2",
+    "version": "2.0.0",
+    "description": "Auth (password flow), transcription, and template management endpoints for v2 API."
+  },
+  "servers": [{ "url": "https://api.staging.commure.com/ambient/scribe" }],
+  "paths": {
+    "/v1/auth/token": {
+      "post": {
+        "summary": "Obtain JWT (OAuth2 password flow)",
+        "description": "Authenticate a user and receive a JWT. Send as application/x-www-form-urlencoded.",
+        "tags": ["auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { 
+                    "type": "string", 
+                    "description": "User email address" 
+                  },
+                  "password": { 
+                    "type": "string", 
+                    "format": "password",
+                    "description": "User password"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { 
+                      "type": "string", 
+                      "description": "JWT token" 
+                    },
+                    "token_type": { 
+                      "type": "string", 
+                      "enum": ["bearer"],
+                      "description": "Token type"
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "description": "Token expiration time in seconds"
+                    }
+                  },
+                  "required": ["token", "token_type", "expires_in"]
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+                      "token_type": "bearer",
+                      "expires_in": 172800
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_credentials": {
+                    "value": {
+                      "detail": "Incorrect username or password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { 
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Password flow",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  --data-urlencode 'username={email}' \\\n  --data-urlencode 'password={password}'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch JWT",
+            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/auth/token', { \n  method:'POST', \n  headers:{'Content-Type':'application/x-www-form-urlencoded'}, \n  body: form \n});\nconst {token, token_type, expires_in} = await res.json();"
+          },
+          {
+            "lang": "Python",
+            "label": "Requests JWT",
+            "source": "import os, requests\nres = requests.post('https://api.staging.commure.com/ambient/scribe/v1/auth/token', data={\n  'username': os.environ['AMBIENT_USER'],\n  'password': os.environ['AMBIENT_PASS']\n})\ndata = res.json()\ntoken = data['token']"
+          }
+        ]
+      }
+    },
+    "/v1/transcribe": {
+      "post": {
+        "summary": "Submit audio file for transcription",
+        "description": "Submit an audio file for asynchronous transcription.",
+        "tags": ["transcription"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "audio_file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio file to transcribe (max 100MB). Supported formats: MP3, WAV, M4A, etc."
+                  }
+                },
+                "required": ["audio_file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Transcription accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "transcription_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The transcription record ID. Use this to check transcription status."
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when transcription was submitted"
+                    }
+                  },
+                  "required": ["transcription_id", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful submission",
+                    "value": {
+                      "transcription_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "submitted_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid audio file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_file": {
+                    "summary": "Empty audio file",
+                    "value": {
+                      "detail": "Audio file is empty"
+                    }
+                  },
+                  "missing_file": {
+                    "summary": "No file provided",
+                    "value": {
+                      "detail": "No audio file provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large - audio file exceeds maximum size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "file_too_large": {
+                    "value": {
+                      "detail": "Audio file size exceeds maximum allowed size of 100MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create transcription workflow"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Upload audio file",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/transcribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Upload with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/transcribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {transcription_id, submitted_at} = await res.json();\nconsole.log('Transcription ID:', transcription_id);\nconsole.log('Submitted at:', submitted_at);"
+          },
+          {
+            "lang": "Python",
+            "label": "Upload with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.staging.commure.com/ambient/scribe/v1/transcribe',\n        headers=headers,\n        files=files\n    )\n\ndata = res.json()\nprint(f\"Transcription ID: {data['transcription_id']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/transcribe/{transcription_id}": {
+      "get": {
+        "summary": "Get transcription status and results",
+        "description": "Retrieve the status and results of a transcription.",
+        "tags": ["transcription"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "transcription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the transcription to retrieve",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transcription status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "transcription_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The transcription record ID"
+                    },
+                    "workflow_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The workflow ID associated with this transcription"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DETECTED_FILE",
+                        "STT_PROCESSING",
+                        "STT_COMPLETED",
+                        "STT_ERROR",
+                        "STT_INCOMPLETE"
+                      ],
+                      "description": "Current transcription status:\n- `DETECTED_FILE`: File detected and queued for processing\n- `STT_PROCESSING`: Speech-to-text processing in progress\n- `STT_COMPLETED`: Transcription completed successfully\n- `STT_ERROR`: Error occurred during transcription\n- `STT_INCOMPLETE`: Transcription incomplete or partial"
+                    },
+                    "raw_text": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Transcription text if available (null if still processing or error occurred)"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When transcription was created"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When transcription was last updated"
+                    }
+                  },
+                  "required": ["transcription_id", "workflow_id", "status", "created_at", "updated_at"]
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "Completed transcription",
+                    "value": {
+                      "transcription_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "workflow_id": "123e4567-e89b-12d3-a456-426614174001",
+                      "status": "STT_COMPLETED",
+                      "raw_text": "Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night. No fever, no shortness of breath. Patient denies any recent travel or sick contacts. On examination, lungs are clear to auscultation bilaterally. Vital signs are within normal limits. Assessment: Upper respiratory tract infection. Plan: Recommend over-the-counter cough suppressant, increase fluid intake, and follow up if symptoms worsen or persist beyond one week.",
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:35:00Z"
+                    }
+                  },
+                  "processing": {
+                    "summary": "Processing transcription",
+                    "value": {
+                      "transcription_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "workflow_id": "123e4567-e89b-12d3-a456-426614174001",
+                      "status": "STT_PROCESSING",
+                      "raw_text": null,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:31:00Z"
+                    }
+                  },
+                  "detected": {
+                    "summary": "File detected (queued)",
+                    "value": {
+                      "transcription_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "workflow_id": "123e4567-e89b-12d3-a456-426614174001",
+                      "status": "DETECTED_FILE",
+                      "raw_text": null,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:30:00Z"
+                    }
+                  },
+                  "error": {
+                    "summary": "Transcription error",
+                    "value": {
+                      "transcription_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "workflow_id": "123e4567-e89b-12d3-a456-426614174001",
+                      "status": "STT_ERROR",
+                      "raw_text": null,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:32:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid transcription ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid transcription ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transcription not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Transcription not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get transcription status",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/transcribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch transcription status",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst transcriptionId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst transcription = await res.json();\nconsole.log('Status:', transcription.status);\nif (transcription.raw_text) {\n  console.log('Transcription:', transcription.raw_text);\n}\n\n// Poll for completion\nwhile (transcription.status === 'STT_PROCESSING' || transcription.status === 'DETECTED_FILE') {\n  await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds\n  const res = await fetch(\n    `https://api.staging.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n    { headers: { 'Authorization': `Bearer ${token}` } }\n  );\n  transcription = await res.json();\n  console.log('Status:', transcription.status);\n}"
+          },
+          {
+            "lang": "Python",
+            "label": "Get transcription with polling",
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\ntranscription_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_transcription_status(transcription_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/transcribe/{transcription_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\ntranscription = get_transcription_status(transcription_id, token)\nprint(f\"Status: {transcription['status']}\")\n\n# Poll until completed or error\nwhile transcription['status'] in ['DETECTED_FILE', 'STT_PROCESSING']:\n    print(f\"Status: {transcription['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    transcription = get_transcription_status(transcription_id, token)\n\nif transcription['status'] == 'STT_COMPLETED':\n    print(f\"Transcription completed!\")\n    print(f\"Text: {transcription['raw_text']}\")\nelse:\n    print(f\"Transcription failed with status: {transcription['status']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/templates": {
+      "post": {
+        "summary": "Create a new template",
+        "description": "Create a new template with a JSON Schema definition. Templates define the structure for generating clinical notes from transcriptions.",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "template_name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "description": "Name of the template",
+                    "example": "Primary Care Visit Note"
+                  },
+                  "template_content": {
+                    "type": "object",
+                    "description": "JSON Schema object defining the template structure",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["object"],
+                        "description": "Must be 'object'"
+                      },
+                      "required": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Array of required field names"
+                      },
+                      "properties": {
+                        "type": "object",
+                        "description": "Object mapping field names to their property definitions",
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
+                            },
+                            "title": {
+                              "type": "string",
+                              "description": "Display title for the field"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Description/instructions for the field"
+                            }
+                          },
+                          "required": ["type"]
+                        }
+                      }
+                    },
+                    "required": ["type", "properties"]
+                  },
+                  "template_description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Description of the template",
+                    "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
+                  }
+                },
+                "required": ["template_content"]
+              },
+              "examples": {
+                "soap_note": {
+                  "summary": "SOAP Note Template",
+                  "value": {
+                    "template_name": "SOAP Note",
+                    "template_description": "Standard SOAP format for clinical documentation",
+                    "template_content": {
+                      "type": "object",
+                      "required": ["subjective", "objective", "assessment", "plan"],
+                      "properties": {
+                        "subjective": {
+                          "type": "string",
+                          "title": "Subjective",
+                          "description": "Patient's chief complaint and history of present illness"
+                        },
+                        "objective": {
+                          "type": "string",
+                          "title": "Objective",
+                          "description": "Physical examination findings and vital signs"
+                        },
+                        "assessment": {
+                          "type": "string",
+                          "title": "Assessment",
+                          "description": "Clinical assessment and diagnosis"
+                        },
+                        "plan": {
+                          "type": "string",
+                          "title": "Plan",
+                          "description": "Treatment plan and follow-up instructions"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "template_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Universally unique identifier (UUID) for the created template"
+                    }
+                  },
+                  "required": ["template_uuid"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "template_uuid": "550e8400-e29b-41d4-a716-446655440000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid template content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_content": {
+                    "value": {
+                      "detail": "Template content is empty, unable to create template"
+                    }
+                  },
+                  "validation_error": {
+                    "value": {
+                      "detail": "template_content type must be 'object'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Create SOAP template",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Create template with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/templates', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify(template)\n});\n\nconst {template_uuid} = await res.json();\nconsole.log('Created template:', template_uuid);"
+          },
+          {
+            "lang": "Python",
+            "label": "Create template with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/templates',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Created template: {data['template_uuid']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/templates/{template_id}": {
+      "get": {
+        "summary": "Get a template by ID",
+        "description": "Retrieve a template's details including its content schema, name, description, and timestamps.",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the template to retrieve",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "template_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Universally unique identifier (UUID) for the template"
+                    },
+                    "template_name": {
+                      "type": "string",
+                      "description": "Name of the template"
+                    },
+                    "template_content": {
+                      "type": "object",
+                      "description": "JSON Schema defining the template structure",
+                      "additionalProperties": true
+                    },
+                    "template_description": {
+                      "type": "string",
+                      "description": "Description of the template"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the template was created"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the template was last updated"
+                    }
+                  },
+                  "required": ["template_uuid", "template_content", "created_at", "updated_at"]
+                },
+                "examples": {
+                  "soap_note": {
+                    "summary": "SOAP Note Template",
+                    "value": {
+                      "template_uuid": "550e8400-e29b-41d4-a716-446655440000",
+                      "template_name": "SOAP Note",
+                      "template_description": "Standard SOAP format for clinical documentation",
+                      "template_content": {
+                        "type": "object",
+                        "required": ["subjective", "objective", "assessment", "plan"],
+                        "properties": {
+                          "subjective": {
+                            "type": "string",
+                            "title": "Subjective",
+                            "description": "Patient's chief complaint and history of present illness"
+                          },
+                          "objective": {
+                            "type": "string",
+                            "title": "Objective",
+                            "description": "Physical examination findings and vital signs"
+                          },
+                          "assessment": {
+                            "type": "string",
+                            "title": "Assessment",
+                            "description": "Clinical assessment and diagnosis"
+                          },
+                          "plan": {
+                            "type": "string",
+                            "title": "Plan",
+                            "description": "Treatment plan and follow-up instructions"
+                          }
+                        }
+                      },
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid template ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid UUID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Template with id 550e8400-e29b-41d4-a716-446655440000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get template",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch template",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst template = await res.json();\nconsole.log('Template:', template.template_name);\nconsole.log('Content:', template.template_content);"
+          },
+          {
+            "lang": "Python",
+            "label": "Get template with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\ntemplate = res.json()\nprint(f\"Template: {template['template_name']}\")\nprint(f\"Created: {template['created_at']}\")"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token obtained from /v1/auth/token endpoint"
+      }
+    },
+    "schemas": {
+      "TranscriptionResponse": {
+        "type": "object",
+        "description": "Response after submitting a transcription",
+        "properties": {
+          "transcription_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The transcription record ID"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when transcription was submitted"
+          }
+        },
+        "required": ["transcription_id", "submitted_at"]
+      },
+      "TranscriptionStatusResponse": {
+        "type": "object",
+        "description": "Transcription status and results",
+        "properties": {
+          "transcription_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The transcription record ID"
+          },
+          "workflow_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The workflow ID"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DETECTED_FILE",
+              "STT_PROCESSING",
+              "STT_COMPLETED",
+              "STT_ERROR",
+              "STT_INCOMPLETE"
+            ],
+            "description": "Current transcription status"
+          },
+          "raw_text": {
+            "type": "string",
+            "nullable": true,
+            "description": "Transcription text if available"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When transcription was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When transcription was last updated"
+          }
+        },
+        "required": ["transcription_id", "workflow_id", "status", "created_at", "updated_at"]
+      },
+      "TemplateContentSchema": {
+        "type": "object",
+        "description": "JSON Schema structure for template content",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["object"],
+            "description": "Must be 'object'"
+          },
+          "required": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Array of required field names"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Object mapping field names to their property definitions",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Display title for the field"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description/instructions for the field"
+                }
+              },
+              "required": ["type"]
+            }
+          }
+        },
+        "required": ["type", "properties"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message describing what went wrong"
+          }
+        },
+        "required": ["detail"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Authentication endpoints for obtaining JWT tokens"
+    },
+    {
+      "name": "transcription",
+      "description": "Audio transcription endpoints. Submit audio files for speech-to-text processing and retrieve transcription results. The transcription process is asynchronous - submit a file to receive a transcription ID, then poll the status endpoint to check progress and retrieve results."
+    },
+    {
+      "name": "templates",
+      "description": "Template management endpoints for defining clinical note structures. Templates use JSON Schema to define the fields and structure of generated notes."
+    }
+  ],
+  "security": [{ "bearerAuth": [] }]
+}
