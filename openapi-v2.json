@@ -978,6 +978,836 @@
             "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\ntemplate = res.json()\nprint(f\"Template: {template['template_name']}\")\nprint(f\"Created: {template['created_at']}\")"
           }
         ]
+      },
+      "put": {
+        "summary": "Update an existing template",
+        "description": "Update a template's name, content, and description. The template content will be replaced entirely with the new content.",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the template to update",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "template_name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "description": "Name of the template",
+                    "example": "Primary Care Visit Note"
+                  },
+                  "template_content": {
+                    "type": "object",
+                    "description": "JSON Schema object defining the template structure",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["object"],
+                        "description": "Must be 'object'"
+                      },
+                      "required": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Array of required field names"
+                      },
+                      "properties": {
+                        "type": "object",
+                        "description": "Object mapping field names to their property definitions",
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
+                            },
+                            "title": {
+                              "type": "string",
+                              "description": "Display title for the field"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Description/instructions for the field"
+                            }
+                          },
+                          "required": ["type"]
+                        }
+                      }
+                    },
+                    "required": ["type", "properties"]
+                  },
+                  "template_description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Description of the template",
+                    "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
+                  }
+                },
+                "required": ["template_content"]
+              },
+              "examples": {
+                "soap_note": {
+                  "summary": "Update SOAP Note Template",
+                  "value": {
+                    "template_name": "SOAP Note",
+                    "template_description": "Standard SOAP format for clinical documentation",
+                    "template_content": {
+                      "type": "object",
+                      "required": ["subjective", "objective", "assessment", "plan"],
+                      "properties": {
+                        "subjective": {
+                          "type": "string",
+                          "title": "Subjective",
+                          "description": "Patient's chief complaint and history of present illness"
+                        },
+                        "objective": {
+                          "type": "string",
+                          "title": "Objective",
+                          "description": "Physical examination findings and vital signs"
+                        },
+                        "assessment": {
+                          "type": "string",
+                          "title": "Assessment",
+                          "description": "Clinical assessment and diagnosis"
+                        },
+                        "plan": {
+                          "type": "string",
+                          "title": "Plan",
+                          "description": "Treatment plan and follow-up instructions"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "template_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Universally unique identifier (UUID) for the updated template"
+                    }
+                  },
+                  "required": ["template_uuid"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "template_uuid": "550e8400-e29b-41d4-a716-446655440000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid template content or structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_content": {
+                    "value": {
+                      "detail": "Template content is empty, unable to update template"
+                    }
+                  },
+                  "validation_error": {
+                    "value": {
+                      "detail": "template_content type must be 'object'"
+                    }
+                  },
+                  "invalid_structure": {
+                    "value": {
+                      "detail": "Template structure is not valid. Errors: properties cannot be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Template with id 550e8400-e29b-41d4-a716-446655440000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to update template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Update SOAP template",
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Update template with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify(template)\n  }\n);\n\nconst {template_uuid} = await res.json();\nconsole.log('Updated template:', template_uuid);"
+          },
+          {
+            "lang": "Python",
+            "label": "Update template with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Updated template: {data['template_uuid']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/scribe": {
+      "post": {
+        "summary": "Submit scribe workflow for note generation",
+        "description": "Submit a scribe workflow with either an audio file or pre-existing transcript for clinical note generation.",
+        "tags": ["scribe"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["template_id", "date_of_service"],
+                "properties": {
+                  "template_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Template ID for note generation",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                  },
+                  "date_of_service": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of service in ISO format (e.g., '2025-01-02T10:30:00Z')",
+                    "example": "2025-01-02T10:30:00Z"
+                  },
+                  "audio_file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio file to transcribe (mutually exclusive with transcript). Supported formats: MP3, WAV, M4A, etc. Max size: 100MB."
+                  },
+                  "transcript": {
+                    "type": "string",
+                    "description": "Pre-existing transcript text (mutually exclusive with audio_file). If provided, note generation will start immediately without transcription.",
+                    "example": "Patient presents with chief complaint of persistent cough..."
+                  },
+                  "patient_name": {
+                    "type": "string",
+                    "description": "Optional patient name",
+                    "example": "John Doe"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": ["MALE", "FEMALE", "OTHER", "UNKNOWN"],
+                    "description": "Optional patient gender",
+                    "example": "MALE"
+                  },
+                  "birth_date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Optional patient birth date in ISO format (e.g., '1980-05-15T00:00:00Z')",
+                    "example": "1980-05-15T00:00:00Z"
+                  },
+                  "appointment_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Optional appointment ID",
+                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Scribe workflow accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scribe_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique scribe identifier. Use this to check workflow status and retrieve generated notes."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Current workflow status",
+                      "example": "IN_PROGRESS"
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the workflow was submitted"
+                    }
+                  },
+                  "required": ["scribe_id", "status", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful submission",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "IN_PROGRESS",
+                      "submitted_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "missing_input": {
+                    "value": {
+                      "detail": "Either audio_file or transcript must be provided"
+                    }
+                  },
+                  "both_provided": {
+                    "value": {
+                      "detail": "Only one of audio_file or transcript can be provided, not both"
+                    }
+                  },
+                  "invalid_date": {
+                    "value": {
+                      "detail": "Invalid date_of_service format: invalid isoformat string"
+                    }
+                  },
+                  "invalid_birth_date": {
+                    "value": {
+                      "detail": "Invalid birth_date format: invalid isoformat string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "template_not_found": {
+                    "value": {
+                      "detail": "Template with id 550e8400-e29b-41d4-a716-446655440000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large - audio file exceeds maximum size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "file_too_large": {
+                    "value": {
+                      "detail": "Audio file size exceeds maximum allowed size of 100MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "upload_failed": {
+                    "value": {
+                      "detail": "Failed to upload audio file to GCS: [error details]"
+                    }
+                  },
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create scribe workflow"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Submit with audio file",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'audio_file=@/path/to/audio.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'gender=MALE' \\\n  -F 'birth_date=1980-05-15T00:00:00Z'"
+          },
+          {
+            "lang": "cURL",
+            "label": "Submit with transcript",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'transcript=Patient presents with chief complaint of persistent cough for the past two weeks...' \\\n  -F 'patient_name=John Doe'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Submit with audio file",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('audio_file', audioFile);\nformData.append('patient_name', 'John Doe');\nformData.append('gender', 'MALE');\nformData.append('birth_date', '1980-05-15T00:00:00Z');\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);\nconsole.log('Status:', status);"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Submit with transcript",
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('transcript', 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...');\nformData.append('patient_name', 'John Doe');\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Submit with audio file",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    data = {\n        'template_id': template_id,\n        'date_of_service': '2025-01-02T10:30:00Z',\n        'patient_name': 'John Doe',\n        'gender': 'MALE',\n        'birth_date': '1980-05-15T00:00:00Z'\n    }\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.staging.commure.com/ambient/scribe/v1/scribe',\n        headers=headers,\n        files=files,\n        data=data\n    )\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
+          },
+          {
+            "lang": "Python",
+            "label": "Submit with transcript",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntranscript = 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...'\n\ndata = {\n    'template_id': template_id,\n    'date_of_service': '2025-01-02T10:30:00Z',\n    'transcript': transcript,\n    'patient_name': 'John Doe'\n}\nheaders = {'Authorization': f'Bearer {token}'}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/scribe',\n    headers=headers,\n    data=data\n)\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/scribe/{scribe_id}": {
+      "get": {
+        "summary": "Get scribe details and generated notes",
+        "description": "Retrieve scribe workflow details including status, generated clinical notes, and metadata.",
+        "tags": ["scribe"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "scribe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the scribe workflow to retrieve",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scribe details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scribe_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique scribe identifier"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Current workflow status",
+                      "example": "COMPLETED"
+                    },
+                    "date_of_service": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Date of service"
+                    },
+                    "audio_length_in_seconds": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Audio duration in seconds (if audio file was provided)"
+                    },
+                    "additional_context": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Additional context metadata",
+                      "additionalProperties": true
+                    },
+                    "notes": {
+                      "type": "array",
+                      "description": "Generated clinical notes",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "template_id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "nullable": true,
+                            "description": "Template ID used for note generation"
+                          },
+                          "note_json": {
+                            "type": "object",
+                            "nullable": true,
+                            "description": "Structured note output in JSON format matching the template schema",
+                            "additionalProperties": true
+                          },
+                          "note_text": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Plain text note output"
+                          }
+                        }
+                      }
+                    },
+                    "error_message": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Error message if workflow failed"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the scribe workflow was created"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the scribe workflow was last updated"
+                    }
+                  },
+                  "required": ["scribe_id", "status", "date_of_service", "notes", "created_at", "updated_at"]
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "Completed workflow with notes",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "COMPLETED",
+                      "date_of_service": "2025-01-02T10:30:00Z",
+                      "audio_length_in_seconds": 300,
+                      "additional_context": {
+                        "patient_name": "John Doe",
+                        "gender": "MALE"
+                      },
+                      "notes": [
+                        {
+                          "template_id": "550e8400-e29b-41d4-a716-446655440000",
+                          "note_json": {
+                            "subjective": "Patient presents with chief complaint of persistent cough for the past two weeks.",
+                            "objective": "Lungs are clear to auscultation bilaterally. Vital signs are within normal limits.",
+                            "assessment": "Upper respiratory tract infection",
+                            "plan": "Recommend over-the-counter cough suppressant, increase fluid intake, and follow up if symptoms worsen."
+                          },
+                          "note_text": "SUBJECTIVE: Patient presents with chief complaint of persistent cough for the past two weeks.\n\nOBJECTIVE: Lungs are clear to auscultation bilaterally. Vital signs are within normal limits.\n\nASSESSMENT: Upper respiratory tract infection\n\nPLAN: Recommend over-the-counter cough suppressant, increase fluid intake, and follow up if symptoms worsen."
+                        }
+                      ],
+                      "error_message": null,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:35:00Z"
+                    }
+                  },
+                  "in_progress": {
+                    "summary": "Workflow in progress",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "IN_PROGRESS",
+                      "date_of_service": "2025-01-02T10:30:00Z",
+                      "audio_length_in_seconds": 300,
+                      "additional_context": null,
+                      "notes": [],
+                      "error_message": null,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:31:00Z"
+                    }
+                  },
+                  "failed": {
+                    "summary": "Failed workflow",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "FAILED",
+                      "date_of_service": "2025-01-02T10:30:00Z",
+                      "audio_length_in_seconds": null,
+                      "additional_context": null,
+                      "notes": [],
+                      "error_message": "Transcription failed: Unable to process audio file",
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:32:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid scribe ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid UUID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - scribe does not belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "access_denied": {
+                    "value": {
+                      "detail": "Access denied to this scribe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scribe not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Scribe not found: [error details]"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Internal server error"
+                    }
+                  },
+                  "missing_dependencies": {
+                    "value": {
+                      "detail": "Missing required dependencies"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get scribe details",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch scribe details",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst scribe = await res.json();\nconsole.log('Status:', scribe.status);\nconsole.log('Notes:', scribe.notes);\n\nif (scribe.status === 'COMPLETED' && scribe.notes.length > 0) {\n  console.log('Generated note:', scribe.notes[0].note_text);\n  console.log('Structured note:', scribe.notes[0].note_json);\n} else if (scribe.status === 'IN_PROGRESS') {\n  console.log('Workflow is still processing...');\n} else if (scribe.status === 'FAILED') {\n  console.error('Workflow failed:', scribe.error_message);\n}"
+          },
+          {
+            "lang": "Python",
+            "label": "Get scribe with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nscribe = res.json()\nprint(f\"Status: {scribe['status']}\")\nprint(f\"Date of Service: {scribe['date_of_service']}\")\n\nif scribe['status'] == 'COMPLETED' and scribe['notes']:\n    note = scribe['notes'][0]\n    print(f\"\\nGenerated Note Text:\\n{note['note_text']}\")\n    print(f\"\\nStructured Note JSON:\\n{note['note_json']}\")\nelif scribe['status'] == 'IN_PROGRESS':\n    print(\"Workflow is still processing...\")\nelif scribe['status'] == 'FAILED':\n    print(f\"Workflow failed: {scribe['error_message']}\")"
+          },
+          {
+            "lang": "Python",
+            "label": "Poll for completion",
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['notes']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
+          }
+        ]
       }
     }
   },
@@ -1114,6 +1944,10 @@
     {
       "name": "templates",
       "description": "Template management endpoints for defining clinical note structures. Templates use JSON Schema to define the fields and structure of generated notes."
+    },
+    {
+      "name": "scribe",
+      "description": "Scribe workflow endpoints for generating clinical notes from audio files or transcripts. Submit workflows with templates to generate structured clinical documentation."
     }
   ],
   "security": [{ "bearerAuth": [] }]
