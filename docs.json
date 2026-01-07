@@ -163,6 +163,15 @@
         ]
       },
       {
+        "group": "Templates",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/templates",
+          "GET /v1/templates/{template_id}",
+          "PUT /v1/templates/{template_id}"
+        ]
+      },
+      {
         "group": "Transcription",
         "openapi": "openapi-v2.json",
         "pages": [
@@ -171,12 +180,11 @@
         ]
       },
       {
-        "group": "Templates",
+        "group": "Scribe",
         "openapi": "openapi-v2.json",
         "pages": [
-          "POST /v1/templates",
-          "GET /v1/templates/{template_id}",
-          "PUT /v1/templates/{template_id}"
+          "POST /v1/scribe",
+          "GET /v1/scribe/{scribe_id}"
         ]
       }
     ]
