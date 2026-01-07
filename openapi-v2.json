@@ -978,6 +978,274 @@
             "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\ntemplate = res.json()\nprint(f\"Template: {template['template_name']}\")\nprint(f\"Created: {template['created_at']}\")"
           }
         ]
+      },
+      "put": {
+        "summary": "Update an existing template",
+        "description": "Update a template's name, content, and description. The template content will be replaced entirely with the new content.",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the template to update",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "template_name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "description": "Name of the template",
+                    "example": "Primary Care Visit Note"
+                  },
+                  "template_content": {
+                    "type": "object",
+                    "description": "JSON Schema object defining the template structure",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["object"],
+                        "description": "Must be 'object'"
+                      },
+                      "required": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Array of required field names"
+                      },
+                      "properties": {
+                        "type": "object",
+                        "description": "Object mapping field names to their property definitions",
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
+                            },
+                            "title": {
+                              "type": "string",
+                              "description": "Display title for the field"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Description/instructions for the field"
+                            }
+                          },
+                          "required": ["type"]
+                        }
+                      }
+                    },
+                    "required": ["type", "properties"]
+                  },
+                  "template_description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Description of the template",
+                    "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
+                  }
+                },
+                "required": ["template_content"]
+              },
+              "examples": {
+                "soap_note": {
+                  "summary": "Update SOAP Note Template",
+                  "value": {
+                    "template_name": "SOAP Note",
+                    "template_description": "Standard SOAP format for clinical documentation",
+                    "template_content": {
+                      "type": "object",
+                      "required": ["subjective", "objective", "assessment", "plan"],
+                      "properties": {
+                        "subjective": {
+                          "type": "string",
+                          "title": "Subjective",
+                          "description": "Patient's chief complaint and history of present illness"
+                        },
+                        "objective": {
+                          "type": "string",
+                          "title": "Objective",
+                          "description": "Physical examination findings and vital signs"
+                        },
+                        "assessment": {
+                          "type": "string",
+                          "title": "Assessment",
+                          "description": "Clinical assessment and diagnosis"
+                        },
+                        "plan": {
+                          "type": "string",
+                          "title": "Plan",
+                          "description": "Treatment plan and follow-up instructions"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "template_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Universally unique identifier (UUID) for the updated template"
+                    }
+                  },
+                  "required": ["template_uuid"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "template_uuid": "550e8400-e29b-41d4-a716-446655440000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid template content or structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_content": {
+                    "value": {
+                      "detail": "Template content is empty, unable to update template"
+                    }
+                  },
+                  "validation_error": {
+                    "value": {
+                      "detail": "template_content type must be 'object'"
+                    }
+                  },
+                  "invalid_structure": {
+                    "value": {
+                      "detail": "Template structure is not valid. Errors: properties cannot be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Template with id 550e8400-e29b-41d4-a716-446655440000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to update template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Update SOAP template",
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Update template with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify(template)\n  }\n);\n\nconst {template_uuid} = await res.json();\nconsole.log('Updated template:', template_uuid);"
+          },
+          {
+            "lang": "Python",
+            "label": "Update template with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Updated template: {data['template_uuid']}\")"
+          }
+        ]
       }
     }
   },
