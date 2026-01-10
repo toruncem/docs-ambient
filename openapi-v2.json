@@ -568,53 +568,16 @@
                     "description": "Name of the template",
                     "example": "Primary Care Visit Note"
                   },
-                  "template_content": {
-                    "type": "object",
-                    "description": "JSON Schema object defining the template structure",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": ["object"],
-                        "description": "Must be 'object'"
-                      },
-                      "required": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "Array of required field names"
-                      },
-                      "properties": {
-                        "type": "object",
-                        "description": "Object mapping field names to their property definitions",
-                        "additionalProperties": {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "type": "string",
-                              "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
-                            },
-                            "title": {
-                              "type": "string",
-                              "description": "Display title for the field"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "Description/instructions for the field"
-                            }
-                          },
-                          "required": ["type"]
-                        }
-                      }
-                    },
-                    "required": ["type", "properties"]
-                  },
                   "template_description": {
                     "type": "string",
                     "maxLength": 1000,
                     "description": "Description of the template",
                     "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
+                  },
+                  "template_content": {
+                    "description": "JSON Schema object defining your template structure."
                   }
-                },
-                "required": ["template_content"]
+                }
               },
               "examples": {
                 "soap_note": {
@@ -1010,53 +973,16 @@
                     "description": "Name of the template",
                     "example": "Primary Care Visit Note"
                   },
-                  "template_content": {
-                    "type": "object",
-                    "description": "JSON Schema object defining the template structure",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": ["object"],
-                        "description": "Must be 'object'"
-                      },
-                      "required": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "Array of required field names"
-                      },
-                      "properties": {
-                        "type": "object",
-                        "description": "Object mapping field names to their property definitions",
-                        "additionalProperties": {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "type": "string",
-                              "description": "Field type (e.g., 'string', 'number', 'boolean', 'array', 'object')"
-                            },
-                            "title": {
-                              "type": "string",
-                              "description": "Display title for the field"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "Description/instructions for the field"
-                            }
-                          },
-                          "required": ["type"]
-                        }
-                      }
-                    },
-                    "required": ["type", "properties"]
-                  },
                   "template_description": {
                     "type": "string",
                     "maxLength": 1000,
                     "description": "Description of the template",
                     "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
+                  },
+                  "template_content": {
+                    "description": "JSON Schema object defining your template structure."
                   }
-                },
-                "required": ["template_content"]
+                }
               },
               "examples": {
                 "soap_note": {
