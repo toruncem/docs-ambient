@@ -170,7 +170,7 @@
                   "audio_file": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Audio file to transcribe (max 100MB). Supported formats: MP3, WAV, M4A, etc."
+                    "description": "Audio file to transcribe (max 100MB). Supported formats: MP3, WAV, OGG, AAC, FLAC, WEBM, OPUS, AMR, WMA, M4A."
                   }
                 },
                 "required": ["audio_file"]
@@ -1203,7 +1203,7 @@
                   "audio_file": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Audio file to transcribe (mutually exclusive with transcript). Supported formats: MP3, WAV, M4A, etc. Max size: 100MB."
+                    "description": "Audio file to transcribe (mutually exclusive with transcript). Supported formats: MP3, WAV, OGG, AAC, FLAC, WEBM, OPUS, AMR, WMA, M4A. Max size: 100MB."
                   },
                   "transcript": {
                     "type": "string",
@@ -1501,7 +1501,7 @@
                       "description": "Additional context metadata",
                       "additionalProperties": true
                     },
-                    "notes": {
+                    "ai_tasks": {
                       "type": "array",
                       "description": "Generated clinical notes",
                       "items": {
@@ -1543,7 +1543,7 @@
                       "description": "Timestamp when the scribe workflow was last updated"
                     }
                   },
-                  "required": ["scribe_id", "status", "date_of_service", "notes", "created_at", "updated_at"]
+                  "required": ["scribe_id", "status", "date_of_service", "ai_tasks", "created_at", "updated_at"]
                 },
                 "examples": {
                   "completed": {
@@ -1557,7 +1557,7 @@
                         "patient_name": "John Doe",
                         "gender": "MALE"
                       },
-                      "notes": [
+                      "ai_tasks": [
                         {
                           "template_id": "550e8400-e29b-41d4-a716-446655440000",
                           "note_json": {
@@ -1582,7 +1582,7 @@
                       "date_of_service": "2025-01-02T10:30:00Z",
                       "audio_length_in_seconds": 300,
                       "additional_context": null,
-                      "notes": [],
+                      "ai_tasks": [],
                       "error_message": null,
                       "created_at": "2025-01-02T10:30:00Z",
                       "updated_at": "2025-01-02T10:31:00Z"
@@ -1596,7 +1596,7 @@
                       "date_of_service": "2025-01-02T10:30:00Z",
                       "audio_length_in_seconds": null,
                       "additional_context": null,
-                      "notes": [],
+                      "ai_tasks": [],
                       "error_message": "Transcription failed: Unable to process audio file",
                       "created_at": "2025-01-02T10:30:00Z",
                       "updated_at": "2025-01-02T10:32:00Z"
@@ -1721,17 +1721,17 @@
           {
             "lang": "JavaScript",
             "label": "Fetch scribe details",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst scribe = await res.json();\nconsole.log('Status:', scribe.status);\nconsole.log('Notes:', scribe.notes);\n\nif (scribe.status === 'COMPLETED' && scribe.notes.length > 0) {\n  console.log('Generated note:', scribe.notes[0].note_text);\n  console.log('Structured note:', scribe.notes[0].note_json);\n} else if (scribe.status === 'IN_PROGRESS') {\n  console.log('Workflow is still processing...');\n} else if (scribe.status === 'FAILED') {\n  console.error('Workflow failed:', scribe.error_message);\n}"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst scribe = await res.json();\nconsole.log('Status:', scribe.status);\nconsole.log('AI Tasks:', scribe.ai_tasks);\n\nif (scribe.status === 'COMPLETED' && scribe.ai_tasks.length > 0) {\n  console.log('Generated note:', scribe.ai_tasks[0].note_text);\n  console.log('Structured note:', scribe.ai_tasks[0].note_json);\n} else if (scribe.status === 'IN_PROGRESS') {\n  console.log('Workflow is still processing...');\n} else if (scribe.status === 'FAILED') {\n  console.error('Workflow failed:', scribe.error_message);\n}"
           },
           {
             "lang": "Python",
             "label": "Get scribe with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nscribe = res.json()\nprint(f\"Status: {scribe['status']}\")\nprint(f\"Date of Service: {scribe['date_of_service']}\")\n\nif scribe['status'] == 'COMPLETED' and scribe['notes']:\n    note = scribe['notes'][0]\n    print(f\"\\nGenerated Note Text:\\n{note['note_text']}\")\n    print(f\"\\nStructured Note JSON:\\n{note['note_json']}\")\nelif scribe['status'] == 'IN_PROGRESS':\n    print(\"Workflow is still processing...\")\nelif scribe['status'] == 'FAILED':\n    print(f\"Workflow failed: {scribe['error_message']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nscribe = res.json()\nprint(f\"Status: {scribe['status']}\")\nprint(f\"Date of Service: {scribe['date_of_service']}\")\n\nif scribe['status'] == 'COMPLETED' and scribe['ai_tasks']:\n    note = scribe['ai_tasks'][0]\n    print(f\"\\nGenerated Note Text:\\n{note['note_text']}\")\n    print(f\"\\nStructured Note JSON:\\n{note['note_json']}\")\nelif scribe['status'] == 'IN_PROGRESS':\n    print(\"Workflow is still processing...\")\nelif scribe['status'] == 'FAILED':\n    print(f\"Workflow failed: {scribe['error_message']}\")"
           },
           {
             "lang": "Python",
             "label": "Poll for completion",
-            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['notes']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['ai_tasks']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
           }
         ]
       }
