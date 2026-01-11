@@ -577,7 +577,7 @@
                   "template_content": {
                     "description": "JSON Schema object defining your template structure."
                   }
-                }
+                  }
               },
               "examples": {
                 "soap_note": {
@@ -982,7 +982,7 @@
                   "template_content": {
                     "description": "JSON Schema object defining your template structure."
                   }
-                }
+                  }
               },
               "examples": {
                 "soap_note": {
@@ -1732,6 +1732,425 @@
             "lang": "Python",
             "label": "Poll for completion",
             "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['ai_tasks']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/scribe/{scribe_id}/regenerate/text": {
+      "post": {
+        "summary": "Regenerate scribe with additional transcript",
+        "description": "Regenerate a scribe using existing transcriptions and adding user context.",
+        "tags": ["scribe"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "scribe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the scribe workflow to regenerate",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["transcript"],
+                "properties": {
+                  "transcript": {
+                    "type": "string",
+                    "description": "Additional transcript or modification instructions for regenerating the notes",
+                    "example": "Please add more details about the patient's symptoms and include medication dosages"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Regeneration request accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scribe_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique scribe identifier"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Current workflow status (REGENERATING)",
+                      "example": "REGENERATING"
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the regeneration request was submitted"
+                    }
+                  },
+                  "required": ["scribe_id", "status", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful regeneration request",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "REGENERATING",
+                      "submitted_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_context": {
+                    "value": {
+                      "detail": "transcript is required and cannot be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scribe not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Scribe with id 123e4567-e89b-12d3-a456-426614174000 not found"
+                    }
+                  },
+                  "access_denied": {
+                    "value": {
+                      "detail": "Scribe 123e4567-e89b-12d3-a456-426614174000 does not belong to account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to regenerate scribe: [error details]"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Regenerate with text context",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/text \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'transcript=Please add more details about the patient\\'s symptoms'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Regenerate with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst formData = new FormData();\nformData.append('transcript', 'Please add more details about the patient\\'s symptoms');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/text`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Regenerate with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'transcript': 'Please add more details about the patient\\'s symptoms'\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/text',\n    headers={'Authorization': f'Bearer {token}'},\n    data=data\n)\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/scribe/{scribe_id}/regenerate/audio": {
+      "post": {
+        "summary": "Regenerate scribe workflow with new audio files",
+        "description": "Regenerate a scribe workflow by uploading new audio files for transcription.",
+        "tags": ["scribe"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "scribe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the scribe workflow to regenerate",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["audio_file"],
+                "properties": {
+                  "audio_file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio file to transcribe. Supported formats: MP3, WAV, OGG, AAC, FLAC, WEBM, OPUS, AMR, WMA, M4A. Max size: 100MB."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Regeneration request accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scribe_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique scribe identifier"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Current workflow status (REGENERATING)",
+                      "example": "REGENERATING"
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when the regeneration request was submitted"
+                    }
+                  },
+                  "required": ["scribe_id", "status", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful regeneration request",
+                    "value": {
+                      "scribe_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "REGENERATING",
+                      "submitted_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "no_files": {
+                    "value": {
+                      "detail": "audio_file is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scribe not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Scribe with id 123e4567-e89b-12d3-a456-426614174000 not found"
+                    }
+                  },
+                  "access_denied": {
+                    "value": {
+                      "detail": "Scribe 123e4567-e89b-12d3-a456-426614174000 does not belong to account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large - audio file exceeds maximum size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "file_too_large": {
+                    "value": {
+                      "detail": "Audio file size exceeds maximum allowed size of 100MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to regenerate scribe: [error details]"
+                    }
+                  },
+                  "upload_failed": {
+                    "value": {
+                      "detail": "Failed to upload audio file to GCS: [error details]"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Regenerate with audio file",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/audio \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Regenerate with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/audio`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Regenerate with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/audio',\n        headers=headers,\n        files=files\n    )\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
           }
         ]
       }
