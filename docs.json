@@ -186,6 +186,14 @@
           "POST /v1/scribe",
           "GET /v1/scribe/{scribe_id}"
         ]
+      },
+      {
+        "group": "Regenerate",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/scribe/{scribe_id}/regenerate/text",
+          "POST /v1/scribe/{scribe_id}/regenerate/audio"
+        ]
       }
     ]
   },
