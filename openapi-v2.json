@@ -8,7 +8,6 @@
   "servers": [{ "url": "https://api.staging.commure.com/ambient/scribe" }],
   "paths": {
     "/v1/auth/token": {
-      "servers": [{ "url": "https://staging-rcm-api.athelas.com" }],
       "post": {
         "summary": "Obtain JWT (OAuth2 password flow)",
         "description": "Authenticate a user and receive a JWT. Send as application/x-www-form-urlencoded.",
@@ -139,17 +138,17 @@
           {
             "lang": "cURL",
             "label": "Password flow",
-            "source": "curl -X POST https://staging-rcm-api.athelas.com/v1/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -H 'auth-server: cognito' \\\n  --data-urlencode 'username={email}' \\\n  --data-urlencode 'password={password}'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -H 'auth-server: cognito' \\\n  --data-urlencode 'username={email}' \\\n  --data-urlencode 'password={password}'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch JWT",
-            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://staging-rcm-api.athelas.com/v1/auth/token', { \n  method:'POST', \n  headers:{\n    'Content-Type':'application/x-www-form-urlencoded',\n    'auth-server': 'cognito'\n  }, \n  body: form \n});\nconst {token, token_type, expires_in} = await res.json();"
+            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/auth/token', { \n  method:'POST', \n  headers:{\n    'Content-Type':'application/x-www-form-urlencoded',\n    'auth-server': 'cognito'\n  }, \n  body: form \n});\nconst {token, token_type, expires_in} = await res.json();"
           },
           {
             "lang": "Python",
             "label": "Requests JWT",
-            "source": "import os, requests\nres = requests.post('https://staging-rcm-api.athelas.com/v1/auth/token', \n  headers={'auth-server': 'cognito'},\n  data={\n    'username': os.environ['AMBIENT_USER'],\n    'password': os.environ['AMBIENT_PASS']\n  }\n)\ndata = res.json()\ntoken = data['token']"
+            "source": "import os, requests\nres = requests.post('https://api.staging.commure.com/ambient/scribe/v1/auth/token', \n  headers={'auth-server': 'cognito'},\n  data={\n    'username': os.environ['AMBIENT_USER'],\n    'password': os.environ['AMBIENT_PASS']\n  }\n)\ndata = res.json()\ntoken = data['token']"
           }
         ]
       }
