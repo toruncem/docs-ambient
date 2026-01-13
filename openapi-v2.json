@@ -1739,7 +1739,7 @@
       "post": {
         "summary": "Regenerate scribe with additional transcript",
         "description": "Regenerate a scribe using existing transcriptions and adding user context.",
-        "tags": ["scribe"],
+        "tags": ["regenerate"],
         "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
@@ -1936,7 +1936,7 @@
       "post": {
         "summary": "Regenerate scribe workflow with new audio files",
         "description": "Regenerate a scribe workflow by uploading new audio files for transcription.",
-        "tags": ["scribe"],
+        "tags": ["regenerate"],
         "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
@@ -2153,6 +2153,508 @@
           }
         ]
       }
+    },
+    "/v1/chunking/sessions": {
+      "post": {
+        "summary": "Create a new chunking upload session",
+        "description": "Create a new upload session for chunked file uploads. Returns a session token and upload instructions for uploading file chunks.",
+        "tags": ["chunking"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "Upload session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "session_token": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique session identifier for this upload session"
+                    },
+                    "upload_session_status": {
+                      "type": "string",
+                      "enum": ["ACTIVE"],
+                      "description": "Status of the upload session"
+                    },
+                    "chunk_upload_info": {
+                      "type": "object",
+                      "properties": {
+                        "upload_endpoint": {
+                          "type": "string",
+                          "description": "URL template for uploading chunks. Replace {chunk_num} with the chunk number (1-indexed)."
+                        },
+                        "method": {
+                          "type": "string",
+                          "enum": ["PUT"],
+                          "description": "HTTP method to use for chunk uploads"
+                        },
+                        "content_type": {
+                          "type": "string",
+                          "description": "Content type to use when uploading chunks"
+                        }
+                      },
+                      "required": ["upload_endpoint", "method", "content_type"]
+                    }
+                  },
+                  "required": ["session_token", "upload_session_status", "chunk_upload_info"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful session creation",
+                    "value": {
+                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "upload_session_status": "ACTIVE",
+                      "chunk_upload_info": {
+                        "upload_endpoint": "/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/{chunk_num}",
+                        "method": "PUT",
+                        "content_type": "application/octet-stream"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create upload session"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Create upload session",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Create session with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session token:', session.session_token);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
+          },
+          {
+            "lang": "Python",
+            "label": "Create session with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session token: {session['session_token']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/chunking/sessions/{session_token}/chunks/{chunk_num}": {
+      "put": {
+        "summary": "Upload a file chunk",
+        "description": "Upload a single chunk of a file to the specified upload session. Chunk numbering starts at 1. Chunks may be uploaded in any order (sequential or random).",
+        "tags": ["chunking"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "session_token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The upload session token obtained from creating a session",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          {
+            "name": "chunk_num",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "The chunk number (1-indexed: 1, 2, 3, ...)",
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "Binary chunk data to upload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Chunk uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "session_token": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The upload session token"
+                    },
+                    "chunk_num": {
+                      "type": "integer",
+                      "description": "The chunk number that was uploaded"
+                    },
+                    "file_size": {
+                      "type": "integer",
+                      "description": "Size of the uploaded chunk in bytes"
+                    }
+                  },
+                  "required": ["session_token", "chunk_num", "file_size"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful chunk upload",
+                    "value": {
+                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "chunk_num": 1,
+                      "file_size": 1048576
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error - invalid chunk number or session token format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_chunk_num": {
+                    "value": {
+                      "detail": "Invalid chunk_num: 0 (must be >= 1) for session 123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  },
+                  "invalid_session_token": {
+                    "value": {
+                      "detail": "Invalid session_token format: invalid-uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to upload chunk"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Upload chunk",
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/1 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/octet-stream' \\\n  --data-binary @chunk1.bin"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Upload chunk with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\nconst chunkNum = 1;\nconst chunkData = new Uint8Array([/* chunk bytes */]);\n// Or read from file: const chunkData = await fs.readFile('chunk1.bin');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/chunks/${chunkNum}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/octet-stream'\n    },\n    body: chunkData\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Chunk ${result.chunk_num} uploaded: ${result.file_size} bytes`);"
+          },
+          {
+            "lang": "Python",
+            "label": "Upload chunk with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\nchunk_num = 1\n\n# Read chunk data from file\nwith open('chunk1.bin', 'rb') as chunk_file:\n    chunk_data = chunk_file.read()\n    \n    res = requests.put(\n        f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/chunks/{chunk_num}',\n        headers={\n            'Authorization': f'Bearer {token}',\n            'Content-Type': 'application/octet-stream'\n        },\n        data=chunk_data\n    )\n\nresult = res.json()\nprint(f\"Chunk {result['chunk_num']} uploaded: {result['file_size']} bytes\")"
+          }
+        ]
+      }
+    },
+    "/v1/chunking/sessions/{session_token}/complete": {
+      "post": {
+        "summary": "Complete an upload session",
+        "description": "Mark an upload session as complete and trigger transcription processing. This endpoint should only be called after all chunks have been uploaded. The server collects all uploaded chunks, validates that no chunks are missing (unless force_complete is true), combines them in order, and triggers the transcription workflow.",
+        "tags": ["chunking"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "session_token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The upload session token obtained from creating a session",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "total_chunks": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Total number of chunks that were uploaded",
+                    "example": 5
+                  },
+                  "force_complete": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "If true, skip validation for missing chunks and proceed with completion and transcription",
+                    "example": false
+                  }
+                },
+                "required": ["total_chunks"]
+              },
+              "examples": {
+                "standard": {
+                  "summary": "Standard completion",
+                  "value": {
+                    "total_chunks": 5,
+                    "force_complete": false
+                  }
+                },
+                "force_complete": {
+                  "summary": "Force completion with missing chunks",
+                  "value": {
+                    "total_chunks": 5,
+                    "force_complete": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Session completion accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "session_token": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Upload session token"
+                    },
+                    "total_chunks": {
+                      "type": "integer",
+                      "description": "Total chunks declared for this session"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Final upload session status",
+                      "example": "UPLOAD_COMPLETED"
+                    },
+                    "transcription_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Transcription ID"
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when upload session was completed"
+                    }
+                  },
+                  "required": ["session_token", "total_chunks", "status", "transcription_id", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful completion",
+                    "value": {
+                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "total_chunks": 5,
+                      "status": "UPLOAD_COMPLETED",
+                      "transcription_id": "223e4567-e89b-12d3-a456-426614174001",
+                      "submitted_at": "2025-01-02T10:35:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Session not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error - invalid session token format or missing chunks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_session_token": {
+                    "value": {
+                      "detail": "Invalid session_token format: invalid-uuid"
+                    }
+                  },
+                  "missing_chunks": {
+                    "value": {
+                      "detail": "Missing chunks detected. Expected 5 chunks but only 4 found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to complete upload session"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Complete upload session",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/complete \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"total_chunks\": 5,\n    \"force_complete\": false\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Complete session with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/complete`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      total_chunks: 5,\n      force_complete: false\n    })\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Session ${result.session_token} completed with ${result.total_chunks} chunks`);\nconsole.log(`Transcription ID: ${result.transcription_id}`);\nconsole.log(`Submitted at: ${result.submitted_at}`);"
+          },
+          {
+            "lang": "Python",
+            "label": "Complete session with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_token']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2292,6 +2794,14 @@
     {
       "name": "scribe",
       "description": "Scribe workflow endpoints for generating clinical notes from audio files or transcripts. Submit workflows with templates to generate structured clinical documentation."
+    },
+    {
+      "name": "regenerate",
+      "description": "Endpoints for regenerating scribe workflows with additional context or new audio files. Regenerate clinical notes by providing new transcripts or re-transcribing audio without creating a new scribe workflow."
+    },
+    {
+      "name": "chunking",
+      "description": "Chunked file upload endpoints for uploading large files in multiple parts. Create an upload session, upload chunks in any order (including sequential or parallel uploads), and complete the session to process the uploaded audio chunks for transcription."
     }
   ],
   "security": [{ "bearerAuth": [] }]
