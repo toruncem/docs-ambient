@@ -194,6 +194,15 @@
           "POST /v1/scribe/{scribe_id}/regenerate/text",
           "POST /v1/scribe/{scribe_id}/regenerate/audio"
         ]
+      },
+      {
+        "group": "Chunking",
+        "openapi": "openapi-v2.json",
+        "pages": [
+          "POST /v1/chunking/sessions",
+          "PUT /v1/chunking/sessions/{session_token}/chunks/{chunk_num}",
+          "POST /v1/chunking/sessions/{session_token}/complete"
+        ]
       }
     ]
   },
