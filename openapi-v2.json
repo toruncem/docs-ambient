@@ -2175,7 +2175,7 @@
                     },
                     "upload_session_status": {
                       "type": "string",
-                      "enum": ["ACTIVE"],
+                      "enum": ["UPLOAD_START"],
                       "description": "Status of the upload session"
                     },
                     "chunk_upload_info": {
@@ -2205,7 +2205,7 @@
                     "summary": "Successful session creation",
                     "value": {
                       "session_token": "123e4567-e89b-12d3-a456-426614174000",
-                      "upload_session_status": "ACTIVE",
+                      "upload_session_status": "UPLOAD_START",
                       "chunk_upload_info": {
                         "upload_endpoint": "/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/{chunk_num}",
                         "method": "PUT",
@@ -2262,17 +2262,17 @@
           {
             "lang": "cURL",
             "label": "Create upload session",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
           },
           {
             "lang": "JavaScript",
             "label": "Create session with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session token:', session.session_token);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session token:', session.session_token);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
           },
           {
             "lang": "Python",
             "label": "Create session with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/create',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session token: {session['session_token']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session token: {session['session_token']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
           }
         ]
       }
