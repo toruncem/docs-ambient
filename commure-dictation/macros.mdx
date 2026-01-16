@@ -1,0 +1,43 @@
+---
+title: "Macros"
+description: "Create and use voice-triggered text templates with placeholders for rapid documentation."
+---
+
+Macros let you insert pre-defined text blocks using a simple voice trigger. Say a short phrase, and an entire template appears—complete with placeholders you can tab through and fill in.
+
+## Creating a Macro
+
+1. Navigate to **Settings > Macros**.
+2. Click **New Macro**.
+3. Enter an **Audio Trigger**—the phrase you'll speak to activate the macro (e.g., "physical exam normal").
+4. Enter the **Macro Content**—the text that will be inserted.
+5. Click **Save**.
+
+## Using Placeholders
+
+Placeholders let you create dynamic templates with fill-in-the-blank fields. When the macro is inserted, the first placeholder is automatically selected. Say "tab" to move to the next placeholder.
+
+**Placeholder syntax:** `{{placeholder name}}`
+
+**Example macro content:**
+
+```
+PHYSICAL EXAM:
+General: {{general appearance}}
+HEENT: {{HEENT findings}}
+Cardiovascular: {{cardiovascular findings}}
+Respiratory: {{respiratory findings}}
+```
+
+When you speak the audio trigger, this text is inserted with the first placeholder selected and ready for input.
+
+## Tips for Effective Macros
+
+- Keep audio triggers short and distinct (2–3 words).
+- Avoid triggers that sound like common clinical phrases.
+- Use placeholders for fields that change between patients.
+- Single-line macros without placeholders are inserted inline; multi-line macros start on a new line.
+
+## Sync with Commure Ambient
+
+Macros created in Commure Dictation automatically sync with your Commure Ambient account. Any macros you've created in Commure Ambient are also available in Commure Dictation.

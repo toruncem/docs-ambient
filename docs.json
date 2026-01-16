@@ -10,215 +10,250 @@
   "favicon": "/logo/cmmr.png",
   "navigation": {
     "tabs": [
-    {
-    "tab": "Commure Ambient",
-      "groups": [
-      
       {
-        "group": "Getting Started",
-        "pages": [
-          "get_started/overview",
-          "get_started/download",
-          "get_started/login",
-          "get_started/first-scribe"
+        "tab": "Commure Ambient",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "get_started/overview",
+              "get_started/download",
+              "get_started/login",
+              "get_started/first-scribe"
+            ]
+          },
+          {
+            "group": "The Basics",
+            "pages": [
+              "basics/navigation",
+              "basics/recording",
+              "basics/history",
+              "basics/scribe-actions",
+              "basics/visits",
+              "basics/ehr_sync"
+            ]
+          },
+          {
+            "group": "Customize (formerly AI Studio)",
+            "pages": [
+              "ai_studio/custom-formatting",
+              "ai_studio/template-library",
+              "ai_studio/dot-phrases",
+              "ai_studio/personal-dictionary",
+              "ai_studio/preferences",
+              "ai_studio/ai-summaries",
+              "ai_studio/after-visit-summaries",
+              "ai_studio/clinical-copilot",
+              "ai_studio/carry-forward",
+              "ai_studio/macros"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/collaborator",
+              "advanced/dictation"
+            ]
+          },
+          {
+            "group": "EHR Integrations",
+            "pages": [
+              "ehr-integrations/AdvancedMD",
+              "ehr-integrations/Athena",
+              "ehr-integrations/Athena_API",
+              "ehr-integrations/NextGen",
+              "ehr-integrations/PracticeFusion",
+              "ehr-integrations/Tebra",
+              "ehr-integrations/TherapyNotes",
+              "ehr-integrations/WebPT",
+              "ehr-integrations/eCW"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/common-issues"
+            ]
+          },
+          {
+            "group": "Enterprise Grade",
+            "pages": [
+              "enterprise/security",
+              "enterprise/admin-panel",
+              "enterprise/sso-self-serve",
+              "enterprise/scim"
+            ]
+          },
+          {
+            "group": "Ambient Support Models",
+            "pages": [
+              "mds/ambient-support-models"
+            ]
+          },
+          {
+            "group": "Product Progress",
+            "pages": [
+              "product/blogs"
+            ]
+          },
+          {
+            "group": "Contact",
+            "pages": [
+              "contact/sales-and-support"
+            ]
+          }
         ]
       },
       {
-        "group": "The Basics",
-        "pages": [
-          "basics/navigation",
-          "basics/recording",
-          "basics/history",
-          "basics/scribe-actions",
-          "basics/visits",
-          "basics/ehr_sync"
+        "tab": "API",
+        "hidden": true,
+        "groups": [
+          {
+            "group": "Guides",
+            "pages": [
+              "api/introduction",
+              "api/authentication",
+              "api/error-handling"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "openapi": "openapi.json",
+            "pages": [
+              "POST /v1/ambient/api/auth/token"
+            ]
+          },
+          {
+            "group": "Transcription",
+            "openapi": "openapi.json",
+            "pages": [
+              "POST /v1/ambient/api/transcribe",
+              "GET /v1/ambient/api/transcribe/{transcription_id}"
+            ]
+          },
+          {
+            "group": "Note Generation",
+            "openapi": "openapi.json",
+            "pages": [
+              "POST /v1/ambient/api/scribe",
+              "GET /v1/ambient/api/scribe/{scribe_id}",
+              "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/audio",
+              "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/text",
+              "POST /v1/ambient/api/feedback"
+            ]
+          }
         ]
       },
       {
-        "group": "Customize (formerly AI Studio)",
-        "pages": [
-          "ai_studio/custom-formatting",
-          "ai_studio/template-library",
-          "ai_studio/dot-phrases",
-          "ai_studio/personal-dictionary",
-          "ai_studio/preferences",
-          "ai_studio/ai-summaries",
-          "ai_studio/after-visit-summaries",
-          "ai_studio/clinical-copilot",
-          "ai_studio/carry-forward",
-          "ai_studio/macros"
+        "tab": "API v2",
+        "hidden": true,
+        "groups": [
+          {
+            "group": "Guides",
+            "pages": [
+              "api/v2/introduction"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/auth/token"
+            ]
+          },
+          {
+            "group": "Templates",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/templates",
+              "GET /v1/templates/{template_id}",
+              "PUT /v1/templates/{template_id}"
+            ]
+          },
+          {
+            "group": "Transcription",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/transcribe",
+              "GET /v1/transcribe/{transcription_id}"
+            ]
+          },
+          {
+            "group": "Scribe",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/scribe",
+              "GET /v1/scribe/{scribe_id}"
+            ]
+          },
+          {
+            "group": "Regenerate",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/scribe/{scribe_id}/regenerate/text",
+              "POST /v1/scribe/{scribe_id}/regenerate/audio"
+            ]
+          },
+          {
+            "group": "Chunking",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/chunking/sessions",
+              "PUT /v1/chunking/sessions/{session_token}/chunks/{chunk_num}",
+              "POST /v1/chunking/sessions/{session_token}/complete"
+            ]
+          }
         ]
       },
       {
-        "group": "Advanced",
-        "pages": [
-          "advanced/collaborator",
-          "advanced/dictation"
+        "tab": "Commure Dictation",
+        "hidden": true,
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "commure-dictation/introduction",
+              "commure-dictation/system-requirements",
+              "commure-dictation/installation"
+            ]
+          },
+          {
+            "group": "Using Dictation",
+            "pages": [
+              "commure-dictation/basic-usage",
+              "commure-dictation/voice-commands",
+              "commure-dictation/hotkeys"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "commure-dictation/macros",
+              "commure-dictation/personal-dictionary",
+              "commure-dictation/ambient-integration"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "commure-dictation/troubleshooting"
+            ]
+          }
         ]
       },
       {
-        "group": "EHR Integrations",
-        "pages": [
-          "ehr-integrations/AdvancedMD",
-          "ehr-integrations/Athena",
-          "ehr-integrations/Athena_API",
-          "ehr-integrations/NextGen",
-          "ehr-integrations/PracticeFusion",
-          "ehr-integrations/Tebra",
-          "ehr-integrations/TherapyNotes",
-          "ehr-integrations/WebPT",
-          "ehr-integrations/eCW"
-        ]
-      },
-      {
-        "group": "Troubleshooting",
-        "pages": [
-          "troubleshooting/common-issues"
-        ]
-      },
-      {
-        "group": "Enterprise Grade",
-        "pages": [
-          "enterprise/security",
-          "enterprise/admin-panel",
-          "enterprise/sso-self-serve",
-          "enterprise/scim"
-        ]
-      },
-      {
-        "group": "Ambient Support Models",
-        "pages": [
-          "mds/ambient-support-models"
-        ]
-      },
-      {
-        "group": "Product Progress",
-        "pages": [
-          "product/blogs"
-        ]
-      },
-      {
-        "group": "Contact",
-        "pages": [
-          "contact/sales-and-support"
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Changelog",
+            "pages": [
+              "product/changelogs"
+            ]
+          }
         ]
       }
     ]
   },
-  {
-    "tab": "API",
-    "hidden": true,
-    "groups": [
-      {
-        "group": "Guides",
-        "pages": [
-          "api/introduction",
-          "api/authentication",
-          "api/error-handling"
-        ]
-      },
-      {
-        "group": "Authentication",
-        "openapi": "openapi.json",
-        "pages": [
-          "POST /v1/ambient/api/auth/token"
-        ]
-      },
-      {
-        "group": "Transcription",
-        "openapi": "openapi.json",
-        "pages": [
-          "POST /v1/ambient/api/transcribe",
-          "GET /v1/ambient/api/transcribe/{transcription_id}"
-        ]
-      },
-      {
-        "group": "Note Generation",
-        "openapi": "openapi.json",
-        "pages": [
-          "POST /v1/ambient/api/scribe",
-          "GET /v1/ambient/api/scribe/{scribe_id}",
-          "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/audio",
-          "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/text",
-          "POST /v1/ambient/api/feedback"
-        ]
-      }
-    ]
-  },
-  {
-    "tab": "API v2",
-    "hidden": true,
-    "groups": [
-      {
-        "group": "Guides",
-        "pages": [
-          "api/v2/introduction"
-        ]
-      },
-      {
-        "group": "Authentication",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/auth/token"
-        ]
-      },
-      {
-        "group": "Templates",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/templates",
-          "GET /v1/templates/{template_id}",
-          "PUT /v1/templates/{template_id}"
-        ]
-      },
-      {
-        "group": "Transcription",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/transcribe",
-          "GET /v1/transcribe/{transcription_id}"
-        ]
-      },
-      {
-        "group": "Scribe",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/scribe",
-          "GET /v1/scribe/{scribe_id}"
-        ]
-      },
-      {
-        "group": "Regenerate",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/scribe/{scribe_id}/regenerate/text",
-          "POST /v1/scribe/{scribe_id}/regenerate/audio"
-        ]
-      },
-      {
-        "group": "Chunking",
-        "openapi": "openapi-v2.json",
-        "pages": [
-          "POST /v1/chunking/sessions",
-          "PUT /v1/chunking/sessions/{session_token}/chunks/{chunk_num}",
-          "POST /v1/chunking/sessions/{session_token}/complete"
-        ]
-      }
-    ]
-  },
-  {
-    "tab": "Changelog",
-    "groups": [
-      {
-        "group": "Changelog",
-        "pages": [
-          "product/changelogs"
-        ]
-      }
-    ]
-  }
-  ]
-    },
   "logo": {
     "light": "/logo/commure_logo_full_black.png",
     "dark": "/logo/commure_logo_full_white.png"
