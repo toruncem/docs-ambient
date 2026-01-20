@@ -158,7 +158,7 @@
         "summary": "Submit audio file for transcription",
         "description": "Submit an audio file for asynchronous transcription.",
         "tags": ["transcription"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -318,7 +318,7 @@
           {
             "lang": "cURL",
             "label": "Upload audio file",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/transcribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/transcribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
           },
           {
             "lang": "JavaScript",
@@ -338,7 +338,7 @@
         "summary": "Get transcription status and results",
         "description": "Retrieve the status and results of a transcription.",
         "tags": ["transcription"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "transcription_id",
@@ -533,7 +533,7 @@
           {
             "lang": "cURL",
             "label": "Get transcription status",
-            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/transcribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/transcribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
@@ -553,7 +553,7 @@
         "summary": "Create a new template",
         "description": "Create a new template with a JSON Schema definition. Templates define the structure for generating clinical notes from transcriptions.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -728,7 +728,7 @@
           {
             "lang": "cURL",
             "label": "Create SOAP template",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
           },
           {
             "lang": "JavaScript",
@@ -748,7 +748,7 @@
         "summary": "Get a template by ID",
         "description": "Retrieve a template's details including its content schema, name, description, and timestamps.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "template_id",
@@ -927,7 +927,7 @@
           {
             "lang": "cURL",
             "label": "Get template",
-            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
@@ -945,7 +945,7 @@
         "summary": "Update an existing template",
         "description": "Update a template's name, content, and description. The template content will be replaced entirely with the new content.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "template_id",
@@ -1158,7 +1158,7 @@
           {
             "lang": "cURL",
             "label": "Update SOAP template",
-            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
           },
           {
             "lang": "JavaScript",
@@ -1178,7 +1178,7 @@
         "summary": "Submit scribe workflow for note generation",
         "description": "Submit a scribe workflow with either an audio file or pre-existing transcript for clinical note generation.",
         "tags": ["scribe"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -1417,12 +1417,12 @@
           {
             "lang": "cURL",
             "label": "Submit with audio file",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'audio_file=@/path/to/audio.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'gender=MALE' \\\n  -F 'birth_date=1980-05-15T00:00:00Z'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'audio_file=@/path/to/audio.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'gender=MALE' \\\n  -F 'birth_date=1980-05-15T00:00:00Z'"
           },
           {
             "lang": "cURL",
             "label": "Submit with transcript",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'transcript=Patient presents with chief complaint of persistent cough for the past two weeks...' \\\n  -F 'patient_name=John Doe'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'transcript=Patient presents with chief complaint of persistent cough for the past two weeks...' \\\n  -F 'patient_name=John Doe'"
           },
           {
             "lang": "JavaScript",
@@ -1452,7 +1452,7 @@
         "summary": "Get scribe details and generated notes",
         "description": "Retrieve scribe workflow details including status, generated clinical notes, and metadata.",
         "tags": ["scribe"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "scribe_id",
@@ -1715,7 +1715,7 @@
           {
             "lang": "cURL",
             "label": "Get scribe details",
-            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
@@ -1740,7 +1740,7 @@
         "summary": "Regenerate scribe with additional transcript",
         "description": "Regenerate a scribe using existing transcriptions and adding user context.",
         "tags": ["regenerate"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "scribe_id",
@@ -1917,7 +1917,7 @@
           {
             "lang": "cURL",
             "label": "Regenerate with text context",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/text \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'transcript=Please add more details about the patient\\'s symptoms'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/text \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'transcript=Please add more details about the patient\\'s symptoms'"
           },
           {
             "lang": "JavaScript",
@@ -1937,7 +1937,7 @@
         "summary": "Regenerate scribe workflow with new audio files",
         "description": "Regenerate a scribe workflow by uploading new audio files for transcription.",
         "tags": ["regenerate"],
-        "security": [{ "bearerAuth": [] }],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
             "name": "scribe_id",
@@ -2139,7 +2139,7 @@
           {
             "lang": "cURL",
             "label": "Regenerate with audio file",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/audio \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/audio \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
           },
           {
             "lang": "JavaScript",
@@ -2157,9 +2157,9 @@
     "/v1/chunking/sessions": {
       "post": {
         "summary": "Create a new chunking upload session",
-        "description": "Create a new upload session for chunked file uploads. Returns a session token and upload instructions for uploading file chunks.",
-        "tags": ["chunking"],
-        "security": [{ "bearerAuth": [] }],
+        "description": "Create an upload session for chunked audio files and returns a session ID and upload instructions.\n\n## Chunk Configuration\n\n| Setting | Value | Notes |\n| --- | --- | --- |\n| **Chunk Duration** | 30 seconds | Audio duration per chunk file |\n| **Timer Interval** | 30 seconds | Flush interval for buffered audio |\n| **Final Packet Wait** | 500 ms | Wait time after stopping recorder to ensure final packets arrive |\n\n**Note:** A chunk might be smaller than 30 seconds. Every time the user pauses, the current chunk will be saved and a new one created on resume.\n\n## Implementation Details\n\n- **Chunk Duration:** 30 seconds of audio per chunk file\n- **Timer Interval:** Used to monitor each 30-second chunk and ensure the upload arrives and succeeds\n- **Final Packet Wait:** 500ms delay to wait for final audio packets after stopping recorder\n- **Completing the Session:**\n  - Call `/complete` endpoint after all chunks have been successfully uploaded\n  - If there are intentionally missing chunks that you do not want to upload, set `force_complete=true` in the request body to skip validation for those chunks\n  - If `force_complete=false` (default), the server will validate that all chunks specified in the `total_chunks` parameter are present. Missing chunks will result in an error response\n\n## Audio Formats\n\n### Supported Content Types\n\n| Format | MIME Type | Platform Support |\n| --- | --- | --- |\n| MP4 | `video/mp4` | All platforms |\n| WAV | `audio/wav` | iOS, Android (PCM 16-bit) |\n| AAC | `audio/aac` | Safari, iOS (fallback) |\n| M4A | `audio/m4a` | iOS, macOS |\n| OGG | `audio/ogg` | Web (non-Safari), iOS (preferred) |\n| WebM | `audio/webm` | Web (non-Safari) |\n\n### Platform-Specific Recommendations\n\n**Web (Non-Safari):**\n- Codec: Opus\n- Container: OGG/WebM\n- Sample Rate: 16,000 Hz\n- Bit Rate: 24,000 bps (24 kbps)\n- Channels: 1 (Mono)\n- Sample Size: 16-bit\n\n**Web (Safari):**\n- Codec: AAC\n- Container: AAC\n- Sample Rate: 48,000 Hz\n- Bit Rate: 48,000 bps (48 kbps)\n- Channels: 1 (Mono)\n- Sample Size: 16-bit\n\n**iOS (Mobile):**\n- Codec: Opus (preferred) or AAC fallback\n- Container: WAV (for chunking uploads)\n- Sample Rate: 16,000 Hz\n- Channels: 1 (Mono)\n\n**Android (Mobile):**\n- Codec: PCM 16-bit\n- Container: WAV\n- Sample Rate: 44,100 Hz (preferred), 16,000 Hz (fallback), 8,000 Hz (last resort)\n- Bit Rate: 32,000 bps\n- Channels: 1 (Mono)",
+        "tags": ["Chunking"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "responses": {
           "201": {
             "description": "Upload session created successfully",
@@ -2168,10 +2168,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "session_token": {
+                    "session_id": {
                       "type": "string",
                       "format": "uuid",
-                      "description": "Unique session identifier for this upload session"
+                      "description": "Unique session ID for this upload session"
                     },
                     "upload_session_status": {
                       "type": "string",
@@ -2192,24 +2192,25 @@
                         },
                         "content_type": {
                           "type": "string",
-                          "description": "Content type to use when uploading chunks"
+                          "enum": ["video/mp4", "audio/wav", "audio/aac", "audio/m4a", "audio/ogg", "audio/webm"],
+                          "description": "Content type to use when uploading chunks. Supported formats: mp4 (video/mp4), wav (audio/wav), aac (audio/aac), m4a (audio/m4a), ogg (audio/ogg), webm (audio/webm)"
                         }
                       },
                       "required": ["upload_endpoint", "method", "content_type"]
                     }
                   },
-                  "required": ["session_token", "upload_session_status", "chunk_upload_info"]
+                  "required": ["session_id", "upload_session_status", "chunk_upload_info"]
                 },
                 "examples": {
                   "success": {
                     "summary": "Successful session creation",
                     "value": {
-                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "session_id": "123e4567-e89b-12d3-a456-426614174000",
                       "upload_session_status": "UPLOAD_START",
                       "chunk_upload_info": {
                         "upload_endpoint": "/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/{chunk_num}",
                         "method": "PUT",
-                        "content_type": "application/octet-stream"
+                        "content_type": "audio/wav"
                       }
                     }
                   }
@@ -2262,37 +2263,37 @@
           {
             "lang": "cURL",
             "label": "Create upload session",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Create session with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session token:', session.session_token);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session ID:', session.session_id);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
           },
           {
             "lang": "Python",
             "label": "Create session with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session token: {session['session_token']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session ID: {session['session_id']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
           }
         ]
       }
     },
-    "/v1/chunking/sessions/{session_token}/chunks/{chunk_num}": {
+    "/v1/chunking/sessions/{session_id}/chunks/{chunk_num}": {
       "put": {
-        "summary": "Upload a file chunk",
-        "description": "Upload a single chunk of a file to the specified upload session. Chunk numbering starts at 1. Chunks may be uploaded in any order (sequential or random).",
-        "tags": ["chunking"],
-        "security": [{ "bearerAuth": [] }],
+        "summary": "Upload an audio chunk",
+        "description": "Upload a single audio chunk to the specified upload session. Chunk numbering starts at 1. Chunks may be uploaded in any order (sequential or random).",
+        "tags": ["Chunking"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
-            "name": "session_token",
+            "name": "session_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             },
-            "description": "The upload session token obtained from creating a session",
+            "description": "The upload session id obtained from creating a session",
             "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           {
@@ -2310,11 +2311,46 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/octet-stream": {
+            "video/mp4": {
               "schema": {
                 "type": "string",
                 "format": "binary",
-                "description": "Binary chunk data to upload"
+                "description": "MP4 video chunk data"
+              }
+            },
+            "audio/wav": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "WAV audio chunk data"
+              }
+            },
+            "audio/aac": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "AAC audio chunk data"
+              }
+            },
+            "audio/m4a": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "M4A audio chunk data"
+              }
+            },
+            "audio/ogg": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "OGG audio chunk data"
+              }
+            },
+            "audio/webm": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "WebM audio chunk data"
               }
             }
           }
@@ -2327,10 +2363,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "session_token": {
+                    "session_id": {
                       "type": "string",
                       "format": "uuid",
-                      "description": "The upload session token"
+                      "description": "The upload session id"
                     },
                     "chunk_num": {
                       "type": "integer",
@@ -2341,13 +2377,13 @@
                       "description": "Size of the uploaded chunk in bytes"
                     }
                   },
-                  "required": ["session_token", "chunk_num", "file_size"]
+                  "required": ["session_id", "chunk_num", "file_size"]
                 },
                 "examples": {
                   "success": {
                     "summary": "Successful chunk upload",
                     "value": {
-                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "session_id": "123e4567-e89b-12d3-a456-426614174000",
                       "chunk_num": 1,
                       "file_size": 1048576
                     }
@@ -2377,7 +2413,7 @@
             }
           },
           "422": {
-            "description": "Validation error - invalid chunk number or session token format",
+            "description": "Validation error - invalid chunk number or session id format",
             "content": {
               "application/json": {
                 "schema": {
@@ -2392,9 +2428,9 @@
                       "detail": "Invalid chunk_num: 0 (must be >= 1) for session 123e4567-e89b-12d3-a456-426614174000"
                     }
                   },
-                  "invalid_session_token": {
+                  "invalid_session_id": {
                     "value": {
-                      "detail": "Invalid session_token format: invalid-uuid"
+                      "detail": "Invalid session_id format: invalid-uuid"
                     }
                   }
                 }
@@ -2426,37 +2462,37 @@
           {
             "lang": "cURL",
             "label": "Upload chunk",
-            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/1 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/octet-stream' \\\n  --data-binary @chunk1.bin"
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/1 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: audio/wav' \\\n  --data-binary @chunk1.wav"
           },
           {
             "lang": "JavaScript",
             "label": "Upload chunk with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\nconst chunkNum = 1;\nconst chunkData = new Uint8Array([/* chunk bytes */]);\n// Or read from file: const chunkData = await fs.readFile('chunk1.bin');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/chunks/${chunkNum}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/octet-stream'\n    },\n    body: chunkData\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Chunk ${result.chunk_num} uploaded: ${result.file_size} bytes`);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\nconst chunkNum = 1;\nconst chunkData = new Uint8Array([/* chunk bytes */]);\n// Or read from file: const chunkData = await fs.readFile('chunk1.wav');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/chunks/${chunkNum}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'audio/wav'\n    },\n    body: chunkData\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Chunk ${result.chunk_num} uploaded: ${result.file_size} bytes`);"
           },
           {
             "lang": "Python",
             "label": "Upload chunk with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\nchunk_num = 1\n\n# Read chunk data from file\nwith open('chunk1.bin', 'rb') as chunk_file:\n    chunk_data = chunk_file.read()\n    \n    res = requests.put(\n        f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/chunks/{chunk_num}',\n        headers={\n            'Authorization': f'Bearer {token}',\n            'Content-Type': 'application/octet-stream'\n        },\n        data=chunk_data\n    )\n\nresult = res.json()\nprint(f\"Chunk {result['chunk_num']} uploaded: {result['file_size']} bytes\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\nchunk_num = 1\n\n# Read chunk data from file\nwith open('chunk1.wav', 'rb') as chunk_file:\n    chunk_data = chunk_file.read()\n    \n    res = requests.put(\n        f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/chunks/{chunk_num}',\n        headers={\n            'Authorization': f'Bearer {token}',\n            'Content-Type': 'audio/wav'\n        },\n        data=chunk_data\n    )\n\nresult = res.json()\nprint(f\"Chunk {result['chunk_num']} uploaded: {result['file_size']} bytes\")"
           }
         ]
       }
     },
-    "/v1/chunking/sessions/{session_token}/complete": {
+    "/v1/chunking/sessions/{session_id}/complete": {
       "post": {
         "summary": "Complete an upload session",
         "description": "Mark an upload session as complete and trigger transcription processing. This endpoint should only be called after all chunks have been uploaded. The server collects all uploaded chunks, validates that no chunks are missing (unless force_complete is true), combines them in order, and triggers the transcription workflow.",
-        "tags": ["chunking"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": ["Chunking"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
         "parameters": [
           {
-            "name": "session_token",
+            "name": "session_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             },
-            "description": "The upload session token obtained from creating a session",
+            "description": "The upload session id obtained from creating a session",
             "example": "123e4567-e89b-12d3-a456-426614174000"
           }
         ],
@@ -2509,10 +2545,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "session_token": {
+                    "session_id": {
                       "type": "string",
                       "format": "uuid",
-                      "description": "Upload session token"
+                      "description": "Upload session id"
                     },
                     "total_chunks": {
                       "type": "integer",
@@ -2534,13 +2570,13 @@
                       "description": "Timestamp when upload session was completed"
                     }
                   },
-                  "required": ["session_token", "total_chunks", "status", "transcription_id", "submitted_at"]
+                  "required": ["session_id", "total_chunks", "status", "transcription_id", "submitted_at"]
                 },
                 "examples": {
                   "success": {
                     "summary": "Successful completion",
                     "value": {
-                      "session_token": "123e4567-e89b-12d3-a456-426614174000",
+                      "session_id": "123e4567-e89b-12d3-a456-426614174000",
                       "total_chunks": 5,
                       "status": "UPLOAD_COMPLETED",
                       "transcription_id": "223e4567-e89b-12d3-a456-426614174001",
@@ -2592,7 +2628,7 @@
             }
           },
           "422": {
-            "description": "Validation error - invalid session token format or missing chunks",
+            "description": "Validation error - invalid session id format or missing chunks",
             "content": {
               "application/json": {
                 "schema": {
@@ -2602,9 +2638,9 @@
                   }
                 },
                 "examples": {
-                  "invalid_session_token": {
+                  "invalid_session_id": {
                     "value": {
-                      "detail": "Invalid session_token format: invalid-uuid"
+                      "detail": "Invalid session_id format: invalid-uuid"
                     }
                   },
                   "missing_chunks": {
@@ -2641,17 +2677,17 @@
           {
             "lang": "cURL",
             "label": "Complete upload session",
-            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/complete \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"total_chunks\": 5,\n    \"force_complete\": false\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/complete \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"total_chunks\": 5,\n    \"force_complete\": false\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Complete session with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/complete`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      total_chunks: 5,\n      force_complete: false\n    })\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Session ${result.session_token} completed with ${result.total_chunks} chunks`);\nconsole.log(`Transcription ID: ${result.transcription_id}`);\nconsole.log(`Submitted at: ${result.submitted_at}`);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/complete`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      total_chunks: 5,\n      force_complete: false\n    })\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Session ${result.session_id} completed with ${result.total_chunks} chunks`);\nconsole.log(`Transcription ID: ${result.transcription_id}`);\nconsole.log(`Submitted at: ${result.submitted_at}`);"
           },
           {
             "lang": "Python",
             "label": "Complete session with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_token']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_id']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
           }
         ]
       }
@@ -2664,6 +2700,12 @@
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "JWT token obtained from /v1/auth/token endpoint"
+      },
+      "authScheme": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "auth-scheme",
+        "description": "Authentication scheme header, should be set to 'cognito'"
       }
     },
     "schemas": {
@@ -2800,9 +2842,9 @@
       "description": "Endpoints for regenerating scribe workflows with additional context or new audio files. Regenerate clinical notes by providing new transcripts or re-transcribing audio without creating a new scribe workflow."
     },
     {
-      "name": "chunking",
-      "description": "Chunked file upload endpoints for uploading large files in multiple parts. Create an upload session, upload chunks in any order (including sequential or parallel uploads), and complete the session to process the uploaded audio chunks for transcription."
+      "name": "Chunking",
+      "description": "Chunked file upload endpoints for uploading large audio files in multiple parts. Create an upload session, upload chunks in any order (including sequential or parallel uploads), and complete the session to process the uploaded audio chunks for transcription."
     }
   ],
-  "security": [{ "bearerAuth": [] }]
+  "security": [{ "bearerAuth": [], "authScheme": [] }]
 }
