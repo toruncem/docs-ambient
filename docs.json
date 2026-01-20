@@ -199,8 +199,8 @@
             "openapi": "openapi-v2.json",
             "pages": [
               "POST /v1/chunking/sessions",
-              "PUT /v1/chunking/sessions/{session_token}/chunks/{chunk_num}",
-              "POST /v1/chunking/sessions/{session_token}/complete"
+              "PUT /v1/chunking/sessions/{session_id}/chunks/{chunk_num}",
+              "POST /v1/chunking/sessions/{session_id}/complete"
             ]
           }
         ]
