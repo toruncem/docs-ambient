@@ -158,7 +158,8 @@
         "summary": "Submit audio file for transcription",
         "description": "Submit an audio file for asynchronous transcription.",
         "tags": ["transcription"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "requestBody": {
           "required": true,
           "content": {
@@ -338,8 +339,9 @@
         "summary": "Get transcription status and results",
         "description": "Retrieve the status and results of a transcription.",
         "tags": ["transcription"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "transcription_id",
             "in": "path",
@@ -553,7 +555,8 @@
         "summary": "Create a new template",
         "description": "Create a new template with a JSON Schema definition. Templates define the structure for generating clinical notes from transcriptions.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "requestBody": {
           "required": true,
           "content": {
@@ -748,8 +751,9 @@
         "summary": "Get a template by ID",
         "description": "Retrieve a template's details including its content schema, name, description, and timestamps.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "template_id",
             "in": "path",
@@ -945,8 +949,9 @@
         "summary": "Update an existing template",
         "description": "Update a template's name, content, and description. The template content will be replaced entirely with the new content.",
         "tags": ["templates"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "template_id",
             "in": "path",
@@ -1178,7 +1183,8 @@
         "summary": "Submit scribe workflow for note generation",
         "description": "Submit a scribe workflow with either an audio file or pre-existing transcript for clinical note generation.",
         "tags": ["scribe"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "requestBody": {
           "required": true,
           "content": {
@@ -1452,8 +1458,9 @@
         "summary": "Get scribe details and generated notes",
         "description": "Retrieve scribe workflow details including status, generated clinical notes, and metadata.",
         "tags": ["scribe"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "scribe_id",
             "in": "path",
@@ -1740,8 +1747,9 @@
         "summary": "Regenerate scribe with additional transcript",
         "description": "Regenerate a scribe using existing transcriptions and adding user context.",
         "tags": ["regenerate"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "scribe_id",
             "in": "path",
@@ -1937,8 +1945,9 @@
         "summary": "Regenerate scribe workflow with new audio files",
         "description": "Regenerate a scribe workflow by uploading new audio files for transcription.",
         "tags": ["regenerate"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "scribe_id",
             "in": "path",
@@ -2159,7 +2168,8 @@
         "summary": "Create a new chunking upload session",
         "description": "Create an upload session for chunked audio files and returns a session ID and upload instructions.\n\n## Chunk Configuration\n\n| Setting | Value | Notes |\n| --- | --- | --- |\n| **Chunk Duration** | 30 seconds | Audio duration per chunk file |\n| **Timer Interval** | 30 seconds | Flush interval for buffered audio |\n| **Final Packet Wait** | 500 ms | Wait time after stopping recorder to ensure final packets arrive |\n\n**Note:** A chunk might be smaller than 30 seconds. Every time the user pauses, the current chunk will be saved and a new one created on resume.\n\n## Implementation Details\n\n- **Chunk Duration:** 30 seconds of audio per chunk file\n- **Timer Interval:** Used to monitor each 30-second chunk and ensure the upload arrives and succeeds\n- **Final Packet Wait:** 500ms delay to wait for final audio packets after stopping recorder\n- **Completing the Session:**\n  - Call `/complete` endpoint after all chunks have been successfully uploaded\n  - If there are intentionally missing chunks that you do not want to upload, set `force_complete=true` in the request body to skip validation for those chunks\n  - If `force_complete=false` (default), the server will validate that all chunks specified in the `total_chunks` parameter are present. Missing chunks will result in an error response\n\n## Audio Formats\n\n### Supported Content Types\n\n| Format | MIME Type | Platform Support |\n| --- | --- | --- |\n| MP4 | `video/mp4` | All platforms |\n| WAV | `audio/wav` | iOS, Android (PCM 16-bit) |\n| AAC | `audio/aac` | Safari, iOS (fallback) |\n| M4A | `audio/m4a` | iOS, macOS |\n| OGG | `audio/ogg` | Web (non-Safari), iOS (preferred) |\n| WebM | `audio/webm` | Web (non-Safari) |\n\n### Platform-Specific Recommendations\n\n**Web (Non-Safari):**\n- Codec: Opus\n- Container: OGG/WebM\n- Sample Rate: 16,000 Hz\n- Bit Rate: 24,000 bps (24 kbps)\n- Channels: 1 (Mono)\n- Sample Size: 16-bit\n\n**Web (Safari):**\n- Codec: AAC\n- Container: AAC\n- Sample Rate: 48,000 Hz\n- Bit Rate: 48,000 bps (48 kbps)\n- Channels: 1 (Mono)\n- Sample Size: 16-bit\n\n**iOS (Mobile):**\n- Codec: Opus (preferred) or AAC fallback\n- Container: WAV (for chunking uploads)\n- Sample Rate: 16,000 Hz\n- Channels: 1 (Mono)\n\n**Android (Mobile):**\n- Codec: PCM 16-bit\n- Container: WAV\n- Sample Rate: 44,100 Hz (preferred), 16,000 Hz (fallback), 8,000 Hz (last resort)\n- Bit Rate: 32,000 bps\n- Channels: 1 (Mono)",
         "tags": ["Chunking"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "responses": {
           "201": {
             "description": "Upload session created successfully",
@@ -2283,8 +2293,9 @@
         "summary": "Upload an audio chunk",
         "description": "Upload a single audio chunk to the specified upload session. Chunk numbering starts at 1. Chunks may be uploaded in any order (sequential or random).",
         "tags": ["Chunking"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "session_id",
             "in": "path",
@@ -2482,8 +2493,9 @@
         "summary": "Complete an upload session",
         "description": "Mark an upload session as complete and trigger transcription processing. This endpoint should only be called after all chunks have been uploaded. The server collects all uploaded chunks, validates that no chunks are missing (unless force_complete is true), combines them in order, and triggers the transcription workflow.",
         "tags": ["Chunking"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "session_id",
             "in": "path",
@@ -2697,7 +2709,8 @@
         "summary": "List all users",
         "description": "Retrieve all users associated with the authenticated service account.",
         "tags": ["users"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "responses": {
           "200": {
             "description": "Users retrieved successfully",
@@ -2850,7 +2863,8 @@
         "summary": "Create a new user",
         "description": "Create a new user associated with the authenticated service account. Each user must have a unique external_id.",
         "tags": ["users"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
         "requestBody": {
           "required": true,
           "content": {
@@ -3038,8 +3052,9 @@
         "summary": "Get user by UUID",
         "description": "Retrieve a specific user by their UUID. The user must belong to the authenticated service account.",
         "tags": ["users"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "user_id",
             "in": "path",
@@ -3220,8 +3235,9 @@
         "summary": "Update user status",
         "description": "Update a user's active status.",
         "tags": ["users"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "user_id",
             "in": "path",
@@ -3451,8 +3467,9 @@
         "summary": "Get user by external ID",
         "description": "Retrieve a specific user by their external identifier. The user must belong to the authenticated service account.",
         "tags": ["users"],
-        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
           {
             "name": "external_id",
             "in": "path",
@@ -3600,6 +3617,485 @@
           }
         ]
       }
+    },
+    "/v1/summaries": {
+      "post": {
+        "summary": "Submit text for AI summarization",
+        "description": "Submit text for asynchronous AI summarization using a specified template.",
+        "tags": ["summaries"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Text to summarize (e.g., clinical notes, conversation transcript, medical documentation)"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID of the template to use for summary generation. Must be associated with your account."
+                  }
+                },
+                "required": ["text", "template_id"]
+              },
+              "examples": {
+                "clinical_note": {
+                  "summary": "Clinical note summarization",
+                  "value": {
+                    "text": "Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night. No fever, no shortness of breath. Patient denies any recent travel or sick contacts. On examination, lungs are clear to auscultation bilaterally. Vital signs are within normal limits. Assessment: Upper respiratory tract infection. Plan: Recommend over-the-counter cough suppressant, increase fluid intake, and follow up if symptoms worsen or persist beyond one week.",
+                    "template_id": "123e4567-e89b-12d3-a456-426614174000"
+                  }
+                },
+                "transcription_summary": {
+                  "summary": "Transcription summary",
+                  "value": {
+                    "text": "Doctor: Good morning, how are you feeling today? Patient: Not great, I've had this cough for about two weeks now. Doctor: Tell me more about it. Patient: It's a dry cough, and it gets really bad at night...",
+                    "template_id": "987e6543-e21b-12d3-a456-426614174001"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Summary request accepted and processing started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summary_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique identifier for this summary. Use this to check summary status."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["IN_PROGRESS", "COMPLETED", "ERROR"],
+                      "description": "Initial status of the summary (typically IN_PROGRESS)"
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Timestamp when summary was submitted"
+                    }
+                  },
+                  "required": ["summary_id", "status", "submitted_at"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Summary submission accepted",
+                    "value": {
+                      "summary_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "IN_PROGRESS",
+                      "submitted_at": "2025-01-21T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "empty_text": {
+                    "summary": "Empty text provided",
+                    "value": {
+                      "detail": "text field cannot be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or not associated with your account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "template_not_found": {
+                    "value": {
+                      "detail": "Template with id 123e4567-e89b-12d3-a456-426614174000 not found or does not belong to scribe account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create summary workflow"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Submit text for summary",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/summaries \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"text\": \"Patient presents with...\",\n    \"template_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Submit for summarization",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/summaries', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    text: 'Patient presents with chief complaint of persistent cough...',\n    template_id: templateId\n  })\n});\n\nconst {summary_id, status, submitted_at} = await res.json();\nconsole.log('Summary ID:', summary_id);\nconsole.log('Status:', status);\nconsole.log('Submitted at:', submitted_at);"
+          },
+          {
+            "lang": "Python",
+            "label": "Submit for summarization",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/summaries',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={\n        'text': 'Patient presents with chief complaint of persistent cough...',\n        'template_id': template_id\n    }\n)\n\ndata = res.json()\nprint(f\"Summary ID: {data['summary_id']}\")\nprint(f\"Status: {data['status']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/summaries/{summary_id}": {
+      "get": {
+        "summary": "Get summary status and results",
+        "description": "Retrieve the status and results of a summary generation request.",
+        "tags": ["summaries"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
+          {
+            "name": "summary_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the summary to retrieve",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summary_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Unique summary identifier"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["IN_PROGRESS", "COMPLETED", "ERROR"],
+                      "description": "Current status:\n- `IN_PROGRESS`: AI is generating the summary\n- `COMPLETED`: Summary generation successful, results available\n- `ERROR`: Summary generation failed"
+                    },
+                    "input_text": {
+                      "type": "string",
+                      "description": "The original text that was submitted for summarization"
+                    },
+                    "ai_task": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Generated summary output (null if still processing or error occurred)",
+                      "properties": {
+                        "template_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "nullable": true,
+                          "description": "Template ID used for generation"
+                        },
+                        "template_name": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Name of the template used"
+                        },
+                        "note_json": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Structured summary output in JSON format"
+                        },
+                        "note_text": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Plain text summary output"
+                        }
+                      }
+                    },
+                    "citations": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Generated citations for the summary (if available)",
+                      "properties": {
+                        "template_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "nullable": true
+                        },
+                        "template_name": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "note_json": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Structured citations in JSON format"
+                        },
+                        "note_text": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Plain text citations"
+                        }
+                      }
+                    },
+                    "error_message": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Error details if status is ERROR"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When the summary was created"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When the summary was last updated"
+                    }
+                  },
+                  "required": ["summary_id", "status", "input_text", "created_at", "updated_at"]
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "Completed summary with results",
+                    "value": {
+                      "summary_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "COMPLETED",
+                      "input_text": "Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night. No fever, no shortness of breath. Patient denies any recent travel or sick contacts. On examination, lungs are clear to auscultation bilaterally. Vital signs are within normal limits. Assessment: Upper respiratory tract infection. Plan: Recommend over-the-counter cough suppressant, increase fluid intake, and follow up if symptoms worsen or persist beyond one week.",
+                      "ai_task": {
+                        "template_id": "123e4567-e89b-12d3-a456-426614174000",
+                        "template_name": "Clinical Note Template",
+                        "note_json": {
+                          "chief_complaint": "Persistent dry cough for 2 weeks",
+                          "history_of_present_illness": "Patient reports dry cough worse at night. No fever, shortness of breath, or sick contacts.",
+                          "physical_examination": "Lungs clear bilaterally. Vital signs normal.",
+                          "assessment": "Upper respiratory tract infection",
+                          "plan": "OTC cough suppressant, increase fluids, follow up if symptoms persist >1 week"
+                        },
+                        "note_text": "Chief Complaint: Persistent dry cough for 2 weeks\n\nHistory of Present Illness: Patient reports dry cough worse at night. No fever, shortness of breath, or sick contacts.\n\nPhysical Examination: Lungs clear bilaterally. Vital signs normal.\n\nAssessment: Upper respiratory tract infection\n\nPlan: OTC cough suppressant, increase fluids, follow up if symptoms persist >1 week"
+                      },
+                      "citations": {
+                        "template_id": "987e6543-e21b-12d3-a456-426614174001",
+                        "template_name": "Citations Template",
+                        "note_json": {
+                          "chief_complaint_citation": "Patient presents with chief complaint of persistent cough for the past two weeks.",
+                          "symptoms_citation": "Patient reports the cough is dry and worse at night. No fever, no shortness of breath."
+                        },
+                        "note_text": "[Chief Complaint]: \"Patient presents with chief complaint of persistent cough for the past two weeks.\"\n[Symptoms]: \"Patient reports the cough is dry and worse at night. No fever, no shortness of breath.\""
+                      },
+                      "error_message": null,
+                      "created_at": "2025-01-21T10:30:00Z",
+                      "updated_at": "2025-01-21T10:32:15Z"
+                    }
+                  },
+                  "in_progress": {
+                    "summary": "Summary still processing",
+                    "value": {
+                      "summary_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "IN_PROGRESS",
+                      "input_text": "Patient presents with chief complaint of persistent cough...",
+                      "ai_task": null,
+                      "citations": null,
+                      "error_message": null,
+                      "created_at": "2025-01-21T10:30:00Z",
+                      "updated_at": "2025-01-21T10:30:30Z"
+                    }
+                  },
+                  "error": {
+                    "summary": "Summary generation failed",
+                    "value": {
+                      "summary_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "status": "ERROR",
+                      "input_text": "Patient presents with chief complaint of persistent cough...",
+                      "ai_task": null,
+                      "citations": null,
+                      "error_message": "AI model timeout - please retry",
+                      "created_at": "2025-01-21T10:30:00Z",
+                      "updated_at": "2025-01-21T10:35:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid summary ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid summary ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Summary not found or not accessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Summary not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to retrieve summary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get summary status",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/summaries/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Poll for completion",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst summaryId = '123e4567-e89b-12d3-a456-426614174000';\n\n// Poll until completed\nlet summary;\nwhile (true) {\n  const res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/summaries/${summaryId}`, {\n    method: 'GET',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  });\n  \n  summary = await res.json();\n  console.log('Status:', summary.status);\n  \n  if (summary.status === 'COMPLETED') {\n    console.log('Summary text:', summary.ai_task?.note_text);\n    break;\n  } else if (summary.status === 'ERROR') {\n    console.error('Error:', summary.error_message);\n    break;\n  }\n  \n  // Wait 5 seconds before polling again\n  await new Promise(resolve => setTimeout(resolve, 5000));\n}"
+          },
+          {
+            "lang": "Python",
+            "label": "Poll for completion",
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nsummary_id = '123e4567-e89b-12d3-a456-426614174000'\n\n# Poll until completed\nwhile True:\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/summaries/{summary_id}',\n        headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n    )\n    \n    summary = res.json()\n    print(f\"Status: {summary['status']}\")\n    \n    if summary['status'] == 'COMPLETED':\n        print(f\"Summary text: {summary['ai_task']['note_text']}\")\n        if summary['citations']:\n            print(f\"Citations: {summary['citations']['note_text']}\")\n        break\n    elif summary['status'] == 'ERROR':\n        print(f\"Error: {summary['error_message']}\")\n        break\n    \n    # Wait 5 seconds before polling again\n    time.sleep(5)"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3608,13 +4104,21 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "JWT token obtained from /v1/auth/token endpoint"
-      },
-      "authScheme": {
-        "type": "apiKey",
-        "in": "header",
+        "description": "JWT token obtained from /v1/auth/token endpoint. Note: All requests automatically include 'auth-scheme: cognito' header."
+      }
+    },
+    "parameters": {
+      "authSchemeHeader": {
         "name": "auth-scheme",
-        "description": "Authentication scheme header, should be set to 'cognito'"
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": ["cognito"],
+          "default": "cognito"
+        },
+        "description": "Authentication scheme",
+        "example": "cognito"
       }
     },
     "schemas": {
@@ -3755,5 +4259,5 @@
       "description": "Chunked file upload endpoints for uploading large audio files in multiple parts. Create an upload session, upload chunks in any order (including sequential or parallel uploads), and complete the session to process the uploaded audio chunks for transcription."
     }
   ],
-  "security": [{ "bearerAuth": [], "authScheme": [] }]
+  "security": [{ "bearerAuth": [] }]
 }
