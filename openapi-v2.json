@@ -2691,6 +2691,915 @@
           }
         ]
       }
+    },
+    "/v1/users": {
+      "get": {
+        "summary": "List all users",
+        "description": "Retrieve all users associated with the authenticated service account.",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "UUID of the user"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "description": "External identifier for the user"
+                          },
+                          "is_active": {
+                            "type": "boolean",
+                            "description": "Whether the user is active"
+                          }
+                        },
+                        "required": ["user_id", "external_id", "is_active"]
+                      },
+                      "description": "List of users for the service account"
+                    }
+                  },
+                  "required": ["users"]
+                },
+                "examples": {
+                  "multiple_users": {
+                    "summary": "Service account with multiple users",
+                    "value": {
+                      "users": [
+                        {
+                          "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                          "external_id": "user@hospital.com",
+                          "is_active": true
+                        },
+                        {
+                          "user_id": "987e6543-e21b-12d3-a456-426614174001",
+                          "external_id": "doctor@hospital.com",
+                          "is_active": true
+                        },
+                        {
+                          "user_id": "456e7890-e89b-12d3-a456-426614174002",
+                          "external_id": "inactive@hospital.com",
+                          "is_active": false
+                        }
+                      ]
+                    }
+                  },
+                  "empty_list": {
+                    "summary": "No users yet",
+                    "value": {
+                      "users": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - not a service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_service_account": {
+                    "value": {
+                      "detail": "Only service accounts can access this endpoint"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to retrieve users"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "List users",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch users",
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/users', {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {users} = await res.json();\nconsole.log(`Found ${users.length} users`);"
+          },
+          {
+            "lang": "Python",
+            "label": "Get users list",
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.staging.commure.com/ambient/scribe/v1/users',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\ndata = res.json()\nprint(f\"Found {len(data['users'])} users\")\nfor user in data['users']:\n    print(f\"  - {user['external_id']} ({user['user_id']}): active={user['is_active']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/users/create": {
+      "post": {
+        "summary": "Create a new user",
+        "description": "Create a new user associated with the authenticated service account. Each user must have a unique external_id.",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "external_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "External identifier for the user (e.g., email, employee ID, or system-specific ID). Must be unique across all users."
+                  }
+                },
+                "required": ["external_id"]
+              },
+              "examples": {
+                "email": {
+                  "summary": "Using email as external ID",
+                  "value": {
+                    "external_id": "doctor@hospital.com"
+                  }
+                },
+                "employee_id": {
+                  "summary": "Using employee ID",
+                  "value": {
+                    "external_id": "EMP-12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "UUID of the created user"
+                    }
+                  },
+                  "required": ["user_id"]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "User created",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - user already exists or invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "duplicate_user": {
+                    "summary": "User already exists",
+                    "value": {
+                      "detail": "User with this external_id already exists"
+                    }
+                  },
+                  "empty_external_id": {
+                    "summary": "Empty external_id",
+                    "value": {
+                      "detail": "external_id cannot be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - not a service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_service_account": {
+                    "value": {
+                      "detail": "Only service accounts can access this endpoint"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Create user",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/users/create \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"external_id\": \"doctor@hospital.com\"}'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Create user",
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/users/create', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    external_id: 'doctor@hospital.com'\n  })\n});\n\nconst {user_id} = await res.json();\nconsole.log('Created user:', user_id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Create user",
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/users/create',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'external_id': 'doctor@hospital.com'}\n)\n\ndata = res.json()\nprint(f\"Created user with ID: {data['user_id']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/users/{user_id}": {
+      "get": {
+        "summary": "Get user by UUID",
+        "description": "Retrieve a specific user by their UUID. The user must belong to the authenticated service account.",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the user to retrieve",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "UUID of the user"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "External identifier for the user"
+                    },
+                    "is_active": {
+                      "type": "boolean",
+                      "description": "Whether the user is active"
+                    }
+                  },
+                  "required": ["user_id", "external_id", "is_active"]
+                },
+                "examples": {
+                  "active_user": {
+                    "summary": "Active user",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "external_id": "doctor@hospital.com",
+                      "is_active": true
+                    }
+                  },
+                  "inactive_user": {
+                    "summary": "Inactive user",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "external_id": "former_doctor@hospital.com",
+                      "is_active": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid UUID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - not a service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_service_account": {
+                    "value": {
+                      "detail": "Only service accounts can access this endpoint"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found or not owned by service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to retrieve user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get user by UUID",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Get user",
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('User:', user);"
+          },
+          {
+            "lang": "Python",
+            "label": "Get user by UUID",
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User: {user['external_id']} - Active: {user['is_active']}\")"
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update user status",
+        "description": "Update a user's active status.",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the user to update",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "is_active": {
+                    "type": "boolean",
+                    "description": "Whether the user should be active or inactive"
+                  }
+                },
+                "required": ["is_active"]
+              },
+              "examples": {
+                "deactivate": {
+                  "summary": "Deactivate user",
+                  "value": {
+                    "is_active": false
+                  }
+                },
+                "activate": {
+                  "summary": "Activate user",
+                  "value": {
+                    "is_active": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "UUID of the user"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "External identifier for the user"
+                    },
+                    "is_active": {
+                      "type": "boolean",
+                      "description": "Updated active status"
+                    }
+                  },
+                  "required": ["user_id", "external_id", "is_active"]
+                },
+                "examples": {
+                  "deactivated": {
+                    "summary": "User deactivated",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "external_id": "doctor@hospital.com",
+                      "is_active": false
+                    }
+                  },
+                  "activated": {
+                    "summary": "User activated",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "external_id": "doctor@hospital.com",
+                      "is_active": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid UUID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - not a service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_service_account": {
+                    "value": {
+                      "detail": "Only service accounts can access this endpoint"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found or not owned by service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to update user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Deactivate user",
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"is_active\": false}'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Update user status",
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'PUT',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    is_active: false\n  })\n});\n\nconst user = await res.json();\nconsole.log('Updated user:', user);"
+          },
+          {
+            "lang": "Python",
+            "label": "Update user status",
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'is_active': False}\n)\n\nuser = res.json()\nprint(f\"User {user['external_id']} is now {'active' if user['is_active'] else 'inactive'}\")"
+          }
+        ]
+      }
+    },
+    "/v1/users/external-id/{external_id}": {
+      "get": {
+        "summary": "Get user by external ID",
+        "description": "Retrieve a specific user by their external identifier. The user must belong to the authenticated service account.",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [], "authScheme": [] }],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The external identifier of the user to retrieve (e.g., email, employee ID)",
+            "example": "doctor@hospital.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "UUID of the user"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "External identifier for the user"
+                    },
+                    "is_active": {
+                      "type": "boolean",
+                      "description": "Whether the user is active"
+                    }
+                  },
+                  "required": ["user_id", "external_id", "is_active"]
+                },
+                "examples": {
+                  "active_user": {
+                    "summary": "Active user found",
+                    "value": {
+                      "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "external_id": "doctor@hospital.com",
+                      "is_active": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - not a service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_service_account": {
+                    "value": {
+                      "detail": "Only service accounts can access this endpoint"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found or not owned by service account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to retrieve user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get user by external ID",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users/external-id/doctor@hospital.com \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Get user by external ID",
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst externalId = 'doctor@hospital.com';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/external-id/${encodeURIComponent(externalId)}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('Found user:', user);"
+          },
+          {
+            "lang": "Python",
+            "label": "Get user by external ID",
+            "source": "import requests\nfrom urllib.parse import quote\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nexternal_id = 'doctor@hospital.com'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/external-id/{quote(external_id)}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User UUID: {user['user_id']}\")\nprint(f\"External ID: {user['external_id']}\")\nprint(f\"Active: {user['is_active']}\")"
+          }
+        ]
+      }
     }
   },
   "components": {
