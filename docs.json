@@ -226,7 +226,7 @@
       },
       {
         "tab": "Commure Dictation",
-        "hidden": true,
+        "hidden": false,
         "groups": [
           {
             "group": "Getting Started",
