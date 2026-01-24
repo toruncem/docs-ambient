@@ -204,6 +204,14 @@
             ]
           },
           {
+            "group": "Summaries",
+            "openapi": "openapi-v2.json",
+            "pages": [
+              "POST /v1/summaries",
+              "GET /v1/summaries/{summary_id}"
+            ]
+          },
+          {
             "group": "User Management",
             "openapi": "openapi-v2.json",
             "pages": [
@@ -215,11 +223,13 @@
             ]
           },
           {
-            "group": "Summaries",
+            "group": "Corrections",
             "openapi": "openapi-v2.json",
             "pages": [
-              "POST /v1/summaries",
-              "GET /v1/summaries/{summary_id}"
+              "POST /v1/corrections",
+              "GET /v1/corrections",
+              "PATCH /v1/corrections/{correction_id}",
+              "DELETE /v1/corrections/{correction_id}"
             ]
           }
         ]
