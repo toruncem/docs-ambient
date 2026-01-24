@@ -1212,8 +1212,9 @@
                   },
                   "transcript": {
                     "type": "string",
-                    "description": "Pre-existing transcript text (mutually exclusive with audio_file). If provided, note generation will start immediately without transcription.",
-                    "example": "Patient presents with chief complaint of persistent cough..."
+                    "minLength": 10,
+                    "description": "Pre-existing transcript text (mutually exclusive with audio_file). If provided, note generation will start immediately without transcription. Must contain at least 10 words (minimum requirement for note generation).",
+                    "example": "Patient presents with chief complaint of persistent cough for the past two weeks. Reports difficulty breathing and occasional chest tightness."
                   },
                   "patient_name": {
                     "type": "string",
@@ -2185,7 +2186,7 @@
                     },
                     "upload_session_status": {
                       "type": "string",
-                      "enum": ["UPLOAD_START"],
+                      "enum": ["UPLOAD_STARTED"],
                       "description": "Status of the upload session"
                     },
                     "chunk_upload_info": {
@@ -2216,7 +2217,7 @@
                     "summary": "Successful session creation",
                     "value": {
                       "session_id": "123e4567-e89b-12d3-a456-426614174000",
-                      "upload_session_status": "UPLOAD_START",
+                      "upload_session_status": "UPLOAD_STARTED",
                       "chunk_upload_info": {
                         "upload_endpoint": "/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/{chunk_num}",
                         "method": "PUT",
@@ -2700,6 +2701,794 @@
             "lang": "Python",
             "label": "Complete session with requests",
             "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_id']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
+          }
+        ]
+      }
+    },
+    "/v1/corrections": {
+      "post": {
+        "summary": "Create a new spell correction",
+        "description": "Create a new correction mapping for misspelled text. Corrections can be user-specific or global, and are used to improve transcription accuracy.",
+        "tags": ["corrections"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "user-uuid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "User UUID for authentication and ownership",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["misspelled_text", "correct_text", "correction_type"],
+                "properties": {
+                  "misspelled_text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "The misspelled or incorrect text",
+                    "example": "tylenol"
+                  },
+                  "correct_text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "The correct text",
+                    "example": "ACETAMINOPHEN"
+                  },
+                  "correction_type": {
+                    "type": "string",
+                    "enum": ["PRESCRIPTION", "DISEASE", "MEDICAL_EQUIPMENT", "MEDICAL_PROCEDURE", "MEDICAL_CONDITION", "OTHER", "ACRONYM"],
+                    "description": "Type of correction",
+                    "example": "PRESCRIPTION"
+                  },
+                  "is_user_specific": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether this correction is user-specific (true) or global (false)"
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether this correction should be active"
+                  }
+                }
+              },
+              "examples": {
+                "prescription": {
+                  "summary": "Prescription correction",
+                  "value": {
+                    "misspelled_text": "tylenol",
+                    "correct_text": "ACETAMINOPHEN",
+                    "correction_type": "PRESCRIPTION",
+                    "is_user_specific": false,
+                    "active": true
+                  }
+                },
+                "disease": {
+                  "summary": "Disease correction",
+                  "value": {
+                    "misspelled_text": "diabeetes",
+                    "correct_text": "DIABETES",
+                    "correction_type": "DISEASE",
+                    "is_user_specific": true,
+                    "active": true
+                  }
+                },
+                "acronym": {
+                  "summary": "Acronym correction",
+                  "value": {
+                    "misspelled_text": "cardiopulmonary resuscitation",
+                    "correct_text": "CPR",
+                    "correction_type": "ACRONYM",
+                    "is_user_specific": false,
+                    "active": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Correction created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "id": "550e8400-e29b-41d4-a716-446655440000",
+                      "misspelled_text": "tylenol",
+                      "correct_text": "ACETAMINOPHEN",
+                      "correction_type": "PRESCRIPTION",
+                      "is_user_specific": false,
+                      "occurrence_count": 1,
+                      "correction_count": 0,
+                      "active": true,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T10:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input or validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user_uuid format"
+                    }
+                  },
+                  "validation_error": {
+                    "value": {
+                      "detail": "Validation error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - user is inactive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "inactive_user": {
+                    "value": {
+                      "detail": "User is inactive"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "user_not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - correction may already exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "duplicate": {
+                    "value": {
+                      "detail": "Database constraint violation - correction may already exist"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to create correction"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Create correction",
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/corrections \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"misspelled_text\": \"tylenol\",\n    \"correct_text\": \"ACETAMINOPHEN\",\n    \"correction_type\": \"PRESCRIPTION\",\n    \"is_user_specific\": false,\n    \"active\": true\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Create correction with fetch",
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correction = {\n  misspelled_text: 'tylenol',\n  correct_text: 'ACETAMINOPHEN',\n  correction_type: 'PRESCRIPTION',\n  is_user_specific: false,\n  active: true\n};\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/corrections', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'user-uuid': userId\n  },\n  body: JSON.stringify(correction)\n});\n\nconst created = await res.json();\nconsole.log('Created correction:', created.id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Create correction with requests",
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection = {\n    'misspelled_text': 'tylenol',\n    'correct_text': 'ACETAMINOPHEN',\n    'correction_type': 'PRESCRIPTION',\n    'is_user_specific': False,\n    'active': True\n}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/corrections',\n    headers={'user-uuid': user_id},\n    json=correction\n)\n\ncreated = res.json()\nprint(f\"Created correction: {created['id']}\")"
+          }
+        ]
+      },
+      "get": {
+        "summary": "Get all corrections for a user",
+        "description": "Retrieve all corrections for the authenticated user. Can filter to show only active corrections or include inactive ones.",
+        "tags": ["corrections"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "user-uuid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "User UUID for authentication and ownership",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          {
+            "name": "active_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "If true, only return active corrections. Defaults to true.",
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Corrections retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "corrections": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CorrectionResponse"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of corrections returned"
+                    }
+                  },
+                  "required": ["corrections", "total"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "corrections": [
+                        {
+                          "id": "550e8400-e29b-41d4-a716-446655440000",
+                          "misspelled_text": "tylenol",
+                          "correct_text": "ACETAMINOPHEN",
+                          "correction_type": "PRESCRIPTION",
+                          "is_user_specific": false,
+                          "occurrence_count": 5,
+                          "correction_count": 3,
+                          "active": true,
+                          "created_at": "2025-01-02T10:30:00Z",
+                          "updated_at": "2025-01-02T10:35:00Z"
+                        },
+                        {
+                          "id": "550e8400-e29b-41d4-a716-446655440001",
+                          "misspelled_text": "diabeetes",
+                          "correct_text": "DIABETES",
+                          "correction_type": "DISEASE",
+                          "is_user_specific": true,
+                          "occurrence_count": 2,
+                          "correction_count": 2,
+                          "active": true,
+                          "created_at": "2025-01-01T08:00:00Z",
+                          "updated_at": "2025-01-01T08:00:00Z"
+                        }
+                      ],
+                      "total": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid user UUID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user_uuid format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - user is inactive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "inactive_user": {
+                    "value": {
+                      "detail": "User is inactive"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "user_not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to get corrections"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Get all active corrections",
+            "source": "curl -X GET 'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=true' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+          },
+          {
+            "lang": "cURL",
+            "label": "Get all corrections including inactive",
+            "source": "curl -X GET 'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=false' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch corrections",
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst activeOnly = true;\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=${activeOnly}`,\n  {\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nconst {corrections, total} = await res.json();\nconsole.log(`Found ${total} corrections`);\ncorrections.forEach(c => {\n  console.log(`${c.misspelled_text} -> ${c.correct_text} (${c.correction_type})`);\n});"
+          },
+          {
+            "lang": "Python",
+            "label": "Get corrections with requests",
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\nactive_only = True\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only={active_only}',\n    headers={'user-uuid': user_id}\n)\n\ndata = res.json()\nprint(f\"Found {data['total']} corrections\")\nfor correction in data['corrections']:\n    print(f\"{correction['misspelled_text']} -> {correction['correct_text']} ({correction['correction_type']})\")"
+          }
+        ]
+      }
+    },
+    "/v1/corrections/{correction_id}": {
+      "patch": {
+        "summary": "Update a correction",
+        "description": "Update an existing correction's correct text or correction type. Only corrections belonging to the authenticated user can be updated.",
+        "tags": ["corrections"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "user-uuid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "User UUID for authentication and ownership",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          {
+            "name": "correction_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the correction to update",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "correct_text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "The correct text (optional)",
+                    "example": "ACETAMINOPHEN 500MG"
+                  },
+                  "correction_type": {
+                    "type": "string",
+                    "enum": ["PRESCRIPTION", "DISEASE", "MEDICAL_EQUIPMENT", "MEDICAL_PROCEDURE", "MEDICAL_CONDITION", "OTHER", "ACRONYM"],
+                    "description": "Type of correction (optional)",
+                    "example": "PRESCRIPTION"
+                  }
+                }
+              },
+              "examples": {
+                "update_text": {
+                  "summary": "Update correct text",
+                  "value": {
+                    "correct_text": "ACETAMINOPHEN 500MG"
+                  }
+                },
+                "update_type": {
+                  "summary": "Update correction type",
+                  "value": {
+                    "correction_type": "PRESCRIPTION"
+                  }
+                },
+                "update_both": {
+                  "summary": "Update both fields",
+                  "value": {
+                    "correct_text": "ACETAMINOPHEN 500MG",
+                    "correction_type": "PRESCRIPTION"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Correction updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "id": "550e8400-e29b-41d4-a716-446655440000",
+                      "misspelled_text": "tylenol",
+                      "correct_text": "ACETAMINOPHEN 500MG",
+                      "correction_type": "PRESCRIPTION",
+                      "is_user_specific": false,
+                      "occurrence_count": 5,
+                      "correction_count": 3,
+                      "active": true,
+                      "created_at": "2025-01-02T10:30:00Z",
+                      "updated_at": "2025-01-02T11:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input or validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user_uuid format"
+                    }
+                  },
+                  "validation_error": {
+                    "value": {
+                      "detail": "Validation error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - user is inactive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "inactive_user": {
+                    "value": {
+                      "detail": "User is inactive"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Correction not found or access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Correction not found"
+                    }
+                  },
+                  "access_denied": {
+                    "value": {
+                      "detail": "Access denied to this correction"
+                    }
+                  },
+                  "user_not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to update correction"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Update correction",
+            "source": "curl -X PATCH https://api.staging.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"correct_text\": \"ACETAMINOPHEN 500MG\",\n    \"correction_type\": \"PRESCRIPTION\"\n  }'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Update correction with fetch",
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\nconst updates = {\n  correct_text: 'ACETAMINOPHEN 500MG',\n  correction_type: 'PRESCRIPTION'\n};\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'PATCH',\n    headers: {\n      'Content-Type': 'application/json',\n      'user-uuid': userId\n    },\n    body: JSON.stringify(updates)\n  }\n);\n\nconst updated = await res.json();\nconsole.log('Updated correction:', updated.id);"
+          },
+          {
+            "lang": "Python",
+            "label": "Update correction with requests",
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\nupdates = {\n    'correct_text': 'ACETAMINOPHEN 500MG',\n    'correction_type': 'PRESCRIPTION'\n}\n\nres = requests.patch(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id},\n    json=updates\n)\n\nupdated = res.json()\nprint(f\"Updated correction: {updated['id']}\")"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a correction",
+        "description": "Mark a correction as inactive (soft delete). Only corrections belonging to the authenticated user can be deleted.",
+        "tags": ["corrections"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "user-uuid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "User UUID for authentication and ownership",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          {
+            "name": "correction_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the correction to delete",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Correction deleted successfully (no content)"
+          },
+          "400": {
+            "description": "Bad request - invalid user UUID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid user_uuid format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - user is inactive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "inactive_user": {
+                    "value": {
+                      "detail": "User is inactive"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Correction not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Correction not found"
+                    }
+                  },
+                  "user_not_found": {
+                    "value": {
+                      "detail": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to delete correction"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Delete correction",
+            "source": "curl -X DELETE https://api.staging.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Delete correction with fetch",
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nif (res.status === 204) {\n  console.log('Correction deleted successfully');\n} else {\n  const error = await res.json();\n  console.error('Error:', error.detail);\n}"
+          },
+          {
+            "lang": "Python",
+            "label": "Delete correction with requests",
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id}\n)\n\nif res.status_code == 204:\n    print('Correction deleted successfully')\nelse:\n    print(f\"Error: {res.json()['detail']}\")"
           }
         ]
       }
@@ -4230,6 +5019,57 @@
           }
         },
         "required": ["detail"]
+      },
+      "CorrectionResponse": {
+        "type": "object",
+        "description": "Response object for a correction entry",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the correction"
+          },
+          "misspelled_text": {
+            "type": "string",
+            "description": "The misspelled or incorrect text"
+          },
+          "correct_text": {
+            "type": "string",
+            "description": "The correct text"
+          },
+          "correction_type": {
+            "type": "string",
+            "enum": ["PRESCRIPTION", "DISEASE", "MEDICAL_EQUIPMENT", "MEDICAL_PROCEDURE", "MEDICAL_CONDITION", "OTHER", "ACRONYM"],
+            "description": "Type of correction"
+          },
+          "is_user_specific": {
+            "type": "boolean",
+            "description": "Whether this correction is user-specific (true) or global (false)"
+          },
+          "occurrence_count": {
+            "type": "integer",
+            "description": "Number of times the misspelled text has been encountered"
+          },
+          "correction_count": {
+            "type": "integer",
+            "description": "Number of times this correction has been applied"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether this correction is currently active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the correction was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the correction was last updated"
+          }
+        },
+        "required": ["id", "misspelled_text", "correct_text", "correction_type", "is_user_specific", "occurrence_count", "correction_count", "active", "created_at", "updated_at"]
       }
     }
   },
@@ -4257,6 +5097,10 @@
     {
       "name": "Chunking",
       "description": "Chunked file upload endpoints for uploading large audio files in multiple parts. Create an upload session, upload chunks in any order (including sequential or parallel uploads), and complete the session to process the uploaded audio chunks for transcription."
+    },
+    {
+      "name": "corrections",
+      "description": "Correction management endpoints for creating and managing spell corrections. Corrections map misspelled or incorrect text to the correct form and can be user-specific or global to improve transcription accuracy."
     }
   ],
   "security": [{ "bearerAuth": [] }]
