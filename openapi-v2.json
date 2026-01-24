@@ -744,6 +744,145 @@
             "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/templates',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Created template: {data['template_uuid']}\")"
           }
         ]
+      },
+      "get": {
+        "summary": "List all templates",
+        "description": "Retrieve a list of all templates belonging to the authenticated user's scribe account.",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
+        "responses": {
+          "200": {
+            "description": "Templates retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "templates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "template_uuid": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Universally unique identifier (UUID) for the template"
+                          },
+                          "template_name": {
+                            "type": "string",
+                            "description": "Name of the template"
+                          },
+                          "template_description": {
+                            "type": "string",
+                            "description": "Description of the template"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Timestamp when the template was created"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Timestamp when the template was last updated"
+                          },
+                          "active": {
+                            "type": "boolean",
+                            "description": "Whether the template is active"
+                          }
+                        },
+                        "required": ["template_uuid", "created_at", "updated_at", "active"]
+                      }
+                    }
+                  },
+                  "required": ["templates"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "templates": [
+                        {
+                          "template_uuid": "550e8400-e29b-41d4-a716-446655440000",
+                          "template_name": "SOAP Note",
+                          "template_description": "Standard SOAP format for clinical documentation",
+                          "created_at": "2025-01-02T10:30:00Z",
+                          "updated_at": "2025-01-02T10:30:00Z",
+                          "active": true
+                        },
+                        {
+                          "template_uuid": "550e8400-e29b-41d4-a716-446655440001",
+                          "template_name": "Progress Note",
+                          "template_description": "Template for progress notes",
+                          "created_at": "2025-01-01T08:00:00Z",
+                          "updated_at": "2025-01-01T08:00:00Z",
+                          "active": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to list templates"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "List templates",
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Fetch templates",
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/templates', {\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {templates} = await res.json();\nconsole.log(`Found ${templates.length} templates`);\ntemplates.forEach(t => {\n  console.log(`${t.template_name} (${t.template_uuid}) - Active: ${t.active}`);\n});"
+          },
+          {
+            "lang": "Python",
+            "label": "List templates with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.staging.commure.com/ambient/scribe/v1/templates',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"Found {len(data['templates'])} templates\")\nfor template in data['templates']:\n    print(f\"{template['template_name']} ({template['template_uuid']}) - Active: {template['active']}\")"
+          }
+        ]
       }
     },
     "/v1/templates/{template_id}": {
@@ -1174,6 +1313,156 @@
             "lang": "Python",
             "label": "Update template with requests",
             "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Updated template: {data['template_uuid']}\")"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a template",
+        "description": "Mark a template as inactive (soft delete).",
+        "tags": ["templates"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/authSchemeHeader" },
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The UUID of the template to delete",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "template_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Universally unique identifier (UUID) for the deleted template"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Confirmation message",
+                      "example": "Template deleted successfully"
+                    }
+                  },
+                  "required": ["template_uuid", "message"]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "template_uuid": "550e8400-e29b-41d4-a716-446655440000",
+                      "message": "Template deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid template ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "invalid_uuid": {
+                    "value": {
+                      "detail": "Invalid UUID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "detail": "Not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found or doesn't belong to user's account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "detail": "Template with id 550e8400-e29b-41d4-a716-446655440000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "server_error": {
+                    "value": {
+                      "detail": "Failed to delete template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "Delete template",
+            "source": "curl -X DELETE https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Delete template with fetch",
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  }\n);\n\nconst {template_uuid, message} = await res.json();\nconsole.log(message);"
+          },
+          {
+            "lang": "Python",
+            "label": "Delete template with requests",
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"{data['message']}\")\nprint(f\"Deleted template: {data['template_uuid']}\")"
           }
         ]
       }
