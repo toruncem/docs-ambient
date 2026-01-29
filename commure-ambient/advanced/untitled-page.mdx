@@ -1,0 +1,38 @@
+---
+title: "Assistant Note Editing"
+---
+
+## Functionality
+
+**Assistant Note Editing** enables the AI Assistant to detect intent when users want to modify specific sections of their clinical note, providing a structured interaction model.
+
+<br />
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/JhYCcufF-Ko?modestbranding=1&rel=0&fs=0&disablekb=1" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+
+---
+
+### Intent Detection
+
+- **Automatically identifies which section a user wants to change.**
+- For example, if a user types _"Make the subjective section bulleted,"_ the system recognizes the target section immediately.
+
+---
+
+### Apply/Revert Workflow
+
+- The Assistant responds with an **"Update" bubble**.
+- Once applied, users can **"Revert"** to the original text if the edit isn't desired.
+
+---
+
+### Update Behavior
+
+- **Only one active update per section.**
+- If a user applies a different message's update to the same section, the **previous update is automatically unapplied**.
+
+---
+
+<Info>
+  **Note:** This logic prevents conflicting edits by ensuring the most recent applied change takes precedence for a specific section.
+</Info>

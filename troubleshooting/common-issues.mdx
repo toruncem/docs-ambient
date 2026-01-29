@@ -1,6 +1,8 @@
 ---
 title: "Common Issues, Tips, & Tricks"
-description: "Most common issues we see and how you can resolve them. "
+description: "Most common issues we see and how you can resolve them. 
+
+"
 ---
 
 <AccordionGroup>
@@ -19,7 +21,22 @@ description: "Most common issues we see and how you can resolve them. "
     1. If you are recording on the mobile app and you get an incoming call, the recording will automatically get paused within the app and will only resume after the call has been addressed and you go into the application and press the "resume" button.
     2. If you are recording on the mobile app, webpage, or chrome extension, no audio file will be saved if the application is closed out while it is actively recording.
   </Accordion>
+  <Accordion title="Audio Player On Error" icon="sparkles">
+    Improves the debugging experience for providers when a scribe fails to generate a transcript.
+
+    - **Audio Validation:** If a scribe fails due to "no speech" or other processing errors, the audio player is surfaced immediately on the Transcript tab.
+    - **Provider Self-Service:** Allows users to verify if the audio was actually captured or if technical issues (like a muted mic) occurred during the recording.
+
+    <img
+      src="/images/image.png"
+      alt="Image"
+      title="Image"
+      className="mx-auto"
+      style={{ width:"70%" }}
+    />
+  </Accordion>
 </AccordionGroup>
+
 
 More information will continuously be added to this page!
 

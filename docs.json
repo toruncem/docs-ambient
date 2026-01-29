@@ -30,7 +30,8 @@
               "basics/history",
               "basics/scribe-actions",
               "basics/visits",
-              "basics/ehr_sync"
+              "basics/ehr_sync",
+              "ai_studio/clinical-copilot"
             ]
           },
           {
@@ -43,7 +44,6 @@
               "ai_studio/preferences",
               "ai_studio/ai-summaries",
               "ai_studio/after-visit-summaries",
-              "ai_studio/clinical-copilot",
               "ai_studio/carry-forward",
               "ai_studio/macros"
             ]
@@ -51,6 +51,7 @@
           {
             "group": "Advanced",
             "pages": [
+              "commure-ambient/advanced/untitled-page",
               "advanced/collaborator",
               "advanced/dictation"
             ]
