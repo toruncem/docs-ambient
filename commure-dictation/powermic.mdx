@@ -1,0 +1,166 @@
+---
+title: "PowerMic III"
+description: "Use your Nuance PowerMic III with Commure Dictation for hands-free dictation, field navigation, contextual editing, and undo."
+---
+
+If you already use a Nuance PowerMic III, you can plug it in and start using it with Commure Dictation immediately — no drivers, no configuration, no re-learning. The microphone and every button just work.
+
+<Tip>
+The PowerMic III connects via USB. Commure Dictation automatically detects it when plugged in — there is no setup required.
+</Tip>
+
+## Button Overview
+
+The table below shows how each PowerMic III button maps to an action in Commure Dictation.
+
+| Button | Action | Behavior |
+|--------|--------|----------|
+| **Record** (center) | Dictate | Hold to dictate and release to stop, or press once to start and press again to stop |
+| **Start / Stop** (below Record) | Dictate | Hold to dictate and release to stop, or press once to start and press again to stop |
+| **Tab Forward** (right arrow) | Next Field | Press to move to the next field or placeholder |
+| **Tab Back** (left arrow) | Previous Field | Press to move to the previous field or placeholder |
+| **Custom Left** | Undo | Press to undo the last contextual edit |
+| **Custom Right** (bottom right) | Contextual Edit | Press to enter contextual editing mode |
+
+<Tip>
+The **Record** and **Start / Stop** buttons both work identically — use whichever feels more natural. If you're coming from Dragon, the hand position is the same.
+</Tip>
+
+## Dictating with the PowerMic
+
+You can dictate in whichever style feels most natural — **hold-to-dictate** or **click-to-toggle**:
+
+**Hold to dictate:**
+1. Click into the text field in your EHR where you want to document.
+2. **Press and hold** the Record button (or the Start / Stop button).
+3. Speak naturally. Text appears in real-time at your cursor position.
+4. **Release** the button to stop dictation.
+
+**Click to toggle:**
+1. Click into the text field in your EHR where you want to document.
+2. **Press** the Record button (or the Start / Stop button) once to start dictation.
+3. Speak naturally. Text appears in real-time at your cursor position.
+4. **Press** the button again to stop dictation.
+
+All standard voice commands — punctuation, line breaks, formatting — work while dictating. See the [Voice Commands](/commure-dictation/voice-commands) reference for the full list.
+
+## Navigating Between Fields
+
+The **Tab Forward** and **Tab Back** buttons let you move between fields without touching your keyboard.
+
+| Button | Equivalent | What it does |
+|--------|------------|--------------|
+| Tab Forward | `Tab` | Moves the cursor to the next field or placeholder |
+| Tab Back | `Shift + Tab` | Moves the cursor to the previous field or placeholder |
+
+### Example workflow
+
+You are documenting a visit in a note template with multiple sections:
+
+1. Click into the **Chief Complaint** field and dictate.
+2. Press **Tab Forward** to jump to the **HPI** field.
+3. Dictate the history of present illness.
+4. Press **Tab Forward** again to reach the **Assessment & Plan** field.
+5. Dictate your assessment.
+
+You never need to reach for the keyboard or mouse to move between fields.
+
+<Tip>
+You can also say **"next field"** or **"previous field"** by voice while dictating to achieve the same navigation — useful if your hands are occupied during an exam.
+</Tip>
+
+## Contextual Editing
+
+The **Custom Right** button (bottom right of the PowerMic) activates **Contextual Editing** — a powerful way to revise text you have already dictated, using plain spoken instructions.
+
+### How it works
+
+1. Place your cursor in the field (or select the text) you want to edit.
+2. **Press** the Contextual Edit button.
+3. Speak your editing instruction (e.g., *"make this a bulleted list"*).
+4. Release the button. The edit is applied directly to the text.
+
+Contextual Editing understands your intent and applies the change to the appropriate scope:
+
+- If you have **text selected**, the edit applies to the selection.
+- If nothing is selected, it applies to the **current line**.
+- If the line is empty, it applies to the **entire field**.
+
+### What you can say
+
+| Instruction | What it does | Example |
+|-------------|--------------|---------|
+| *"make this bullets"* | Converts text into a bulleted list | A paragraph of symptoms becomes a clean bullet list |
+| *"patient is female"* | Replaces gendered pronouns and references throughout | "He reports..." → "She reports..." |
+| *"convert numbers"* | Changes written-out numbers to numerals | "eighty two" → "82" |
+| *"make this more concise"* | Shortens verbose text while preserving meaning | A lengthy HPI becomes a focused summary |
+| *"fix grammar"* | Corrects grammatical errors and awkward phrasing | Cleans up run-on sentences and subject-verb agreement |
+| *"organize by chief complaint"* | Restructures the note into logical sections | Free-form text becomes organized with headers |
+
+You are not limited to these examples — speak any natural editing instruction and Contextual Editing will interpret and apply it.
+
+### Example: reformatting a note
+
+You dictated the following into the Assessment & Plan field:
+
+> *Patient has hypertension which is well controlled on lisinopril ten milligrams daily and type two diabetes with last a one c of six point eight and hyperlipidemia on atorvastatin twenty milligrams*
+
+Press the **Contextual Edit** button and say: *"make this a bulleted list with each condition separate"*
+
+The text is replaced with:
+
+> - Hypertension — well controlled on lisinopril 10 mg daily
+> - Type 2 diabetes — last A1c 6.8
+> - Hyperlipidemia — on atorvastatin 20 mg
+
+### Example: correcting a detail
+
+You dictated a note referring to the patient as male, but the patient is female.
+
+Press the **Contextual Edit** button and say: *"patient is female"*
+
+All instances of "he", "him", "his" in the field are updated to "she", "her", "hers" — without changing anything else.
+
+## Undo
+
+The **Custom Left** button undoes the last contextual edit, restoring the original text.
+
+### How it works
+
+1. After a contextual edit is applied, press the **Custom Left** button.
+2. The edited text is replaced with the original text that was there before the edit.
+
+This is a single-level undo — it reverts the most recent contextual edit only. If you have made additional manual changes to the field after the contextual edit, the undo is automatically cleared (since the text has changed).
+
+<Tip>
+Think of it as a safety net: if a contextual edit didn't produce the result you wanted, one press of the Undo button brings back your original text instantly.
+</Tip>
+
+### Example
+
+1. You dictate a paragraph into the HPI field.
+2. You press the **Contextual Edit** button and say *"make this more concise."*
+3. The text is shortened — but you preferred the original version.
+4. Press the **Custom Left** (Undo) button. Your original paragraph is restored.
+
+## Quick Reference
+
+| Button | When to use it |
+|--------|----------------|
+| **Record** / **Start-Stop** | Hold to dictate, or press to toggle on/off |
+| **Tab Forward** | Jump to the next field or placeholder |
+| **Tab Back** | Jump to the previous field or placeholder |
+| **Custom Right** | Revise or reformat existing text by voice |
+| **Custom Left** | Undo the last contextual edit |
+
+## Coming from Dragon?
+
+If you have been using a PowerMic III with Dragon Medical One, here is what to expect:
+
+- **Same hardware, same hand position.** No physical adjustment needed.
+- **Record button works the same way.** Press and hold to dictate, or press once to start and again to stop.
+- **Tab Forward / Tab Back work the same way.** Field navigation is identical.
+- **Contextual Edit is new.** This replaces the need to manually select and re-dictate text. Speak an instruction and the text updates in place.
+- **Undo is new.** One-press rollback for contextual edits — no keyboard shortcut needed.
+- **Voice commands carry over.** Punctuation, line breaks, and formatting commands work just like you're used to.
+- **No configuration needed.** Plug in and go — Commure Dictation detects the PowerMic automatically.
