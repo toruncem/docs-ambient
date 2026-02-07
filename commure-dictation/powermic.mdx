@@ -1,7 +1,11 @@
 ---
-title: "PowerMic III"
-description: "Use your Nuance PowerMic III with Commure Dictation for hands-free dictation, field navigation, contextual editing, and undo."
+title: "Handheld Microphone Integration"
+description: "Use handheld dictation microphones like the PowerMic III with Commure Dictation for hands-free dictation, field navigation, and even AI-fueled contextual editing."
 ---
+
+## Supported Devices
+
+Commure Dictation currently supports the **Nuance PowerMic III**. Support for the **PowerMic 4** and **Philips SpeechMike** is planned for a future release.
 
 If you already use a Nuance PowerMic III, you can plug it in and start using it with Commure Dictation immediately — no drivers, no configuration, no re-learning. The microphone and every button just work.
 
@@ -71,14 +75,20 @@ You can also say **"next field"** or **"previous field"** by voice while dictati
 
 ## Contextual Editing
 
-The **Custom Right** button (bottom right of the PowerMic) activates **Contextual Editing** — a powerful way to revise text you have already dictated, using plain spoken instructions.
+The **Custom Right** button (bottom right of the PowerMic) activates **Contextual Editing** — an AI-powered way to revise text you have already dictated, using plain spoken instructions.
+
+With traditional dictation, fixing a mistake or reformatting a section means selecting text, deleting it, and re-dictating. Contextual Editing eliminates that entirely. Just tell the AI what you want changed — in your own words — and it rewrites the text for you in place. No mouse clicks, no deleting, no re-dictating.
+
+<Tip>
+Contextual Editing is powered by AI that understands clinical language and your intent. You do not need to memorize specific commands — speak naturally, and the AI interprets what you mean.
+</Tip>
 
 ### How it works
 
 1. Place your cursor in the field (or select the text) you want to edit.
 2. **Press** the Contextual Edit button.
 3. Speak your editing instruction (e.g., *"make this a bulleted list"*).
-4. Release the button. The edit is applied directly to the text.
+4. Release the button. The AI applies the edit directly to the text.
 
 Contextual Editing understands your intent and applies the change to the appropriate scope:
 
@@ -88,6 +98,8 @@ Contextual Editing understands your intent and applies the change to the appropr
 
 ### What you can say
 
+Because Contextual Editing is AI-powered, you can say virtually anything. Here are some common examples:
+
 | Instruction | What it does | Example |
 |-------------|--------------|---------|
 | *"make this bullets"* | Converts text into a bulleted list | A paragraph of symptoms becomes a clean bullet list |
@@ -95,9 +107,11 @@ Contextual Editing understands your intent and applies the change to the appropr
 | *"convert numbers"* | Changes written-out numbers to numerals | "eighty two" → "82" |
 | *"make this more concise"* | Shortens verbose text while preserving meaning | A lengthy HPI becomes a focused summary |
 | *"fix grammar"* | Corrects grammatical errors and awkward phrasing | Cleans up run-on sentences and subject-verb agreement |
-| *"organize by chief complaint"* | Restructures the note into logical sections | Free-form text becomes organized with headers |
+| *"add vitals at the top"* | Inserts a section you forgot | Adds a vitals line above existing text |
+| *"change lisinopril to losartan"* | Swaps a specific medication reference | Updates the drug name without touching anything else |
+| *"organize by problem"* | Restructures the note into logical sections | Free-form text becomes organized with headers |
 
-You are not limited to these examples — speak any natural editing instruction and Contextual Editing will interpret and apply it.
+You are not limited to these examples — speak any natural editing instruction and the AI will interpret and apply it.
 
 ### Example: reformatting a note
 
@@ -113,13 +127,21 @@ The text is replaced with:
 > - Type 2 diabetes — last A1c 6.8
 > - Hyperlipidemia — on atorvastatin 20 mg
 
-### Example: correcting a detail
+### Example: correcting a medication
 
-You dictated a note referring to the patient as male, but the patient is female.
+You dictated a note and said "lisinopril 10 milligrams" but the patient's dose was recently increased.
 
-Press the **Contextual Edit** button and say: *"patient is female"*
+Press the **Contextual Edit** button and say: *"change lisinopril to 20 mg"*
 
-All instances of "he", "him", "his" in the field are updated to "she", "her", "hers" — without changing anything else.
+The AI finds the medication reference and updates it to "lisinopril 20 mg" — without touching anything else in the note.
+
+### Example: cleaning up a rushed dictation
+
+You dictated quickly between patients and the result is a long, unstructured paragraph in the HPI field.
+
+Press the **Contextual Edit** button and say: *"clean this up and organize by system"*
+
+The AI restructures your free-form paragraph into clearly organized sections by organ system, fixing grammar along the way.
 
 ## Undo
 
@@ -163,4 +185,5 @@ If you have been using a PowerMic III with Dragon Medical One, here is what to e
 - **Contextual Edit is new.** This replaces the need to manually select and re-dictate text. Speak an instruction and the text updates in place.
 - **Undo is new.** One-press rollback for contextual edits — no keyboard shortcut needed.
 - **Voice commands carry over.** Punctuation, line breaks, and formatting commands work just like you're used to.
+- **Custom button mappings do not carry over.** If you programmed custom button behaviors in Dragon, those configurations are not transferred. Commure Dictation uses its own fixed button mappings as described above.
 - **No configuration needed.** Plug in and go — Commure Dictation detects the PowerMic automatically.
