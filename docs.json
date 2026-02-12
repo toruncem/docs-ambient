@@ -152,7 +152,7 @@
           {
             "group": "Guides",
             "pages": [
-              "api-reference/introduction"
+              "api/v2/introduction"
             ]
           },
           {
