@@ -112,7 +112,6 @@
           {
             "group": "Guides",
             "pages": [
-              "api/introduction",
               "api/authentication",
               "api/error-handling"
             ]
@@ -152,7 +151,7 @@
           {
             "group": "Guides",
             "pages": [
-              "api/v2/introduction"
+              "api/introduction"
             ]
           },
           {
