@@ -5,7 +5,7 @@
     "version": "2.0.0",
     "description": "Auth (password flow), transcription, and template management endpoints for v2 API."
   },
-  "servers": [{ "url": "https://api.sandbox.commure.com/ambient/scribe" }],
+  "servers": [{ "url": "https://api.staging.commure.com/ambient/scribe" }],
   "paths": {
     "/v1/auth/token": {
       "post": {
@@ -138,17 +138,17 @@
           {
             "lang": "cURL",
             "label": "Password flow",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -H 'auth-server: cognito' \\\n  --data-urlencode 'username={email}' \\\n  --data-urlencode 'password={password}'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/auth/token \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -H 'auth-server: cognito' \\\n  --data-urlencode 'username={email}' \\\n  --data-urlencode 'password={password}'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch JWT",
-            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/auth/token', { \n  method:'POST', \n  headers:{\n    'Content-Type':'application/x-www-form-urlencoded',\n    'auth-server': 'cognito'\n  }, \n  body: form \n});\nconst {token, token_type, expires_in} = await res.json();"
+            "source": "const form = new URLSearchParams({username: process.env.AMBIENT_USER, password: process.env.AMBIENT_PASS});\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/auth/token', { \n  method:'POST', \n  headers:{\n    'Content-Type':'application/x-www-form-urlencoded',\n    'auth-server': 'cognito'\n  }, \n  body: form \n});\nconst {token, token_type, expires_in} = await res.json();"
           },
           {
             "lang": "Python",
             "label": "Requests JWT",
-            "source": "import os, requests\nres = requests.post('https://api.sandbox.commure.com/ambient/scribe/v1/auth/token', \n  headers={'auth-server': 'cognito'},\n  data={\n    'username': os.environ['AMBIENT_USER'],\n    'password': os.environ['AMBIENT_PASS']\n  }\n)\ndata = res.json()\ntoken = data['token']"
+            "source": "import os, requests\nres = requests.post('https://api.staging.commure.com/ambient/scribe/v1/auth/token', \n  headers={'auth-server': 'cognito'},\n  data={\n    'username': os.environ['AMBIENT_USER'],\n    'password': os.environ['AMBIENT_PASS']\n  }\n)\ndata = res.json()\ntoken = data['token']"
           }
         ]
       }
@@ -319,17 +319,17 @@
           {
             "lang": "cURL",
             "label": "Upload audio file",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/transcribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/transcribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
           },
           {
             "lang": "JavaScript",
             "label": "Upload with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/transcribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {transcription_id, submitted_at} = await res.json();\nconsole.log('Transcription ID:', transcription_id);\nconsole.log('Submitted at:', submitted_at);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/transcribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {transcription_id, submitted_at} = await res.json();\nconsole.log('Transcription ID:', transcription_id);\nconsole.log('Submitted at:', submitted_at);"
           },
           {
             "lang": "Python",
             "label": "Upload with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.sandbox.commure.com/ambient/scribe/v1/transcribe',\n        headers=headers,\n        files=files\n    )\n\ndata = res.json()\nprint(f\"Transcription ID: {data['transcription_id']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.staging.commure.com/ambient/scribe/v1/transcribe',\n        headers=headers,\n        files=files\n    )\n\ndata = res.json()\nprint(f\"Transcription ID: {data['transcription_id']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
           }
         ]
       }
@@ -535,17 +535,17 @@
           {
             "lang": "cURL",
             "label": "Get transcription status",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/transcribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/transcribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch transcription status",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst transcriptionId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst transcription = await res.json();\nconsole.log('Status:', transcription.status);\nif (transcription.raw_text) {\n  console.log('Transcription:', transcription.raw_text);\n}\n\n// Poll for completion\nwhile (transcription.status === 'STT_PROCESSING' || transcription.status === 'DETECTED_FILE') {\n  await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds\n  const res = await fetch(\n    `https://api.sandbox.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n    { headers: { 'Authorization': `Bearer ${token}` } }\n  );\n  transcription = await res.json();\n  console.log('Status:', transcription.status);\n}"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst transcriptionId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst transcription = await res.json();\nconsole.log('Status:', transcription.status);\nif (transcription.raw_text) {\n  console.log('Transcription:', transcription.raw_text);\n}\n\n// Poll for completion\nwhile (transcription.status === 'STT_PROCESSING' || transcription.status === 'DETECTED_FILE') {\n  await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds\n  const res = await fetch(\n    `https://api.staging.commure.com/ambient/scribe/v1/transcribe/${transcriptionId}`,\n    { headers: { 'Authorization': `Bearer ${token}` } }\n  );\n  transcription = await res.json();\n  console.log('Status:', transcription.status);\n}"
           },
           {
             "lang": "Python",
             "label": "Get transcription with polling",
-            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\ntranscription_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_transcription_status(transcription_id, token):\n    res = requests.get(\n        f'https://api.sandbox.commure.com/ambient/scribe/v1/transcribe/{transcription_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\ntranscription = get_transcription_status(transcription_id, token)\nprint(f\"Status: {transcription['status']}\")\n\n# Poll until completed or error\nwhile transcription['status'] in ['DETECTED_FILE', 'STT_PROCESSING']:\n    print(f\"Status: {transcription['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    transcription = get_transcription_status(transcription_id, token)\n\nif transcription['status'] == 'STT_COMPLETED':\n    print(f\"Transcription completed!\")\n    print(f\"Text: {transcription['raw_text']}\")\nelse:\n    print(f\"Transcription failed with status: {transcription['status']}\")"
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\ntranscription_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_transcription_status(transcription_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/transcribe/{transcription_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\ntranscription = get_transcription_status(transcription_id, token)\nprint(f\"Status: {transcription['status']}\")\n\n# Poll until completed or error\nwhile transcription['status'] in ['DETECTED_FILE', 'STT_PROCESSING']:\n    print(f\"Status: {transcription['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    transcription = get_transcription_status(transcription_id, token)\n\nif transcription['status'] == 'STT_COMPLETED':\n    print(f\"Transcription completed!\")\n    print(f\"Text: {transcription['raw_text']}\")\nelse:\n    print(f\"Transcription failed with status: {transcription['status']}\")"
           }
         ]
       }
@@ -731,17 +731,17 @@
           {
             "lang": "cURL",
             "label": "Create SOAP template",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Create template with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/templates', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify(template)\n});\n\nconst {template_uuid} = await res.json();\nconsole.log('Created template:', template_uuid);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/templates', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify(template)\n});\n\nconst {template_uuid} = await res.json();\nconsole.log('Created template:', template_uuid);"
           },
           {
             "lang": "Python",
             "label": "Create template with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/templates',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Created template: {data['template_uuid']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/templates',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Created template: {data['template_uuid']}\")"
           }
         ]
       },
@@ -870,17 +870,17 @@
           {
             "lang": "cURL",
             "label": "List templates",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch templates",
-            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/templates', {\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {templates} = await res.json();\nconsole.log(`Found ${templates.length} templates`);\ntemplates.forEach(t => {\n  console.log(`${t.template_name} (${t.template_uuid}) - Active: ${t.active}`);\n});"
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/templates', {\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {templates} = await res.json();\nconsole.log(`Found ${templates.length} templates`);\ntemplates.forEach(t => {\n  console.log(`${t.template_name} (${t.template_uuid}) - Active: ${t.active}`);\n});"
           },
           {
             "lang": "Python",
             "label": "List templates with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/templates',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"Found {len(data['templates'])} templates\")\nfor template in data['templates']:\n    print(f\"{template['template_name']} ({template['template_uuid']}) - Active: {template['active']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.staging.commure.com/ambient/scribe/v1/templates',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"Found {len(data['templates'])} templates\")\nfor template in data['templates']:\n    print(f\"{template['template_name']} ({template['template_uuid']}) - Active: {template['active']}\")"
           }
         ]
       }
@@ -1070,17 +1070,17 @@
           {
             "lang": "cURL",
             "label": "Get template",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch template",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst template = await res.json();\nconsole.log('Template:', template.template_name);\nconsole.log('Content:', template.template_content);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst template = await res.json();\nconsole.log('Template:', template.template_name);\nconsole.log('Content:', template.template_content);"
           },
           {
             "lang": "Python",
             "label": "Get template with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.get(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\ntemplate = res.json()\nprint(f\"Template: {template['template_name']}\")\nprint(f\"Created: {template['created_at']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\ntemplate = res.json()\nprint(f\"Template: {template['template_name']}\")\nprint(f\"Created: {template['created_at']}\")"
           }
         ]
       },
@@ -1302,17 +1302,17 @@
           {
             "lang": "cURL",
             "label": "Update SOAP template",
-            "source": "curl -X PUT https://api.sandbox.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"template_name\": \"SOAP Note\",\n    \"template_description\": \"Standard SOAP format\",\n    \"template_content\": {\n      \"type\": \"object\",\n      \"required\": [\"subjective\", \"objective\", \"assessment\", \"plan\"],\n      \"properties\": {\n        \"subjective\": {\"type\": \"string\", \"title\": \"Subjective\"},\n        \"objective\": {\"type\": \"string\", \"title\": \"Objective\"},\n        \"assessment\": {\"type\": \"string\", \"title\": \"Assessment\"},\n        \"plan\": {\"type\": \"string\", \"title\": \"Plan\"}\n      }\n    }\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Update template with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify(template)\n  }\n);\n\nconst {template_uuid} = await res.json();\nconsole.log('Updated template:', template_uuid);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\nconst template = {\n  template_name: 'SOAP Note',\n  template_description: 'Standard SOAP format',\n  template_content: {\n    type: 'object',\n    required: ['subjective', 'objective', 'assessment', 'plan'],\n    properties: {\n      subjective: {type: 'string', title: 'Subjective'},\n      objective: {type: 'string', title: 'Objective'},\n      assessment: {type: 'string', title: 'Assessment'},\n      plan: {type: 'string', title: 'Plan'}\n    }\n  }\n};\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify(template)\n  }\n);\n\nconst {template_uuid} = await res.json();\nconsole.log('Updated template:', template_uuid);"
           },
           {
             "lang": "Python",
             "label": "Update template with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.put(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Updated template: {data['template_uuid']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntemplate = {\n    'template_name': 'SOAP Note',\n    'template_description': 'Standard SOAP format',\n    'template_content': {\n        'type': 'object',\n        'required': ['subjective', 'objective', 'assessment', 'plan'],\n        'properties': {\n            'subjective': {'type': 'string', 'title': 'Subjective'},\n            'objective': {'type': 'string', 'title': 'Objective'},\n            'assessment': {'type': 'string', 'title': 'Assessment'},\n            'plan': {'type': 'string', 'title': 'Plan'}\n        }\n    }\n}\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={'Authorization': f'Bearer {token}'},\n    json=template\n)\n\ndata = res.json()\nprint(f\"Updated template: {data['template_uuid']}\")"
           }
         ]
       },
@@ -1452,17 +1452,17 @@
           {
             "lang": "cURL",
             "label": "Delete template",
-            "source": "curl -X DELETE https://api.sandbox.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X DELETE https://api.staging.commure.com/ambient/scribe/v1/templates/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Delete template with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  }\n);\n\nconst {template_uuid, message} = await res.json();\nconsole.log(message);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/templates/${templateId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  }\n);\n\nconst {template_uuid, message} = await res.json();\nconsole.log(message);"
           },
           {
             "lang": "Python",
             "label": "Delete template with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"{data['message']}\")\nprint(f\"Deleted template: {data['template_uuid']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.staging.commure.com/ambient/scribe/v1/templates/{template_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    }\n)\n\ndata = res.json()\nprint(f\"{data['message']}\")\nprint(f\"Deleted template: {data['template_uuid']}\")"
           }
         ]
       }
@@ -1713,32 +1713,32 @@
           {
             "lang": "cURL",
             "label": "Submit with audio file",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'audio_file=@/path/to/audio.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'gender=MALE' \\\n  -F 'birth_date=1980-05-15T00:00:00Z'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'audio_file=@/path/to/audio.mp3' \\\n  -F 'patient_name=John Doe' \\\n  -F 'gender=MALE' \\\n  -F 'birth_date=1980-05-15T00:00:00Z'"
           },
           {
             "lang": "cURL",
             "label": "Submit with transcript",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'transcript=Patient presents with chief complaint of persistent cough for the past two weeks...' \\\n  -F 'patient_name=John Doe'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'template_id=550e8400-e29b-41d4-a716-446655440000' \\\n  -F 'date_of_service=2025-01-02T10:30:00Z' \\\n  -F 'transcript=Patient presents with chief complaint of persistent cough for the past two weeks...' \\\n  -F 'patient_name=John Doe'"
           },
           {
             "lang": "JavaScript",
             "label": "Submit with audio file",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('audio_file', audioFile);\nformData.append('patient_name', 'John Doe');\nformData.append('gender', 'MALE');\nformData.append('birth_date', '1980-05-15T00:00:00Z');\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);\nconsole.log('Status:', status);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('audio_file', audioFile);\nformData.append('patient_name', 'John Doe');\nformData.append('gender', 'MALE');\nformData.append('birth_date', '1980-05-15T00:00:00Z');\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);\nconsole.log('Status:', status);"
           },
           {
             "lang": "JavaScript",
             "label": "Submit with transcript",
-            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('transcript', 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...');\nformData.append('patient_name', 'John Doe');\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst formData = new FormData();\nformData.append('template_id', '550e8400-e29b-41d4-a716-446655440000');\nformData.append('date_of_service', '2025-01-02T10:30:00Z');\nformData.append('transcript', 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...');\nformData.append('patient_name', 'John Doe');\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/scribe', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  },\n  body: formData\n});\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Scribe ID:', scribe_id);"
           },
           {
             "lang": "Python",
             "label": "Submit with audio file",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    data = {\n        'template_id': template_id,\n        'date_of_service': '2025-01-02T10:30:00Z',\n        'patient_name': 'John Doe',\n        'gender': 'MALE',\n        'birth_date': '1980-05-15T00:00:00Z'\n    }\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.sandbox.commure.com/ambient/scribe/v1/scribe',\n        headers=headers,\n        files=files,\n        data=data\n    )\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    data = {\n        'template_id': template_id,\n        'date_of_service': '2025-01-02T10:30:00Z',\n        'patient_name': 'John Doe',\n        'gender': 'MALE',\n        'birth_date': '1980-05-15T00:00:00Z'\n    }\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        'https://api.staging.commure.com/ambient/scribe/v1/scribe',\n        headers=headers,\n        files=files,\n        data=data\n    )\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
           },
           {
             "lang": "Python",
             "label": "Submit with transcript",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntranscript = 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...'\n\ndata = {\n    'template_id': template_id,\n    'date_of_service': '2025-01-02T10:30:00Z',\n    'transcript': transcript,\n    'patient_name': 'John Doe'\n}\nheaders = {'Authorization': f'Bearer {token}'}\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/scribe',\n    headers=headers,\n    data=data\n)\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '550e8400-e29b-41d4-a716-446655440000'\ntranscript = 'Patient presents with chief complaint of persistent cough for the past two weeks. Patient reports the cough is dry and worse at night...'\n\ndata = {\n    'template_id': template_id,\n    'date_of_service': '2025-01-02T10:30:00Z',\n    'transcript': transcript,\n    'patient_name': 'John Doe'\n}\nheaders = {'Authorization': f'Bearer {token}'}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/scribe',\n    headers=headers,\n    data=data\n)\n\ndata = res.json()\nprint(f\"Scribe ID: {data['scribe_id']}\")\nprint(f\"Status: {data['status']}\")"
           }
         ]
       }
@@ -2012,22 +2012,22 @@
           {
             "lang": "cURL",
             "label": "Get scribe details",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch scribe details",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/scribe/${scribeId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst scribe = await res.json();\nconsole.log('Status:', scribe.status);\nconsole.log('AI Tasks:', scribe.ai_tasks);\n\nif (scribe.status === 'COMPLETED' && scribe.ai_tasks.length > 0) {\n  console.log('Generated note:', scribe.ai_tasks[0].note_text);\n  console.log('Structured note:', scribe.ai_tasks[0].note_json);\n} else if (scribe.status === 'IN_PROGRESS') {\n  console.log('Workflow is still processing...');\n} else if (scribe.status === 'FAILED') {\n  console.error('Workflow failed:', scribe.error_message);\n}"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}`,\n  {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  }\n);\n\nconst scribe = await res.json();\nconsole.log('Status:', scribe.status);\nconsole.log('AI Tasks:', scribe.ai_tasks);\n\nif (scribe.status === 'COMPLETED' && scribe.ai_tasks.length > 0) {\n  console.log('Generated note:', scribe.ai_tasks[0].note_text);\n  console.log('Structured note:', scribe.ai_tasks[0].note_json);\n} else if (scribe.status === 'IN_PROGRESS') {\n  console.log('Workflow is still processing...');\n} else if (scribe.status === 'FAILED') {\n  console.error('Workflow failed:', scribe.error_message);\n}"
           },
           {
             "lang": "Python",
             "label": "Get scribe with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nscribe = res.json()\nprint(f\"Status: {scribe['status']}\")\nprint(f\"Date of Service: {scribe['date_of_service']}\")\n\nif scribe['status'] == 'COMPLETED' and scribe['ai_tasks']:\n    note = scribe['ai_tasks'][0]\n    print(f\"\\nGenerated Note Text:\\n{note['note_text']}\")\n    print(f\"\\nStructured Note JSON:\\n{note['note_json']}\")\nelif scribe['status'] == 'IN_PROGRESS':\n    print(\"Workflow is still processing...\")\nelif scribe['status'] == 'FAILED':\n    print(f\"Workflow failed: {scribe['error_message']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nscribe = res.json()\nprint(f\"Status: {scribe['status']}\")\nprint(f\"Date of Service: {scribe['date_of_service']}\")\n\nif scribe['status'] == 'COMPLETED' and scribe['ai_tasks']:\n    note = scribe['ai_tasks'][0]\n    print(f\"\\nGenerated Note Text:\\n{note['note_text']}\")\n    print(f\"\\nStructured Note JSON:\\n{note['note_json']}\")\nelif scribe['status'] == 'IN_PROGRESS':\n    print(\"Workflow is still processing...\")\nelif scribe['status'] == 'FAILED':\n    print(f\"Workflow failed: {scribe['error_message']}\")"
           },
           {
             "lang": "Python",
             "label": "Poll for completion",
-            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.sandbox.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['ai_tasks']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndef get_scribe_status(scribe_id, token):\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}',\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return res.json()\n\n# Get initial status\nscribe = get_scribe_status(scribe_id, token)\nprint(f\"Status: {scribe['status']}\")\n\n# Poll until completed or failed\nwhile scribe['status'] in ['IN_PROGRESS', 'PENDING']:\n    print(f\"Status: {scribe['status']} - waiting...\")\n    time.sleep(5)  # Wait 5 seconds\n    scribe = get_scribe_status(scribe_id, token)\n\nif scribe['status'] == 'COMPLETED':\n    print(\"\\nWorkflow completed!\")\n    for note in scribe['ai_tasks']:\n        print(f\"\\nNote from template {note['template_id']}:\")\n        print(note['note_text'])\nelse:\n    print(f\"\\nWorkflow failed: {scribe['error_message']}\")"
           }
         ]
       }
@@ -2215,17 +2215,17 @@
           {
             "lang": "cURL",
             "label": "Regenerate with text context",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/text \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'transcript=Please add more details about the patient\\'s symptoms'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/text \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'transcript=Please add more details about the patient\\'s symptoms'"
           },
           {
             "lang": "JavaScript",
             "label": "Regenerate with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst formData = new FormData();\nformData.append('transcript', 'Please add more details about the patient\\'s symptoms');\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/text`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst formData = new FormData();\nformData.append('transcript', 'Please add more details about the patient\\'s symptoms');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/text`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
           },
           {
             "lang": "Python",
             "label": "Regenerate with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'transcript': 'Please add more details about the patient\\'s symptoms'\n}\n\nres = requests.post(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/text',\n    headers={'Authorization': f'Bearer {token}'},\n    data=data\n)\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'transcript': 'Please add more details about the patient\\'s symptoms'\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/text',\n    headers={'Authorization': f'Bearer {token}'},\n    data=data\n)\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
           }
         ]
       }
@@ -2438,17 +2438,17 @@
           {
             "lang": "cURL",
             "label": "Regenerate with audio file",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/audio \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/scribe/123e4567-e89b-12d3-a456-426614174000/regenerate/audio \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -F 'audio_file=@/path/to/audio.mp3'"
           },
           {
             "lang": "JavaScript",
             "label": "Regenerate with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/audio`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst scribeId = '123e4567-e89b-12d3-a456-426614174000';\nconst audioFile = document.getElementById('audioInput').files[0];\n// Or for Node.js:\n// const audioFile = fs.readFileSync('/path/to/audio.mp3');\n\nconst formData = new FormData();\nformData.append('audio_file', audioFile);\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/scribe/${scribeId}/regenerate/audio`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`\n    },\n    body: formData\n  }\n);\n\nconst {scribe_id, status, submitted_at} = await res.json();\nconsole.log('Regeneration started:', scribe_id);"
           },
           {
             "lang": "Python",
             "label": "Regenerate with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        f'https://api.sandbox.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/audio',\n        headers=headers,\n        files=files\n    )\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nscribe_id = '123e4567-e89b-12d3-a456-426614174000'\naudio_file_path = '/path/to/audio.mp3'\n\nwith open(audio_file_path, 'rb') as audio_file:\n    files = {'audio_file': audio_file}\n    headers = {'Authorization': f'Bearer {token}'}\n    \n    res = requests.post(\n        f'https://api.staging.commure.com/ambient/scribe/v1/scribe/{scribe_id}/regenerate/audio',\n        headers=headers,\n        files=files\n    )\n\nresult = res.json()\nprint(f\"Regeneration started: {result['scribe_id']}\")\nprint(f\"Status: {result['status']}\")"
           }
         ]
       }
@@ -2563,17 +2563,17 @@
           {
             "lang": "cURL",
             "label": "Create upload session",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Create session with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session ID:', session.session_id);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`\n  }\n});\n\nconst session = await res.json();\nconsole.log('Session ID:', session.session_id);\nconsole.log('Upload endpoint:', session.chunk_upload_info.upload_endpoint);"
           },
           {
             "lang": "Python",
             "label": "Create session with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session ID: {session['session_id']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions',\n    headers={'Authorization': f'Bearer {token}'}\n)\n\nsession = res.json()\nprint(f\"Session ID: {session['session_id']}\")\nprint(f\"Upload endpoint: {session['chunk_upload_info']['upload_endpoint']}\")"
           }
         ]
       }
@@ -2763,17 +2763,17 @@
           {
             "lang": "cURL",
             "label": "Upload chunk",
-            "source": "curl -X PUT https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/1 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: audio/wav' \\\n  --data-binary @chunk1.wav"
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/chunks/1 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: audio/wav' \\\n  --data-binary @chunk1.wav"
           },
           {
             "lang": "JavaScript",
             "label": "Upload chunk with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\nconst chunkNum = 1;\nconst chunkData = new Uint8Array([/* chunk bytes */]);\n// Or read from file: const chunkData = await fs.readFile('chunk1.wav');\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/chunks/${chunkNum}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'audio/wav'\n    },\n    body: chunkData\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Chunk ${result.chunk_num} uploaded: ${result.file_size} bytes`);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\nconst chunkNum = 1;\nconst chunkData = new Uint8Array([/* chunk bytes */]);\n// Or read from file: const chunkData = await fs.readFile('chunk1.wav');\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/chunks/${chunkNum}`,\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'audio/wav'\n    },\n    body: chunkData\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Chunk ${result.chunk_num} uploaded: ${result.file_size} bytes`);"
           },
           {
             "lang": "Python",
             "label": "Upload chunk with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\nchunk_num = 1\n\n# Read chunk data from file\nwith open('chunk1.wav', 'rb') as chunk_file:\n    chunk_data = chunk_file.read()\n    \n    res = requests.put(\n        f'https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/chunks/{chunk_num}',\n        headers={\n            'Authorization': f'Bearer {token}',\n            'Content-Type': 'audio/wav'\n        },\n        data=chunk_data\n    )\n\nresult = res.json()\nprint(f\"Chunk {result['chunk_num']} uploaded: {result['file_size']} bytes\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\nchunk_num = 1\n\n# Read chunk data from file\nwith open('chunk1.wav', 'rb') as chunk_file:\n    chunk_data = chunk_file.read()\n    \n    res = requests.put(\n        f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/chunks/{chunk_num}',\n        headers={\n            'Authorization': f'Bearer {token}',\n            'Content-Type': 'audio/wav'\n        },\n        data=chunk_data\n    )\n\nresult = res.json()\nprint(f\"Chunk {result['chunk_num']} uploaded: {result['file_size']} bytes\")"
           }
         ]
       }
@@ -2979,17 +2979,17 @@
           {
             "lang": "cURL",
             "label": "Complete upload session",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/complete \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"total_chunks\": 5,\n    \"force_complete\": false\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/123e4567-e89b-12d3-a456-426614174000/complete \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"total_chunks\": 5,\n    \"force_complete\": false\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Complete session with fetch",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/complete`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      total_chunks: 5,\n      force_complete: false\n    })\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Session ${result.session_id} completed with ${result.total_chunks} chunks`);\nconsole.log(`Transcription ID: ${result.transcription_id}`);\nconsole.log(`Submitted at: ${result.submitted_at}`);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst sessionToken = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/${sessionToken}/complete`,\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      total_chunks: 5,\n      force_complete: false\n    })\n  }\n);\n\nconst result = await res.json();\nconsole.log(`Session ${result.session_id} completed with ${result.total_chunks} chunks`);\nconsole.log(`Transcription ID: ${result.transcription_id}`);\nconsole.log(`Submitted at: ${result.submitted_at}`);"
           },
           {
             "lang": "Python",
             "label": "Complete session with requests",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_id']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\nsession_token = '123e4567-e89b-12d3-a456-426614174000'\n\ndata = {\n    'total_chunks': 5,\n    'force_complete': False\n}\n\nres = requests.post(\n    f'https://api.staging.commure.com/ambient/scribe/v1/chunking/sessions/{session_token}/complete',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'Content-Type': 'application/json'\n    },\n    json=data\n)\n\nresult = res.json()\nprint(f\"Session {result['session_id']} completed with {result['total_chunks']} chunks\")\nprint(f\"Status: {result['status']}\")\nprint(f\"Transcription ID: {result['transcription_id']}\")\nprint(f\"Submitted at: {result['submitted_at']}\")"
           }
         ]
       }
@@ -3208,17 +3208,17 @@
           {
             "lang": "cURL",
             "label": "Create correction",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/corrections \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"misspelled_text\": \"tylenol\",\n    \"correct_text\": \"ACETAMINOPHEN\",\n    \"correction_type\": \"PRESCRIPTION\"\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/corrections \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"misspelled_text\": \"tylenol\",\n    \"correct_text\": \"ACETAMINOPHEN\",\n    \"correction_type\": \"PRESCRIPTION\"\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Create correction with fetch",
-            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correction = {\n  misspelled_text: 'tylenol',\n  correct_text: 'ACETAMINOPHEN',\n  correction_type: 'PRESCRIPTION'\n};\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/corrections', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'user-uuid': userId\n  },\n  body: JSON.stringify(correction)\n});\n\nconst created = await res.json();\nconsole.log('Created correction:', created.id);"
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correction = {\n  misspelled_text: 'tylenol',\n  correct_text: 'ACETAMINOPHEN',\n  correction_type: 'PRESCRIPTION'\n};\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/corrections', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'user-uuid': userId\n  },\n  body: JSON.stringify(correction)\n});\n\nconst created = await res.json();\nconsole.log('Created correction:', created.id);"
           },
           {
             "lang": "Python",
             "label": "Create correction with requests",
-            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection = {\n    'misspelled_text': 'tylenol',\n    'correct_text': 'ACETAMINOPHEN',\n    'correction_type': 'PRESCRIPTION'\n}\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/corrections',\n    headers={'user-uuid': user_id},\n    json=correction\n)\n\ncreated = res.json()\nprint(f\"Created correction: {created['id']}\")"
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection = {\n    'misspelled_text': 'tylenol',\n    'correct_text': 'ACETAMINOPHEN',\n    'correction_type': 'PRESCRIPTION'\n}\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/corrections',\n    headers={'user-uuid': user_id},\n    json=correction\n)\n\ncreated = res.json()\nprint(f\"Created correction: {created['id']}\")"
           }
         ]
       },
@@ -3394,22 +3394,22 @@
           {
             "lang": "cURL",
             "label": "Get all active corrections",
-            "source": "curl -X GET 'https://api.sandbox.commure.com/ambient/scribe/v1/corrections?active_only=true' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+            "source": "curl -X GET 'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=true' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
           },
           {
             "lang": "cURL",
             "label": "Get all corrections including inactive",
-            "source": "curl -X GET 'https://api.sandbox.commure.com/ambient/scribe/v1/corrections?active_only=false' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+            "source": "curl -X GET 'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=false' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch corrections",
-            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst activeOnly = true;\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/corrections?active_only=${activeOnly}`,\n  {\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nconst {corrections, total} = await res.json();\nconsole.log(`Found ${total} corrections`);\ncorrections.forEach(c => {\n  console.log(`${c.misspelled_text} -> ${c.correct_text} (${c.correction_type})`);\n});"
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst activeOnly = true;\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only=${activeOnly}`,\n  {\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nconst {corrections, total} = await res.json();\nconsole.log(`Found ${total} corrections`);\ncorrections.forEach(c => {\n  console.log(`${c.misspelled_text} -> ${c.correct_text} (${c.correction_type})`);\n});"
           },
           {
             "lang": "Python",
             "label": "Get corrections with requests",
-            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\nactive_only = True\n\nres = requests.get(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/corrections?active_only={active_only}',\n    headers={'user-uuid': user_id}\n)\n\ndata = res.json()\nprint(f\"Found {data['total']} corrections\")\nfor correction in data['corrections']:\n    print(f\"{correction['misspelled_text']} -> {correction['correct_text']} ({correction['correction_type']})\")"
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\nactive_only = True\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections?active_only={active_only}',\n    headers={'user-uuid': user_id}\n)\n\ndata = res.json()\nprint(f\"Found {data['total']} corrections\")\nfor correction in data['corrections']:\n    print(f\"{correction['misspelled_text']} -> {correction['correct_text']} ({correction['correction_type']})\")"
           }
         ]
       }
@@ -3617,17 +3617,17 @@
           {
             "lang": "cURL",
             "label": "Update correction",
-            "source": "curl -X PATCH https://api.sandbox.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"correct_text\": \"ACETAMINOPHEN 500MG\",\n    \"correction_type\": \"PRESCRIPTION\"\n  }'"
+            "source": "curl -X PATCH https://api.staging.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'Content-Type: application/json' \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000' \\\n  -d '{\n    \"correct_text\": \"ACETAMINOPHEN 500MG\",\n    \"correction_type\": \"PRESCRIPTION\"\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Update correction with fetch",
-            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\nconst updates = {\n  correct_text: 'ACETAMINOPHEN 500MG',\n  correction_type: 'PRESCRIPTION'\n};\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'PATCH',\n    headers: {\n      'Content-Type': 'application/json',\n      'user-uuid': userId\n    },\n    body: JSON.stringify(updates)\n  }\n);\n\nconst updated = await res.json();\nconsole.log('Updated correction:', updated.id);"
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\nconst updates = {\n  correct_text: 'ACETAMINOPHEN 500MG',\n  correction_type: 'PRESCRIPTION'\n};\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'PATCH',\n    headers: {\n      'Content-Type': 'application/json',\n      'user-uuid': userId\n    },\n    body: JSON.stringify(updates)\n  }\n);\n\nconst updated = await res.json();\nconsole.log('Updated correction:', updated.id);"
           },
           {
             "lang": "Python",
             "label": "Update correction with requests",
-            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\nupdates = {\n    'correct_text': 'ACETAMINOPHEN 500MG',\n    'correction_type': 'PRESCRIPTION'\n}\n\nres = requests.patch(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id},\n    json=updates\n)\n\nupdated = res.json()\nprint(f\"Updated correction: {updated['id']}\")"
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\nupdates = {\n    'correct_text': 'ACETAMINOPHEN 500MG',\n    'correction_type': 'PRESCRIPTION'\n}\n\nres = requests.patch(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id},\n    json=updates\n)\n\nupdated = res.json()\nprint(f\"Updated correction: {updated['id']}\")"
           }
         ]
       },
@@ -3755,17 +3755,17 @@
           {
             "lang": "cURL",
             "label": "Delete correction",
-            "source": "curl -X DELETE https://api.sandbox.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
+            "source": "curl -X DELETE https://api.staging.commure.com/ambient/scribe/v1/corrections/550e8400-e29b-41d4-a716-446655440000 \\\n  -H 'user-uuid: 123e4567-e89b-12d3-a456-426614174000'"
           },
           {
             "lang": "JavaScript",
             "label": "Delete correction with fetch",
-            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.sandbox.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nif (res.status === 204) {\n  console.log('Correction deleted successfully');\n} else {\n  const error = await res.json();\n  console.error('Error:', error.detail);\n}"
+            "source": "const userId = '123e4567-e89b-12d3-a456-426614174000';\nconst correctionId = '550e8400-e29b-41d4-a716-446655440000';\n\nconst res = await fetch(\n  `https://api.staging.commure.com/ambient/scribe/v1/corrections/${correctionId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'user-uuid': userId\n    }\n  }\n);\n\nif (res.status === 204) {\n  console.log('Correction deleted successfully');\n} else {\n  const error = await res.json();\n  console.error('Error:', error.detail);\n}"
           },
           {
             "lang": "Python",
             "label": "Delete correction with requests",
-            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id}\n)\n\nif res.status_code == 204:\n    print('Correction deleted successfully')\nelse:\n    print(f\"Error: {res.json()['detail']}\")"
+            "source": "import requests\n\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\ncorrection_id = '550e8400-e29b-41d4-a716-446655440000'\n\nres = requests.delete(\n    f'https://api.staging.commure.com/ambient/scribe/v1/corrections/{correction_id}',\n    headers={'user-uuid': user_id}\n)\n\nif res.status_code == 204:\n    print('Correction deleted successfully')\nelse:\n    print(f\"Error: {res.json()['detail']}\")"
           }
         ]
       }
@@ -3909,17 +3909,17 @@
           {
             "lang": "cURL",
             "label": "List users",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/users \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Fetch users",
-            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/users', {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {users} = await res.json();\nconsole.log(`Found ${users.length} users`);"
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/users', {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst {users} = await res.json();\nconsole.log(`Found ${users.length} users`);"
           },
           {
             "lang": "Python",
             "label": "Get users list",
-            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/users',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\ndata = res.json()\nprint(f\"Found {len(data['users'])} users\")\nfor user in data['users']:\n    print(f\"  - {user['external_id']} ({user['user_id']}): active={user['is_active']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.get(\n    'https://api.staging.commure.com/ambient/scribe/v1/users',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\ndata = res.json()\nprint(f\"Found {len(data['users'])} users\")\nfor user in data['users']:\n    print(f\"  - {user['external_id']} ({user['user_id']}): active={user['is_active']}\")"
           }
         ]
       }
@@ -4098,17 +4098,17 @@
           {
             "lang": "cURL",
             "label": "Create user",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/users/create \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"external_id\": \"doctor@hospital.com\"}'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/users/create \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"external_id\": \"doctor@hospital.com\"}'"
           },
           {
             "lang": "JavaScript",
             "label": "Create user",
-            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/users/create', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    external_id: 'doctor@hospital.com'\n  })\n});\n\nconst {user_id} = await res.json();\nconsole.log('Created user:', user_id);"
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/users/create', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    external_id: 'doctor@hospital.com'\n  })\n});\n\nconst {user_id} = await res.json();\nconsole.log('Created user:', user_id);"
           },
           {
             "lang": "Python",
             "label": "Create user",
-            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/users/create',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'external_id': 'doctor@hospital.com'}\n)\n\ndata = res.json()\nprint(f\"Created user with ID: {data['user_id']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/users/create',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'external_id': 'doctor@hospital.com'}\n)\n\ndata = res.json()\nprint(f\"Created user with ID: {data['user_id']}\")"
           }
         ]
       }
@@ -4283,17 +4283,17 @@
           {
             "lang": "cURL",
             "label": "Get user by UUID",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Get user",
-            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.sandbox.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('User:', user);"
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('User:', user);"
           },
           {
             "lang": "Python",
             "label": "Get user by UUID",
-            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User: {user['external_id']} - Active: {user['is_active']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User: {user['external_id']} - Active: {user['is_active']}\")"
           }
         ]
       },
@@ -4513,17 +4513,17 @@
           {
             "lang": "cURL",
             "label": "Deactivate user",
-            "source": "curl -X PUT https://api.sandbox.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"is_active\": false}'"
+            "source": "curl -X PUT https://api.staging.commure.com/ambient/scribe/v1/users/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"is_active\": false}'"
           },
           {
             "lang": "JavaScript",
             "label": "Update user status",
-            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.sandbox.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'PUT',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    is_active: false\n  })\n});\n\nconst user = await res.json();\nconsole.log('Updated user:', user);"
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst userId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/${userId}`, {\n  method: 'PUT',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    is_active: false\n  })\n});\n\nconst user = await res.json();\nconsole.log('Updated user:', user);"
           },
           {
             "lang": "Python",
             "label": "Update user status",
-            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.put(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'is_active': False}\n)\n\nuser = res.json()\nprint(f\"User {user['external_id']} is now {'active' if user['is_active'] else 'inactive'}\")"
+            "source": "import requests\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nuser_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.put(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/{user_id}',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={'is_active': False}\n)\n\nuser = res.json()\nprint(f\"User {user['external_id']} is now {'active' if user['is_active'] else 'inactive'}\")"
           }
         ]
       }
@@ -4669,17 +4669,17 @@
           {
             "lang": "cURL",
             "label": "Get user by external ID",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/users/external-id/doctor@hospital.com \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/users/external-id/doctor@hospital.com \\\n  -H 'Authorization: Bearer YOUR_SERVICE_ACCOUNT_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Get user by external ID",
-            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst externalId = 'doctor@hospital.com';\n\nconst res = await fetch(`https://api.sandbox.commure.com/ambient/scribe/v1/users/external-id/${encodeURIComponent(externalId)}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('Found user:', user);"
+            "source": "const token = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN';\nconst externalId = 'doctor@hospital.com';\n\nconst res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/users/external-id/${encodeURIComponent(externalId)}`, {\n  method: 'GET',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito'\n  }\n});\n\nconst user = await res.json();\nconsole.log('Found user:', user);"
           },
           {
             "lang": "Python",
             "label": "Get user by external ID",
-            "source": "import requests\nfrom urllib.parse import quote\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nexternal_id = 'doctor@hospital.com'\n\nres = requests.get(\n    f'https://api.sandbox.commure.com/ambient/scribe/v1/users/external-id/{quote(external_id)}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User UUID: {user['user_id']}\")\nprint(f\"External ID: {user['external_id']}\")\nprint(f\"Active: {user['is_active']}\")"
+            "source": "import requests\nfrom urllib.parse import quote\n\ntoken = 'YOUR_SERVICE_ACCOUNT_JWT_TOKEN'\nexternal_id = 'doctor@hospital.com'\n\nres = requests.get(\n    f'https://api.staging.commure.com/ambient/scribe/v1/users/external-id/{quote(external_id)}',\n    headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n)\n\nuser = res.json()\nprint(f\"User UUID: {user['user_id']}\")\nprint(f\"External ID: {user['external_id']}\")\nprint(f\"Active: {user['is_active']}\")"
           }
         ]
       }
@@ -4871,17 +4871,17 @@
           {
             "lang": "cURL",
             "label": "Submit text for summary",
-            "source": "curl -X POST https://api.sandbox.commure.com/ambient/scribe/v1/summaries \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"text\": \"Patient presents with...\",\n    \"template_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n  }'"
+            "source": "curl -X POST https://api.staging.commure.com/ambient/scribe/v1/summaries \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"text\": \"Patient presents with...\",\n    \"template_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n  }'"
           },
           {
             "lang": "JavaScript",
             "label": "Submit for summarization",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch('https://api.sandbox.commure.com/ambient/scribe/v1/summaries', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    text: 'Patient presents with chief complaint of persistent cough...',\n    template_id: templateId\n  })\n});\n\nconst {summary_id, status, submitted_at} = await res.json();\nconsole.log('Summary ID:', summary_id);\nconsole.log('Status:', status);\nconsole.log('Submitted at:', submitted_at);"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst templateId = '123e4567-e89b-12d3-a456-426614174000';\n\nconst res = await fetch('https://api.staging.commure.com/ambient/scribe/v1/summaries', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${token}`,\n    'auth-scheme': 'cognito',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    text: 'Patient presents with chief complaint of persistent cough...',\n    template_id: templateId\n  })\n});\n\nconst {summary_id, status, submitted_at} = await res.json();\nconsole.log('Summary ID:', summary_id);\nconsole.log('Status:', status);\nconsole.log('Submitted at:', submitted_at);"
           },
           {
             "lang": "Python",
             "label": "Submit for summarization",
-            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.post(\n    'https://api.sandbox.commure.com/ambient/scribe/v1/summaries',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={\n        'text': 'Patient presents with chief complaint of persistent cough...',\n        'template_id': template_id\n    }\n)\n\ndata = res.json()\nprint(f\"Summary ID: {data['summary_id']}\")\nprint(f\"Status: {data['status']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
+            "source": "import requests\n\ntoken = 'YOUR_JWT_TOKEN'\ntemplate_id = '123e4567-e89b-12d3-a456-426614174000'\n\nres = requests.post(\n    'https://api.staging.commure.com/ambient/scribe/v1/summaries',\n    headers={\n        'Authorization': f'Bearer {token}',\n        'auth-scheme': 'cognito'\n    },\n    json={\n        'text': 'Patient presents with chief complaint of persistent cough...',\n        'template_id': template_id\n    }\n)\n\ndata = res.json()\nprint(f\"Summary ID: {data['summary_id']}\")\nprint(f\"Status: {data['status']}\")\nprint(f\"Submitted at: {data['submitted_at']}\")"
           }
         ]
       }
@@ -5148,17 +5148,17 @@
           {
             "lang": "cURL",
             "label": "Get summary status",
-            "source": "curl -X GET https://api.sandbox.commure.com/ambient/scribe/v1/summaries/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
+            "source": "curl -X GET https://api.staging.commure.com/ambient/scribe/v1/summaries/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\\n  -H 'auth-scheme: cognito'"
           },
           {
             "lang": "JavaScript",
             "label": "Poll for completion",
-            "source": "const token = 'YOUR_JWT_TOKEN';\nconst summaryId = '123e4567-e89b-12d3-a456-426614174000';\n\n// Poll until completed\nlet summary;\nwhile (true) {\n  const res = await fetch(`https://api.sandbox.commure.com/ambient/scribe/v1/summaries/${summaryId}`, {\n    method: 'GET',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  });\n  \n  summary = await res.json();\n  console.log('Status:', summary.status);\n  \n  if (summary.status === 'COMPLETED') {\n    console.log('Summary text:', summary.ai_task?.note_text);\n    break;\n  } else if (summary.status === 'ERROR') {\n    console.error('Error:', summary.error_message);\n    break;\n  }\n  \n  // Wait 5 seconds before polling again\n  await new Promise(resolve => setTimeout(resolve, 5000));\n}"
+            "source": "const token = 'YOUR_JWT_TOKEN';\nconst summaryId = '123e4567-e89b-12d3-a456-426614174000';\n\n// Poll until completed\nlet summary;\nwhile (true) {\n  const res = await fetch(`https://api.staging.commure.com/ambient/scribe/v1/summaries/${summaryId}`, {\n    method: 'GET',\n    headers: {\n      'Authorization': `Bearer ${token}`,\n      'auth-scheme': 'cognito'\n    }\n  });\n  \n  summary = await res.json();\n  console.log('Status:', summary.status);\n  \n  if (summary.status === 'COMPLETED') {\n    console.log('Summary text:', summary.ai_task?.note_text);\n    break;\n  } else if (summary.status === 'ERROR') {\n    console.error('Error:', summary.error_message);\n    break;\n  }\n  \n  // Wait 5 seconds before polling again\n  await new Promise(resolve => setTimeout(resolve, 5000));\n}"
           },
           {
             "lang": "Python",
             "label": "Poll for completion",
-            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nsummary_id = '123e4567-e89b-12d3-a456-426614174000'\n\n# Poll until completed\nwhile True:\n    res = requests.get(\n        f'https://api.sandbox.commure.com/ambient/scribe/v1/summaries/{summary_id}',\n        headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n    )\n    \n    summary = res.json()\n    print(f\"Status: {summary['status']}\")\n    \n    if summary['status'] == 'COMPLETED':\n        print(f\"Summary text: {summary['ai_task']['note_text']}\")\n        if summary['citations']:\n            print(f\"Citations: {summary['citations']['note_text']}\")\n        break\n    elif summary['status'] == 'ERROR':\n        print(f\"Error: {summary['error_message']}\")\n        break\n    \n    # Wait 5 seconds before polling again\n    time.sleep(5)"
+            "source": "import requests\nimport time\n\ntoken = 'YOUR_JWT_TOKEN'\nsummary_id = '123e4567-e89b-12d3-a456-426614174000'\n\n# Poll until completed\nwhile True:\n    res = requests.get(\n        f'https://api.staging.commure.com/ambient/scribe/v1/summaries/{summary_id}',\n        headers={'Authorization': f'Bearer {token}', 'auth-scheme': 'cognito'}\n    )\n    \n    summary = res.json()\n    print(f\"Status: {summary['status']}\")\n    \n    if summary['status'] == 'COMPLETED':\n        print(f\"Summary text: {summary['ai_task']['note_text']}\")\n        if summary['citations']:\n            print(f\"Citations: {summary['citations']['note_text']}\")\n        break\n    elif summary['status'] == 'ERROR':\n        print(f\"Error: {summary['error_message']}\")\n        break\n    \n    # Wait 5 seconds before polling again\n    time.sleep(5)"
           }
         ]
       }
