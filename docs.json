@@ -240,7 +240,7 @@
             "group": "Using Dictation",
             "pages": [
               "commure-dictation/basic-usage",
-              "commure-dictation/powermic",
+              "commure-dictation/handheld-microphones",
               "commure-dictation/voice-commands",
               "commure-dictation/hotkeys"
             ]
