@@ -1,23 +1,30 @@
 ---
 title: "Handheld Microphone Integration"
-description: "Use handheld dictation microphones like the PowerMic III with Commure Dictation for hands-free dictation, field navigation, and even AI-fueled contextual editing."
+description: "Use handheld dictation microphones with Commure Dictation for hands-free dictation, field navigation, and AI-powered contextual editing."
 ---
 
 ## Supported Devices
 
-Commure Dictation currently supports the **Nuance PowerMic III**. Support for the **PowerMic 4** and **Philips SpeechMike** is planned for a future release.
+Commure Dictation supports the following handheld dictation microphones:
 
-If you already use a Nuance PowerMic III, you can plug it in and start using it with Commure Dictation immediately — no drivers, no configuration, no re-learning. The microphone and every button just work.
+| Device | Model | USB VID | Status |
+|--------|-------|---------|--------|
+| **Nuance PowerMic III** | All variants | 0x0554 | ✅ Fully supported |
+| **Nuance PowerMic IV** | All variants | TBD | 🔄 Planned |
+| **Philips SpeechMike Premium** | PID 0x149A | 0x0911 | ✅ Fully supported |
+| **Philips SpeechMike III** | PIDs 0x1496, 0x0C1C | 0x0911 | ✅ Fully supported |
+
+If you already use a supported handheld microphone, you can plug it in and start using it with Commure Dictation immediately — no drivers, no configuration, no re-learning. The microphone and every button just work.
 
 <Tip>
-The PowerMic III connects via USB. Commure Dictation automatically detects it when plugged in — there is no setup required.
+All supported devices connect via USB. Commure Dictation automatically detects them when plugged in — there is no setup required.
 </Tip>
 
-After plugging in your device, verify that it is selected as the active microphone. Open **Settings > Audio** and confirm the microphone dropdown shows your PowerMic III. Commure Dictation will select it automatically in most cases, but it is good practice to double-check — especially the first time you connect.
+After plugging in your device, verify that it is selected as the active microphone. Open **Settings > Audio** and confirm the microphone dropdown shows your device. Commure Dictation will select it automatically in most cases, but it is good practice to double-check — especially the first time you connect.
 
-## Button Overview
+## Button Mapping
 
-The table below shows how each PowerMic III button maps to an action in Commure Dictation.
+### Nuance PowerMic III
 
 | Button | Action | Behavior |
 |--------|--------|----------|
@@ -32,19 +39,33 @@ The table below shows how each PowerMic III button maps to an action in Commure 
 The **Record** and **Start / Stop** buttons both work identically — use whichever feels more natural. If you're coming from Dragon, the hand position is the same.
 </Tip>
 
-## Dictating with the PowerMic
+### Philips SpeechMike (Premium & III)
+
+| Button | Location | Action | Behavior |
+|--------|----------|--------|----------|
+| **Record** (main) | Front side, bottom | Dictate | Hold to dictate and release to stop, or press once to start and press again to stop |
+| **Record** (alternative) | Front side, middle | Dictate | Same as main Record button — use whichever is more comfortable |
+| **Forward** | Front side, right arrow | Next Field | Press to move to the next field or placeholder |
+| **Back** | Front side, left arrow | Previous Field | Press to move to the previous field or placeholder |
+| **Command** (top) | Back side, top button | Contextual Edit | Press to enter contextual editing mode using the AI |
+
+<Tip>
+The SpeechMike has two Record buttons — both work identically. On the back of the device, the **top button** is your contextual edit trigger.
+</Tip>
+
+## Dictating with Your Handheld Microphone
 
 You can dictate in whichever style feels most natural — **hold-to-dictate** or **click-to-toggle**:
 
 **Hold to dictate:**
 1. Click into the text field in your EHR where you want to document.
-2. **Press and hold** the Record button (or the Start / Stop button).
+2. **Press and hold** the Record button.
 3. Speak naturally. Text appears in real-time at your cursor position.
 4. **Release** the button to stop dictation.
 
 **Click to toggle:**
 1. Click into the text field in your EHR where you want to document.
-2. **Press** the Record button (or the Start / Stop button) once to start dictation.
+2. **Press** the Record button once to start dictation.
 3. Speak naturally. Text appears in real-time at your cursor position.
 4. **Press** the button again to stop dictation.
 
@@ -52,21 +73,21 @@ All standard voice commands — punctuation, line breaks, formatting — work wh
 
 ## Navigating Between Fields
 
-The **Tab Forward** and **Tab Back** buttons let you move between fields without touching your keyboard.
+The **Forward** and **Back** buttons (or **Tab Forward** / **Tab Back** on PowerMic) let you move between fields without touching your keyboard.
 
 | Button | Equivalent | What it does |
 |--------|------------|--------------|
-| Tab Forward | `Tab` | Moves the cursor to the next field or placeholder |
-| Tab Back | `Shift + Tab` | Moves the cursor to the previous field or placeholder |
+| Forward / Tab Forward | `Tab` | Moves the cursor to the next field or placeholder |
+| Back / Tab Back | `Shift + Tab` | Moves the cursor to the previous field or placeholder |
 
 ### Example workflow
 
 You are documenting a visit in a note template with multiple sections:
 
 1. Click into the **Chief Complaint** field and dictate.
-2. Press **Tab Forward** to jump to the **HPI** field.
+2. Press **Forward** to jump to the **HPI** field.
 3. Dictate the history of present illness.
-4. Press **Tab Forward** again to reach the **Assessment & Plan** field.
+4. Press **Forward** again to reach the **Assessment & Plan** field.
 5. Dictate your assessment.
 
 You never need to reach for the keyboard or mouse to move between fields.
@@ -77,7 +98,11 @@ You can also say **"next field"** or **"previous field"** by voice while dictati
 
 ## Contextual Editing
 
-The **Custom Right** button (to the right of the checkmark) activates **Contextual Editing** — an AI-powered way to revise text you have already dictated, using plain spoken instructions.
+The **Contextual Edit** button activates **Contextual Editing** — an AI-powered way to revise text you have already dictated, using plain spoken instructions.
+
+**Button locations:**
+- **PowerMic III**: Custom Right button (to the right of the checkmark)
+- **SpeechMike**: Command button (back of the device, top button)
 
 With traditional dictation, fixing a mistake or reformatting a section means selecting text, deleting it, and re-dictating. Contextual Editing eliminates that entirely. Just tell the AI what you want changed — in your own words — and it rewrites the text for you in place. No mouse clicks, no deleting, no re-dictating.
 
@@ -147,11 +172,15 @@ The AI restructures your free-form paragraph into clearly organized sections by 
 
 ## Undo
 
-The **Custom Left** button undoes the last contextual edit, restoring the original text.
+The **Undo** button reverts the last contextual edit, restoring the original text.
+
+**Button locations:**
+- **PowerMic III**: Custom Left button (left of the checkmark)
+- **SpeechMike**: Command button (back of the device, bottom button)
 
 ### How it works
 
-1. After a contextual edit is applied, press the **Custom Left** button.
+1. After a contextual edit is applied, press the **Undo** button.
 2. The edited text is replaced with the original text that was there before the edit.
 
 This is a single-level undo — it reverts the most recent contextual edit only. If you have made additional manual changes to the field after the contextual edit, the undo is automatically cleared (since the text has changed).
@@ -165,9 +194,11 @@ Think of it as a safety net: if a contextual edit didn't produce the result you 
 1. You dictate a paragraph into the HPI field.
 2. You press the **Contextual Edit** button and say *"make this more concise."*
 3. The text is shortened — but you preferred the original version.
-4. Press the **Custom Left** (Undo) button. Your original paragraph is restored.
+4. Press the **Undo** button. Your original paragraph is restored.
 
 ## Quick Reference
+
+### PowerMic III
 
 | Button | When to use it |
 |--------|----------------|
@@ -177,15 +208,36 @@ Think of it as a safety net: if a contextual edit didn't produce the result you 
 | **Custom Right** | Revise or reformat existing text by voice |
 | **Custom Left** | Undo the last contextual edit |
 
+### SpeechMike (Premium & III)
+
+| Button | When to use it |
+|--------|----------------|
+| **Record** (either button) | Hold to dictate, or press to toggle on/off |
+| **Forward** | Jump to the next field or placeholder |
+| **Back** | Jump to the previous field or placeholder |
+| **Command** (back, top) | Revise or reformat existing text by voice |
+| **Command** (back, bottom) | Undo the last contextual edit |
+
+## Keyboard Hotkeys
+
+In addition to handheld microphone buttons, Commure Dictation supports configurable keyboard hotkeys for contextual editing and undo. These are disabled by default and can be enabled in **Settings > Hotkeys**.
+
+| Action | Default Hotkey | Description |
+|--------|---------------|-------------|
+| Contextual Edit | `Ctrl+Shift+E` | Press to enter contextual editing mode (same as the device button) |
+| Undo Edit | `Ctrl+Shift+Z` | Revert the last contextual edit |
+
+These hotkeys work identically to the corresponding device buttons — you don't need a handheld microphone to use contextual editing.
+
 ## Coming from Dragon?
 
-If you have been using a PowerMic III with Dragon Medical One, here is what to expect:
+If you have been using a handheld microphone with Dragon Medical One, here is what to expect:
 
 - **Same hardware, same hand position.** No physical adjustment needed.
 - **Record button works the same way.** Press and hold to dictate, or press once to start and again to stop.
-- **Tab Forward / Tab Back work the same way.** Field navigation is identical.
+- **Field navigation works the same way.** Forward/Back buttons work identically to how they did in Dragon.
 - **Contextual Edit is new.** This replaces the need to manually select and re-dictate text. Speak an instruction and the text updates in place.
-- **Undo is supported.** One-press rollback for contextual edits — no keyboard shortcut needed.
+- **Undo is supported.** One-press rollback for contextual edits on both PowerMic III and SpeechMike — or use `Ctrl+Shift+Z`.
 - **Voice commands carry over.** Punctuation, line breaks, and formatting commands work just like you're used to.
 - **Custom button mappings do not carry over.** If you programmed custom button behaviors in Dragon, those configurations are not transferred. Commure Dictation uses its own fixed button mappings as described above.
-- **No configuration needed.** Plug in and go — Commure Dictation detects the PowerMic automatically.
+- **No configuration needed.** Plug in and go — Commure Dictation detects your device automatically.
