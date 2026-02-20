@@ -3,21 +3,80 @@ title: "Scribe Macros"
 description: "Incorporate pre-defined materials into your note. "
 ---
 
-**Scribe Macros** enables pre-defined content (macros) to be injected within the Physical Exam and Review of Systems sections within a note. This reduces the amount of time providers spend on editing and including visit information. Additionally, it automates the process of customizing patient records, ensuring that generalized note templates are transformed into highly specific, clinically relevant notes that reflect the individual patient's condition and the details discussed during the visit.
+**Scribe Macros** enables pre-defined content (macros) to be injected within sections of a medical note. This reduces the amount of time providers spend on editing and including visit information. Additionally, it automates the process of customizing patient records, ensuring that generalized note templates are transformed into highly specific, clinically relevant notes that reflect the individual patient's condition and the details discussed during the visit.
 
-![Macros Gif Nov17 Gi](/images/macros_gif_nov17.gif)
+<img
+  src="/images/macros_gif_nov17.gif"
+  alt="Macros Gif Nov17 Gi"
+  className="mx-auto"
+  style={{ width:"59%" }}
+/>
 
 **The pre-defined content can be:**
 
-- **Static** **Macro** – contains fixed text content that **does not** include placeholders. The content is injected into the final note as is and nothing additional should be added.
-
-<Note>
-  While dot phrases and static macros both deal with static text, the difference lies in how they’re inserted into the note. Static macros should typically be independent sentences/paragraphs. Dot phrases are best for small phrases that are applied throughout a paragraph/note.
-</Note>
-
 - **Dynamic Macro** – contains the default which can be overridden based on visit details from the transcription. You can also choose to leave the default empty.
 
+  <Columns cols={2}>
+    <Card title="Input">
+      **EENT**: <u>Denies vision changes, ear pain, nasal congestion or discharge, or sore throat</u>.
+    </Card>
+    <Card title="Output">
+      **EENT**: _Patient experienced pain in the right ear and throat inflammation. Denies vision changes and nasal congestion_.
+    </Card>
+  </Columns>
+  <Columns cols={2}>
+    <Card title="Input">
+      **General**: <u>Well appearing, well nourished, in no distress</u>. **Skin**: <u>Good turgor, no rash, unusual bruising or prominent lesions</u>. **Hair**: <u>Normal texture and distribution.</u>
+    </Card>
+    <Card title="Output">
+      **General**: _Well appearing, well nourished, in no distress_. **Skin**: _The skin is not too good_. _Some redness in the overall box._ **Hair**: _Normal texture and distribution._
+    </Card>
+  </Columns>
+
+
+- **Static** **Macro** – contains fixed text content that **does not** include placeholders. The content is injected into the final note as is and nothing additional should be added.
+
+  <Note>
+    While dot phrases and static macros both deal with static text, the difference lies in how they’re inserted into the note. Static macros should typically be independent sentences/paragraphs. Dot phrases are best for small phrases that are applied throughout a paragraph/note.
+  </Note>
+  <Columns cols={2}>
+    <Card title="Input">
+      EENT: <u>Denies vision changes.</u> \
+      \
+      I verify this content is accurate. All questions have been answered with the patient.
+    </Card>
+    <Card title="Output">
+      EENT:_Patient experienced pain in the right ear and throat inflammation._  \
+      \
+      I verify this content is accurate. All questions have been answered with the patient.
+    </Card>
+  </Columns>
+
 ---
+
+### **Basic Workflow**
+
+<Frame caption="https://app.arcade.software/share/wgQh1bMIxrYEFJFBynfr">
+  <img
+    src="/images/Macros_Standard_Arcade.png"
+    alt="Macros Standard Arcade"
+    title="Macros Standard Arcade"
+    className="mx-auto"
+    style={{ width:"61%" }}
+  />
+</Frame>
+
+### **Advanced Workflow**
+
+<Frame caption="https://app.arcade.software/share/XI6yHl7W3csLH2oQdPET">
+  <img
+    src="/images/Macros_Standard_Arcade.png"
+    alt="Macros Standard Arcade"
+    title="Macros Standard Arcade"
+    className="mx-auto"
+    style={{ width:"61%" }}
+  />
+</Frame>
 
 ### How to Use it:
 
@@ -26,16 +85,12 @@ To create and use a macro, navigate to your **Customize** and press the **Custom
 1. Select the note template you wish to add a macro to
 2. Select the template section the macro will be added to (either Physical Exam or Review of Systems) and select "Add Macro"
    - If the same macro is required in multiple sections, it must be added individually to each section.
-
-     <Note>
-       Currently macros can only be created for the Physical Exam and Review of Systems sections.
-     </Note>
 3. Create your macro, entering the exam name and macro content.
 4. You can choose additional preferences to personalize your macro.
-   - Default: if the macro should always appear if no other macro is triggered for the same exam name and demographic constraints.
-   - Listed systems: If unchecked, only the systems listed in the macro will appear. Check the box if you want all systems discussed during the visit to be included, even if they are not explicitly listed.
-   - Formatting instructions: Add additional custom formatting rules, such as listing abnormal systems at the start of the macro.
-   - Patient demographics: Macros can be restricted to specific age or gender groups. These demographics must be mentioned in the visit for the macro to trigger.
+   - **Default**: if the macro should always appear if no other macro is triggered for the same exam name and demographic constraints.
+   - **Listed systems**: If unchecked, only the systems listed in the macro will appear. Check the box if you want all systems discussed during the visit to be included, even if they are not explicitly listed.
+   - **Formatting instructions**: Add additional custom formatting rules, such as listing abnormal systems at the start of the macro.
+   - **Patient demographics**: Macros can be restricted to specific age or gender groups. These demographics must be mentioned in the visit for the macro to trigger.
 4. Save your newly created macros by selecting the black "Save" button at the bottom of your macro window
 5. During the visit, explicitly mention the exam name to trigger the macro. The macro will then appear in the generated scribe and you can toggle the highlight feature on to see the dynamic values that were added within it.
 
