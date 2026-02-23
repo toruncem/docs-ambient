@@ -110,13 +110,6 @@
         "hidden": true,
         "groups": [
           {
-            "group": "Guides",
-            "pages": [
-              "api/authentication",
-              "api/error-handling"
-            ]
-          },
-          {
             "group": "Authentication",
             "openapi": "openapi.json",
             "pages": [
