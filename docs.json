@@ -106,38 +106,6 @@
         ]
       },
       {
-        "tab": "API",
-        "hidden": true,
-        "groups": [
-          {
-            "group": "Authentication",
-            "openapi": "openapi.json",
-            "pages": [
-              "POST /v1/ambient/api/auth/token"
-            ]
-          },
-          {
-            "group": "Transcription",
-            "openapi": "openapi.json",
-            "pages": [
-              "POST /v1/ambient/api/transcribe",
-              "GET /v1/ambient/api/transcribe/{transcription_id}"
-            ]
-          },
-          {
-            "group": "Note Generation",
-            "openapi": "openapi.json",
-            "pages": [
-              "POST /v1/ambient/api/scribe",
-              "GET /v1/ambient/api/scribe/{scribe_id}",
-              "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/audio",
-              "POST /v1/ambient/api/scribe/{scribe_id}/regenerate/text",
-              "POST /v1/ambient/api/feedback"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API v1",
         "hidden": true,
         "groups": [
