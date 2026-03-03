@@ -215,7 +215,8 @@
               "commure-dictation/basic-usage",
               "commure-dictation/handheld-microphones",
               "commure-dictation/voice-commands",
-              "commure-dictation/hotkeys"
+              "commure-dictation/hotkeys",
+              "commure-dictation/ambient-mic"
             ]
           },
           {
