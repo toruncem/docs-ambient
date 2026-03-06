@@ -12,15 +12,13 @@ Once your Scribe has been generated, you have several options for what to do nex
 </Frame>
 
 1. **Copy the Note**\
-   Use the "Copy" button to copy the entire note to your clipboard. You can then paste it into your EHR or any other documentation system.
+   Use the "Copy All" button to copy the entire note to your clipboard. You can then paste it into your EHR or any other documentation system.
 2. **Edit the Note**\
    If you notice any errors or want to make changes to the note or the patient name, you can edit the note directly before finalizing it by clicking the pen.
-   - **Auto-focus**: Tap directly on any text content to enter edit mode at the exact tap location.
-   - **Auto-save**: Automatically saves changes when tapping outside fields and handles nested template fields with tap-to-edit functionality.
 3. **Provide Feedback using "Rate this Scribe"**\
    Rate the quality of the note and provide feedback to help improve future Scribe notes.
 4. **Regenerate the Note**\
-   If the note does not meet your expectations, you can use the "Regenerate" option to create a new version, optionally providing feedback to guide improvements.
+   If the note does not meet your expectations, you can use the "AI Actions → Regenerate" option to create a new version, optionally providing feedback to guide improvements.
 5. **Transfer to EHR**\
    Follow the steps to transfer your note into your EHR system. See [Transfer Your Note to EHR](ehr_sync) for detailed instructions.
 
@@ -30,17 +28,20 @@ Once your Scribe has been generated, you have several options for what to do nex
 
 ### Regenerating a note to apply custom formatting or template changes
 
+<Frame>
+  <img
+    src="/images/image-9.png"
+    alt="Image"
+    title="Image"
+    className="mx-auto"
+    style={{ width:"74%" }}
+  />
+</Frame>
+
 1. Locate the generated Scribe you want to update on the "My Scribes" page.
 2. Click on the “AI Actions” button.
-3. Select “Change Template” from the menu.
-4. In the template selection window, choose a different template (any template other than the current one).
-5. Click “Regenerate Scribe” to apply the change.
-6. Once the Scribe has regenerated with the new template, repeat the process:
-   - Click “AI Actions” again.
-   - Select “Change Template.”
-   - This time, select the original template you want to use.
-   - Click “Regenerate Scribe” once more.
-7. The Scribe will now be regenerated with the original template, and any new custom formatting or template updates will be applied to the historical note.
+3. Select “Regenerate" from the menu.
+7. The Scribe will now be regenerated with newly added [Custom Formatting](https://docs.ambient.commure.com/ai_studio/custom-formatting#custom-formatting) rules or an updated template structure. 
 
 **Note:** This process is useful when you want to apply updated formatting or template changes to notes that were generated before those updates were available.
 
@@ -87,7 +88,7 @@ Once the template is regenerated, the title of the template will be reflected in
 - Click “Submit” to send your feedback.
 
 <Note>
-  [NEW] We've simplified rating to **Thumbs Up** or **Thumbs Down **actions. As we do phased rollouts, if you're still seeing a 5-star rating, you'll be seeing the simplified rating system soon! 
+  [NEW] We've simplified rating to **Thumbs Up** or **Thumbs Down** actions. As we do phased rollouts, if you're still seeing a 5-star rating, you'll be seeing the simplified rating system soon!
 </Note>
 
 ### Deleting a Scribe

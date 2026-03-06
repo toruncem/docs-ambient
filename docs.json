@@ -26,12 +26,11 @@
             "group": "The Basics",
             "pages": [
               "basics/navigation",
-              "basics/recording",
-              "basics/history",
+              "basics/myscribes",
               "basics/scribe-actions",
               "basics/visits",
-              "basics/ehr_sync",
-              "ai_studio/clinical-copilot"
+              "basics/transfer_note",
+              "ai_studio/commure_assistant"
             ]
           },
           {
@@ -51,7 +50,7 @@
           {
             "group": "Advanced",
             "pages": [
-              "commure-ambient/advanced/untitled-page",
+              "commure-ambient/advanced/assistant-note-editing",
               "advanced/collaborator",
               "advanced/dictation"
             ]
