@@ -1,0 +1,45 @@
+---
+title: "[New] Patient 360 "
+---
+
+Patient360 gives providers a comprehensive AI-generated pre-visit summary powered by EHR data, surfacing medications, labs, allergies, and past signed notes before the appointment begins. The Commure Assistant lets providers ask natural-language questions about any of this patient context, turning chart review into a conversation. 
+
+### Pre-visit Summary
+
+- Automatically generated for upcoming appointments with available EHR data.
+- Displays toggle-able sections: `At A Glance`, `Last Visit Summary`, `Active Problems`, `Recent Labs`, `Recent Imaging and Diagnostics`, `Active Meds`, and `Allergies`.
+- Each section shows relevant data or an empty state indicating data is not on file.
+
+### Commure Assistant (Search & Summarization)
+
+- Providers can ask questions grounded in the patient's EHR data.
+- Example queries:
+  - "Does the patient have any allergies?"
+  - "Does this patient have any recent lab results?"
+  - "Summarize the last visit."
+
+**Note:** Answers are generated from the patient's available EHR data. If data is missing or incomplete, the Assistant will indicate that information is not on file.
+
+<img
+  src="/images/image-18.png"
+  alt="Image"
+  title="Image"
+/>
+
+_Pre-visit summary view showing EHR sections on the Visits tab_
+
+<img
+  src="/images/image-19.png"
+  alt="Image"
+  title="Image"
+  className="mx-auto"
+  style={{ width:"65%" }}
+/>
+
+_                                                Patient Q&A with Commure Assistant_
+
+### Known Limitations
+
+- Currently supporting **Athena EHR only**.
+- Does not work on Safari.
+- UI may be impacted on small screen Android devices.
