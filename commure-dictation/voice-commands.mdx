@@ -1,6 +1,6 @@
 ---
 title: "Voice Commands"
-description: "Complete reference for punctuation, formatting, and special character voice commands in Commure Dictation."
+description: "Complete reference for navigation, selection, editing, formatting, punctuation, and special character voice commands in Commure Dictation."
 ---
 
 Commure Dictation recognizes voice commands for punctuation, formatting, and special characters. Simply speak the command as part of your dictation.
@@ -37,25 +37,58 @@ Commure Dictation recognizes voice commands for punctuation, formatting, and spe
 | "open brace"                         | `{`     |
 | "close brace"                        | `}`     |
 
-## Numbered Lists
+## Navigation
 
-Create auto-formatted lists.
+| Say This             | Description                                          |
+| -------------------- | ---------------------------------------------------- |
+| "New line"           | Insert a new line                                    |
+| "Next line"          | Move to the next line, or create one if none exists  |
+| "New paragraph"      | Start a new paragraph                                |
+| "Next field"         | Navigate to the next placeholder                     |
+| "Previous field"     | Navigate to the previous placeholder                 |
+| "Go to beginning"    | Move the cursor to the beginning of the text         |
+| "Go to end"          | Move the cursor to the end of the text               |
+| "Go to start of line"| Move the cursor to the start of the current line     |
+| "Go to end of line"  | Move the cursor to the end of the current line       |
 
-| Say This                                                                            | Inserts                                         |
-| :---------------------------------------------------------------------------------- | :---------------------------------------------- |
-| "Create numbered list" or<br />"Start numbered list" or<br />"Insert numbered list" | Starts a list, beginning with "1."              |
-| "Next item" or<br />"Next number" or<br />"Number 3"                                | Adds item to the numbered list after a new line |
-| "Create bullet list" or<br />"Start bullet list" or<br />"Insert bullet list"       | Starts a list with bullet points                |
-| "End list"                                                                          | Ends the numbered or bullet lists               |
+## Selection
 
-## Fields and Lines
+| Say This                 | Description                          |
+| ------------------------ | ------------------------------------ |
+| "Select that"            | Select the last dictated word        |
+| "Select previous word"   | Select the word before the cursor    |
+| "Select next word"       | Select the word after the cursor     |
+| "Select previous sentence" | Select the sentence before the cursor |
+| "Select next sentence"   | Select the sentence after the cursor |
+| "Unselect that"          | Clear the current selection          |
 
-| Say This                  | Inserts                      |
-| ------------------------- | ---------------------------- |
-| "new line" or "next line" | Line break                   |
-| "new paragraph"           | Double line break            |
-| "Next field"              | Goes to next placeholder     |
-| "Previous field"          | Goes to previous placeholder |
+## Editing
+
+| Say This              | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| "Scratch that"        | Delete the last dictated utterance             |
+| "Delete that"         | Delete the current selection                   |
+| "Delete last word"    | Delete the last dictated word                  |
+| "Delete line"         | Delete the entire line at the cursor position  |
+| "Delete word to left" | Delete the word to the left of the cursor      |
+| "Delete word to right"| Delete the word to the right of the cursor     |
+| "Delete paragraph"    | Delete the current paragraph                   |
+| "Delete last sentence"| Delete the last sentence                       |
+| "Undo"                | Undo the last action or dictation              |
+| "Copy that"           | Copy the current selection to the clipboard    |
+| "Paste"               | Paste from the clipboard                       |
+| "Start of macro"      | Move to the beginning of the active macro      |
+| "End of macro"        | Move to the end of the active macro            |
+
+## Formatting
+
+| Say This               | Description                              |
+| ---------------------- | ---------------------------------------- |
+| "Insert numbered list" | Starts a numbered list                   |
+| "Insert bullet list"   | Starts a bullet list                     |
+| "Insert dash list"     | Starts a dash list                       |
+| "Next item"            | Adds an item to the list after a new line|
+| "End list"             | Ends the current list                    |
 
 ## Numbers and Currency
 
