@@ -1,0 +1,112 @@
+---
+title: "MEDITECH Expanse Integration"
+---
+
+## Supported Versions
+
+| Feature | Minimum Version |
+| :-- | :-- |
+| Core ambient note writeback (4 fields) | Expanse 2.1.70\+ / 2.2.58\+ |
+| Patient Instructions writeback | 2.1.78 / 2.2.66 |
+| E/M Coding support | 2.1.80 / 2.2.68 |
+
+> Commure supports multiple simultaneous MEDITECH instances. Contact your Commure account team for multi-instance configuration guidance.
+
+---
+
+## How It Works
+
+1. A provider initiates an ambient session from the Commure app after a document is created in Expanse.
+2. Commure records the encounter and generates an AI-structured clinical summary.
+3. Content is sent back to MEDITECH via the **Observation API**, linked to the correct patient, visit, and document.
+4. A **Yellow Flag** alert appears in Expanse, notifying the initiating provider that ambient content is ready.
+5. The provider reviews, edits if needed, and applies content into the mapped clinical sections.
+6. Content is signed and committed to the note within Expanse.
+
+If content already exists in a section (e.g., entered by nursing), Expanse prompts the provider to resolve the conflict before applying ambient text.
+
+---
+
+## Phase 1: Core Integration
+
+_Available with Expanse 2.2.58\+ (PP 2.2.58) or 2.1.70 (PP 2.1.70)_
+
+Phase 1 covers appointment-based ambient documentation with note writeback into up to 4 clinical fields via MEDITECH's Sectioned Observation APIs.
+
+**Supported clinical sections (LOINC-mapped):**
+
+| LOINC Code | Section |
+| :-- | :-- |
+| 10164-2 | HPI Narrative - Reported |
+| 10187-3 | Review of Systems - Reported |
+| 29545-1 | Physical Findings - Narrative |
+| 51847-2 | Assessment & Plan |
+
+AI-generated content from these sections is written back to a single created document in MEDITECH. Commure provides UI/UX support for statusing and managing content across multi-document workflows.
+
+**Phase 1 also includes:**
+
+- Appointment integration using MEDITECH APIs (scheduling and registration context pulled for ambient session initialization)
+- Sandbox validation with test patients and appointments, configured by the customer in Expanse, before production go-live
+
+> Phase 1 requires an appropriate MEDITECH Service Pack. Your MEDITECH system administrator can confirm current PP version and upgrade eligibility.
+
+---
+
+## Phase 2\+: Enhanced Functionality
+
+Functionality expands as MEDITECH upgrades Priority Pack versions.
+
+| Priority Pack Version | Functionality Added |
+| :-- | :-- |
+| 2.2.58 | API writeback to 4 core fields (HPI, ROS, Exam, Assessment/Plan) |
+| 2.2.66 / 2.1.78 | Patient Instructions writeback |
+| 2.2.64/2.1.76\+ for GA or 2.2.60/2.1.72\+ for EA | Orders |
+| 2.2.70/2.1.82\+ | Impressions / Orders |
+| Future MEDITECH API upgrades | Additional section support and workflow enhancements (TBD) |
+
+For additional API read functionality, Commure and the customer can agree on expanded clinical context including lab results, imaging results, active problems, meds, allergies, procedures, and vitals.
+
+---
+
+## Setup Requirements
+
+### MEDITECH Side
+
+- **Document Dictionary**: "Use for Document Feature?" must be set to Yes
+- **Documentation Section Dictionary**: LOINC-based nomenclature mapping required per supported section; specific IMO concepts must be mapped for ambient ingestion
+- **User Access**: Users must exist in both Expanse and Commure; ambulatory providers require resource and appointment access; MIS Person Profile must include RESTful API Data Access Groups
+- **Service Pack**: Must be on an eligible Priority Pack version for desired functionality (see table above)
+
+### Commure Side
+
+- Commure configures the Observation API connection and validates with test appointments and mock patients in non-production sandbox
+- Upon successful sandbox validation, Commure enables note writeback for additional test users
+- After expanded validation, full deployment to all corresponding phase users
+
+---
+
+## Security & Access
+
+- **SAML Identity Provider (IdP) required**: Must use the same identifiers as Expanse
+- Off-network use requires IdP availability
+- Mobile Device Management (MDM) policies are recommended for device-based deployments
+
+---
+
+## Getting Started
+
+1. Confirm your current Priority Pack version with your MEDITECH system administrator
+2. Contact your Commure account team to confirm API readiness and initiate the integration intake process
+3. Commure will coordinate with your MEDITECH team to configure the Observation API, document dictionary mappings, and user access
+4. Sandbox validation is completed before any production rollout
+
+---
+
+## Notes
+
+- This integration applies to **MEDITECH Expanse** only (not MEDITECH 6.x or Magic)
+- Functionality availability is contingent on MEDITECH PP version - contact Commure if you are unsure what is available in your environment
+- As MEDITECH releases future API upgrades, additional functionality can be enabled without a full re-implementation
+
+---
