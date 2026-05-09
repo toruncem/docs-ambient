@@ -29,7 +29,14 @@
               "basics/myscribes",
               "basics/scribe-actions",
               "basics/visits",
-              "basics/transfer_note",
+              {
+                "group": "Transferring to the EHR",
+                "pages": [
+                  "copy-and-paste",
+                  "appointment-based-integration",
+                  "chrome-extension-integration"
+                ]
+              },
               "ai_studio/commure_assistant"
             ]
           },
