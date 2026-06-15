@@ -81,7 +81,8 @@
           {
             "group": "Troubleshooting",
             "pages": [
-              "troubleshooting/common-issues"
+              "troubleshooting/common-issues",
+              "troubleshooting/feedback"
             ]
           },
           {
