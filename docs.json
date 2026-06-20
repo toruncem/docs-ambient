@@ -51,7 +51,8 @@
               "ai_studio/ai-summaries",
               "ai_studio/after-visit-summaries",
               "ai_studio/carry-forward",
-              "ai_studio/macros"
+              "ai_studio/macros",
+              "ai_studio/macro-library"
             ]
           },
           {
