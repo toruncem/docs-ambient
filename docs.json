@@ -113,12 +113,7 @@
             "pages": [
               "contact/sales-and-support"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Regulatory",
-        "groups": [
+          },
           {
             "group": "Regulatory",
             "pages": [
