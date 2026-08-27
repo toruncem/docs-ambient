@@ -117,6 +117,17 @@
         ]
       },
       {
+        "tab": "Regulatory",
+        "groups": [
+          {
+            "group": "Regulatory",
+            "pages": [
+              "regulatory/labelling-ce-marking"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API v1",
         "hidden": true,
         "groups": [
