@@ -3,39 +3,21 @@ title: "Instructions for Use (eIFU) & CE Marking"
 description: "Electronic Instructions for Use, SaMD device label, and CE marking for Commure Ambient Scribe, Software Version 3.22."
 ---
 
-{/* maintainers: WHEN THIS PAGE MUST BE UPDATED — UK MDR / MHRA software change rules
-   Source: Matt O'Neil (Regulatory), "UK MDR / MHRA Software Change Guidelines"
-   https://docs.google.com/document/d/1NJI_rtg10UvmQWH0cVzIits8WbRhwQ1DV7Ntt0InSpk/edit
-   Slack: https://commure.enterprise.slack.com/archives/C0BT5BJSGPN/p1787945520664499?thread_ts=1787922117.400119
-
-   This page is the electronic IFU referenced on the Ambient Scribe SaMD label (UK MDR 2002 /
-   EU MDR 2017/745, Class I, IEC 62304 Class A). It is NOT updated on every product release.
-   Re-issue the label + eIFU (new software version, LOT, UDI-PI, date of manufacture, and any
-   changed IFU text) when a change is classified MAJOR / SUBSTANTIAL:
-
-   MAJOR / SUBSTANTIAL (re-issue required; also triggers DHF update, version bump 3.22 -> 3.23,
-   ISO 14971 risk re-assessment, MHRA variation/FSN assessment, PMS report entry per MFR-016):
-     - Intended purpose or patient population changes (e.g. new clinical population / specialty scope)
-     - Safety profile changes: new hazards, altered risk mitigation, unacceptable residual risk
-     - Clinical performance degradation beyond threshold: >2% hallucination increase, <95% entity
-       extraction, WER increase beyond agreed threshold
-     - Mode of action changes: how the device supports clinical decision-making
-     - Clinician review workflow: removal of review step or auto-approval without clinician sign-off
-     - ASR / diarization vendor or engine change
-     - EHR integration change affecting security or data integrity
-     - Offline functionality (audio capture without cloud) — data residency / PHI handling
-     - Post-market code/model modifications that change device behaviour unpredictably
-
-   STANDARD / MINOR (no re-issue; PMS surveillance reporting only):
-     - LLM/model version updates or retraining within the bounded PCCP
-     - New note templates; prompt engineering that does not degrade performance past threshold
-     - New EHR system additions that do not affect security/data integrity
-     - Accessibility / UI / layout refinements
-     - Corrective actions for non-critical defects; backend infra, logging, compliance procedures
-     - Updated clinical evidence
-
-   If unsure whether a change is Major, ask Regulatory (Matt O'Neil) BEFORE editing this page.
-   Do not edit IFU wording, the label image, version, UDI, or contact details without Regulatory sign-off.
+{/* maintainers: WHEN THIS PAGE MUST BE UPDATED
+   This is the electronic IFU referenced on the Ambient Scribe device label. It is NOT
+   updated on every product release. Re-issue the label + IFU (version, lot, UDI, date,
+   and any affected IFU text) only when Regulatory classifies a change as MAJOR, e.g.:
+     - intended purpose, intended users, or patient population changes
+     - safety profile changes (new hazards, warnings, contra-indications)
+     - the clinician-review / approval step is changed or removed
+     - speech-recognition or note-generation engine is replaced
+     - EHR integration changes that affect security or data integrity
+     - offline / on-device operation is introduced
+     - a material change in note accuracy or performance
+   Routine releases (model version updates, new templates, prompt tuning, UI changes,
+   additional EHRs, bug fixes, infra) do NOT require a re-issue.
+   Regulatory (Matt O'Neil) owns this decision. Do not edit IFU wording, the label image,
+   version, UDI, or contact details without Regulatory sign-off.
 */}
 
 <Warning>
