@@ -113,6 +113,12 @@
             "pages": [
               "contact/sales-and-support"
             ]
+          },
+          {
+            "group": "Regulatory",
+            "pages": [
+              "regulatory/labelling-ce-marking"
+            ]
           }
         ]
       },
@@ -276,5 +282,19 @@
       "label": "Use on Web",
       "href": "https://ambient.commure.com/"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/EIFU",
+      "destination": "/regulatory/labelling-ce-marking"
+    },
+    {
+      "source": "/eifu",
+      "destination": "/regulatory/labelling-ce-marking"
+    },
+    {
+      "source": "/IFU",
+      "destination": "/regulatory/labelling-ce-marking"
+    }
+  ]
 }
