@@ -1,0 +1,209 @@
+---
+title: "Instructions for Use (eIFU) & CE Marking"
+description: "Electronic Instructions for Use, SaMD device label, and CE marking for Commure Ambient Scribe, Software Version 3.22."
+---
+
+{/* maintainers: WHEN THIS PAGE MUST BE UPDATED
+   This is the electronic IFU referenced on the Ambient Scribe device label. It is NOT
+   updated on every product release. Re-issue the label + IFU (version, lot, UDI, date,
+   and any affected IFU text) only when Regulatory classifies a change as MAJOR, e.g.:
+     - intended purpose, intended users, or patient population changes
+     - safety profile changes (new hazards, warnings, contra-indications)
+     - the clinician-review / approval step is changed or removed
+     - speech-recognition or note-generation engine is replaced
+     - EHR integration changes that affect security or data integrity
+     - offline / on-device operation is introduced
+     - a material change in note accuracy or performance
+   Routine releases (model version updates, new templates, prompt tuning, UI changes,
+   additional EHRs, bug fixes, infra) do NOT require a re-issue.
+   Regulatory (Matt O'Neil) owns this decision. Do not edit IFU wording, the label image,
+   version, UDI, or contact details without Regulatory sign-off.
+*/}
+
+<Note>
+This page is the electronic Instructions for Use (eIFU) referenced on the Ambient Scribe device label. Short link: **docs.ambient.commure.com/EIFU**
+</Note>
+
+## Device Label
+
+<Frame caption="Ambient Scribe v3.22 — Labelling & CE Marking (LBS-001)">
+  <img src="/images/ambient-scribe-label-v3-22.png" alt="Commure Ambient Scribe software version 3.22 device label with CE marking, UDI, manufacturer and EC REP details" />
+</Frame>
+
+## Instructions for Use — Ambient Scribe
+
+*Commure – Ambient Scribe, Software Version 3.22*
+
+### Intended Purpose, Indications for Use, Patient Target Groups, and Intended Users
+
+#### Intended Purpose
+
+Commure Ambient Scribe is intended to assist healthcare professionals (clinicians) with clinical documentation by capturing audio recordings of clinician–patient encounters and generating draft structured clinical notes (e.g., SOAP format or specialty-specific templates) for clinician review.
+
+The product functions as a documentation support tool. The treating clinician reviews, edits as necessary, and explicitly approves every draft note before it is entered into the patient record. The clinician retains sole and full responsibility for the content, accuracy, and clinical appropriateness of the final medical record.
+
+#### Patient Target Group(s)
+
+**All patients of all ages** may be documented using Ambient Scribe, provided that:
+
+- The patient (or legal guardian/proxy) has provided informed consent to audio recording in accordance with the deploying organization's consent policy and applicable law
+
+#### Intended Users
+
+Commure Ambient Scribe is intended for use by licensed healthcare professionals (Point of Service providers) who have completed required onboarding and training.
+
+### Brief Description of the Software, Including its Essential Functions
+
+Ambient Scribe is a cloud-based clinical documentation platform available via web browser, Chrome extension, and mobile applications. The software processes clinician-patient encounter inputs using automatic speech recognition (ASR), natural language processing (NLP), and large language models (LLMs) to generate structured clinical documentation.
+
+#### Essential Functions
+
+- **Audio Recording:** Captures ambient audio of clinician-patient conversations with start/stop controls
+- **Automatic Speech Recognition (ASR):** Transcribes encounters in 100+ languages, accents, and dialects
+- **Note Generation:** Converts transcripts into structured clinical notes using LLM-based processing
+- **Template Support:** Supports customizable note templates (SOAP, specialty-specific formats)
+- **Note Review & Editing:** Allows clinician review, editing, and approval before finalization
+- **Multi-Modal Input:** Accepts audio recordings, images, existing notes, and EHR context
+- **EHR Integration:** Enables bi-directional integration with major EHR systems (Epic, Athenahealth, eClinicalWorks, MEDITECH)
+- **Coding Suggestions:** Provides automated CPT/ICD-10 coding recommendations for clinician review
+- **Patient Summaries:** Generates AI-powered 12-hour patient summaries and historical context
+- **Documentation Chat:** Provides interactive AI-assisted chat for querying patient information
+
+### Safety
+
+Users of Ambient Scribe must be aware of the following warnings, precautions, and measures:
+
+#### Warnings and Precautions
+
+<Warning>
+- Ambient Scribe is intended for use only by licensed healthcare professionals. Unlicensed individuals must not use this software.
+- Ambient Scribe is a documentation support tool and must not be used as a substitute for independent clinical judgment.
+- The software does not create treatment plans; clinicians must establish treatment decisions based on their own clinical assessment.
+- Do not walk away from the device during audio transcription, as this may result in incorrect or missed information.
+- Always verify that the correct patient record is open prior to initiating a recording in patient consultations.
+- Users must always review the generated clinical note and verify its accuracy prior to uploading to the EHR system.
+- Patient audio recording consent must be obtained in accordance with the deploying organization's consent policy and applicable law before use.
+- Users must complete required onboarding and training prior to clinical use of Ambient Scribe.
+- The software must not be used in jurisdictions where regulatory approval or authorization has not been obtained.
+</Warning>
+
+#### Contra-Indications (Conditions Under Which Ambient Scribe Must NOT Be Used)
+
+Ambient Scribe is contraindicated under the following conditions. Users must not use the software in these circumstances:
+
+- **As a substitute for clinical judgment:** Ambient Scribe cannot replace independent clinical assessment. Clinicians must perform their own clinical evaluation and decision-making independent of the software.
+- **For unapproved clinical documentation:** Documentation must not be generated or submitted to the medical record without prior review and approval by the responsible clinician. Every note requires explicit clinician sign-off before EHR entry.
+- **Without patient consent:** Ambient Scribe cannot be used where patient consent to audio recording has not been obtained in accordance with the deploying organization's consent policy and applicable law. Consent must be informed and documented.
+- **By untrained users:** Ambient Scribe cannot be used by persons who have not completed required onboarding and training for the software. All users must demonstrate competency prior to clinical use.
+- **In unauthorized jurisdictions:** Ambient Scribe cannot be used in jurisdictions where regulatory approval/authorization has not been obtained. Confirm that your region has received appropriate regulatory clearance (MHRA in UK, relevant competent authority in EU Member States) before deployment.
+
+#### Human Oversight Measures
+
+The clinician-in-the-loop model is fundamental to the safety and regulatory classification of Ambient Scribe. The clinician must review, edit as necessary, and explicitly approve every draft note prior to entry into the patient medical record. This mandatory clinician review and approval serves as the critical control that ensures patient safety and accountability.
+
+### Performance
+
+#### Performance Characteristics
+
+Ambient Scribe employs risk stratification via color-coded confidence indicators (green, amber, red) to convey clinical note quality to the reviewing clinician:
+
+- **Green:** High confidence in transcription and note accuracy; minimal clinician editing expected
+- **Amber:** Medium confidence; clinician should review carefully and edit as needed
+- **Red:** Low confidence; clinician must thoroughly review and edit before approving for the medical record
+
+#### Known Technical Issues and Limitations
+
+- ASR accuracy varies with audio quality, accent, background noise, and language complexity
+- LLM-generated notes may require editing for clinical accuracy, completeness, or format compliance
+- The system may occasionally generate contextually irrelevant suggestions during note review
+- EHR integration depends on the correct configuration of credentials and API endpoints
+- System performance may vary with network connectivity and data volume
+
+#### Validation of AI System
+
+Ambient Scribe has been validated for accuracy, safety, and performance in accordance with IEC 62304 (software lifecycle) and ISO 14971 (risk management). The system has undergone testing for transcription accuracy across multiple languages and accents, note structure compliance with template requirements, handling of diverse audio quality, and clinician usability. Detailed validation results are available in the Design History File (DHF) maintained by Commure.
+
+#### System Specifications and Requirements
+
+| Requirement | Specification |
+| :-- | :-- |
+| Supported Browsers | Chrome, Edge, Safari, Firefox (latest versions) |
+| Mobile Platforms | iOS 13+ (Apple), Android 9+ (Google) |
+| Network Requirements | Minimum 2 Mbps internet connection for audio streaming and upload |
+| Audio Quality | Optimal performance with 16 kHz, 16-bit PCM audio; handles varied quality |
+| Supported Languages | 100+ languages, accents, and dialects (consult documentation for complete list) |
+| Operating Systems | Windows 10+, macOS 10.15+, iOS 13+, Android 9+ |
+
+#### Preventive and Regular Maintenance
+
+- Clear browser cache and cookies periodically to optimize application performance
+- Ensure your operating system and browser are updated to the latest version
+- Keep your device securely connected to a reliable, password-protected network
+- Review and update API credentials if using EHR integration features
+- Monitor for software updates and apply them when notified
+- For technical support, contact the Commure support team at support@ambient.commure.com
+
+#### Software Updates and Version Control
+
+Commure releases software updates periodically to improve performance, add features, and address identified issues. Users will be notified of available updates. Updates are applied automatically or can be applied manually depending on deployment configuration. Users should not interrupt the update process. Review release notes for information about changes in each version.
+
+#### Instructions on Safe Use and Expected Lifetime
+
+Ambient Scribe is a cloud-based software service provided by Commure. The software is accessed via web browser or mobile application; no local installation is required. The system is actively maintained by Commure and will continue to receive updates and support for the duration of your service agreement. The expected operational lifetime of the software extends for the duration of the service contract. Users should maintain regular backups of clinical notes exported from Ambient Scribe in accordance with their organization's records management and compliance policies.
+
+### Compatibility, Connectivity, and Security
+
+Ambient Scribe requires reliable internet connectivity and operates using cloud-based infrastructure. The following requirements and measures are in place:
+
+#### Hardware and IT Network Requirements
+
+- Minimum 2 Mbps internet bandwidth for audio streaming, processing, and uploads
+- Secure, password-protected Wi-Fi or cellular network connection
+- Device storage: Minimum 500 MB available storage (for app caching and temporary files)
+- RAM: Minimum 2 GB (mobile), 4 GB (desktop) recommended
+- Processor: Modern dual-core processor or equivalent
+
+#### IT Security Measures
+
+- End-to-end encryption of patient audio and note data in transit (TLS 1.2+)
+- Data at rest encryption using AES-256
+- HIPAA-compliant infrastructure with BAA (Business Associate Agreement) available
+- UK GDPR and UK MDR compliance controls
+- Multi-factor authentication (MFA) support for user accounts
+- Role-based access control (RBAC) for administrative and clinical functions
+- Regular security audits and penetration testing
+- Secure API endpoints for EHR integration
+- Audit logging of all user actions and data access
+- Regular vulnerability assessments and patch management
+
+#### EHR Integration and Compatibility
+
+Ambient Scribe integrates bi-directionally with major EHR systems via secure API connections. The current list of supported EHR systems and integration methods is maintained in the [EHR Integrations](/ehr-integrations/AdvancedMD) section of this documentation; see also [Appointment-based integration](/appointment-based-integration) and [Chrome extension integration](/chrome-extension-integration) for the supported integration mechanisms.
+
+#### Symbols, Warnings, Abbreviations, and Error Messages
+
+Ambient Scribe uses the following conventions to communicate status and alerts to users:
+
+| Symbol | Meaning |
+| :-- | :-- |
+| Green Circle / Checkmark | High confidence; recommendation to proceed |
+| Amber Triangle / Warning | Medium confidence; review recommended |
+| Red Circle / X | Low confidence or error; user action required |
+| Information Icon (i) | Additional context or helpful guidance available |
+| Spinner / Loading Animation | System processing; please wait for completion |
+
+#### System Messages and Error Handling
+
+All system messages, error messages, and fault messages generated by Ambient Scribe are self-explanatory and provide guidance on resolution. In the event of an error, follow the on-screen instructions or contact support. Error logs are automatically transmitted to Commure support systems to aid in troubleshooting and continuous improvement.
+
+#### Computational and Hardware Resources
+
+Ambient Scribe is a cloud-based system that scales resources automatically based on user demand. Users do not need to manage local computational resources. The system handles processing of audio files, transcription, and LLM-based note generation on Commure servers. Minimal local processing is required on the end-user device (web browser or mobile app).
+
+### Incident Reporting
+
+<Warning>
+Healthcare professionals and organizations must report any serious incidents, adverse events, or product defects related to Ambient Scribe to Commure immediately and to the relevant regulatory authority (MHRA in the UK, national competent authorities in EU Member States). Serious incidents include any incident that directly or indirectly led to death, serious deterioration of health, or serious concern about the safety or performance of the device.
+</Warning>
+
+To report an incident: Contact Commure Medical Device Safety at support@ambient.commure.com. Provide a detailed description of the incident, date/time, affected patient (de-identified), software version, and any supporting documentation.
