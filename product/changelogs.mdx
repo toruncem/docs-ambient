@@ -3,6 +3,24 @@ title: "Changelog"
 description: "Product Updates and Announcements"
 ---
 
+<Update label="November 24, 2026">
+  
+</Update>
+
+<Expandable title="Nov 24 - API Breaking Changes" defaultOpen="true">
+  <Steps>
+    <Step title="Template name required when creating a template" icon="triangle-exclamation">
+      `POST /v1/templates` now requires `template_name`. Requests without it return `422` instead of `201`.
+
+      - `template_name` must be 1 to 255 characters and cannot be blank or only whitespace.
+      - A `422` response means no template was created.
+      - `template_description` is still optional (max 1000 characters). `template_content` is still required.
+      - Successful requests still return `201` with `template_uuid`.
+      - To migrate, add `template_name` to every create template request.
+    </Step>
+  </Steps>
+</Expandable>
+
 <Update label="January 19, 2026">
   
 </Update>

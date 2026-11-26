@@ -553,7 +553,7 @@
     "/v1/templates": {
       "post": {
         "summary": "Create a new template",
-        "description": "Create a new template with a JSON Schema definition. Templates define the structure for generating clinical notes from transcriptions.",
+        "description": "Create a new template with a JSON Schema definition. Templates define the structure for generating clinical notes from transcriptions.\n\n**Breaking change:** `template_name` is now required. It must be 1 to 255 characters and cannot be blank or only whitespace. Requests with a missing or blank `template_name` return `422`. Previously, `template_name` was optional.",
         "tags": ["templates"],
         "security": [{ "bearerAuth": [] }],
         "parameters": [{ "$ref": "#/components/parameters/authSchemeHeader" }],
@@ -566,8 +566,9 @@
                 "properties": {
                   "template_name": {
                     "type": "string",
+                    "minLength": 1,
                     "maxLength": 255,
-                    "description": "Name of the template",
+                    "description": "Name of the template. Required; shown to users in the app. Must be 1 to 255 characters and cannot be blank or only whitespace.",
                     "example": "Primary Care Visit Note"
                   },
                   "template_description": {
@@ -577,9 +578,10 @@
                     "example": "Template for documenting primary care visits including chief complaint, history, exam, and plan"
                   },
                   "template_content": {
-                    "description": "JSON Schema object defining your template structure."
+                    "description": "JSON Schema object defining your template structure. Required."
                   }
-                  }
+                },
+                "required": ["template_name", "template_content"]
               },
               "examples": {
                 "soap_note": {
@@ -691,7 +693,7 @@
             }
           },
           "422": {
-            "description": "Validation error",
+            "description": "Validation error. Returned when `template_name` is missing, blank, whitespace-only, or longer than 255 characters, or when another field is invalid. The template is not created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -700,6 +702,32 @@
                     "detail": {
                       "type": "array",
                       "items": { "type": "object" }
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_template_name": {
+                    "summary": "template_name is missing",
+                    "value": {
+                      "detail": [
+                        {
+                          "type": "missing",
+                          "loc": ["body", "template_name"],
+                          "msg": "Field required"
+                        }
+                      ]
+                    }
+                  },
+                  "blank_template_name": {
+                    "summary": "template_name is blank or whitespace-only",
+                    "value": {
+                      "detail": [
+                        {
+                          "type": "value_error",
+                          "loc": ["body", "template_name"],
+                          "msg": "Value error, template_name must not be blank"
+                        }
+                      ]
                     }
                   }
                 }
